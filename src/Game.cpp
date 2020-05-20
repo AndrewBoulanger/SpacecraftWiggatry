@@ -6,7 +6,7 @@
 #include "Renderer.h"
 #include "EventManager.h"
 
-
+//adding note
 Game* Game::s_pInstance = nullptr;
 
 // Game functions - DO NOT REMOVE ***********************************************
