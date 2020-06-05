@@ -44,6 +44,33 @@ public:
 	void Exit();
 private:
 	Button* m_playBtn;
+	Button* m_quitBtn;
+};
+
+class PauseState : public State
+{
+public:
+	PauseState();
+	void Update();
+	void Render();
+	void Enter();
+	void Exit();
+private:
+	Button* m_resumeBtn;
+	Button* m_menuBtn;
+};
+
+class DeadState : public State
+{
+public:
+	DeadState();
+	void Update();
+	void Render();
+	void Enter();
+	void Exit();
+private:
+	Button* m_playBtn;
+	Button* m_quitBtn;
 };
 
 #endif
