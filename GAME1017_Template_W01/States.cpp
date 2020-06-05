@@ -51,6 +51,10 @@ void GameState::Update()
 	// Do the rest.
 	m_pPlayer->Update();
 	CheckCollision();
+	if (EVMA::KeyPressed(SDL_SCANCODE_P))
+	{
+		STMA::PushState(new PauseState);
+	}
 }
 
 void GameState::CheckCollision()
@@ -115,7 +119,7 @@ TitleState::TitleState() {}
 void TitleState::Enter()
 {
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
-	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
+	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
 }
 
@@ -129,7 +133,7 @@ void TitleState::Update()
 
 void TitleState::Render()
 {
-	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 128, 0, 255, 255);
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 51, 255, 0);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
 	m_playBtn->Render();
 	m_quitBtn->Render();
@@ -139,5 +143,71 @@ void TitleState::Render()
 void TitleState::Exit()
 {
 	std::cout << "Exiting TitleState..." << std::endl;
+}
+// End TitleState.
+
+// Pause StateStuff
+PauseState::PauseState() {}
+
+void PauseState::Enter()
+{
+	std::cout << "Entering Pause...\n";
+	m_resumeBtn = new ResumeButton({ 0,0,200,80 }, { 415.0f,400.0f,200.0f,80.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("resume"));//1024
+}
+
+void PauseState::Update()
+{
+	if (m_resumeBtn->Update() == 1)
+		return;
+}
+
+void PauseState::Render()
+{
+	STMA::GetStates().front()->Render();
+	SDL_SetRenderDrawBlendMode(Engine::Instance().GetRenderer(), SDL_BLENDMODE_BLEND); // below won't be taken into account unles we do this // blendmode create transparency
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 51, 225, 100);
+	SDL_Rect rect = { 173, 128, 700, 512 };
+	SDL_RenderFillRect(Engine::Instance().GetRenderer(), &rect);
+	m_resumeBtn->Render();
+	State::Render();
+}
+
+void PauseState::Exit()
+{
+	std::cout << "Exiting PauseState...\n";
+}
+// End of PauseState
+
+// Begin TitleState.
+DeadState::DeadState() {}
+
+void DeadState::Enter()
+{
+	std::cout << "Entering DeadState...";
+	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
+	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
+	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
+}
+
+void DeadState::Update()
+{
+	if (m_playBtn->Update() == 1)
+		return;
+	if (m_quitBtn->Update() == 1)
+		return;
+}
+
+void DeadState::Render()
+{
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 0, 0, 0);
+	SDL_RenderClear(Engine::Instance().GetRenderer());
+	m_playBtn->Render();
+	m_quitBtn->Render();
+	State::Render();
+}
+
+void DeadState::Exit()
+{
+	std::cout << "Exiting DeadState..." << std::endl;
 }
 // End TitleState.

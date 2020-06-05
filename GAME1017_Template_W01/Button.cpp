@@ -71,3 +71,10 @@ void QuitButton::Execute()
 	SOMA::PlaySound("beep");
 	Engine::Instance().Running() = false;
 }
+
+ResumeButton::ResumeButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
+void ResumeButton::Execute()
+{
+	SOMA::PlaySound("beep");
+	STMA::PopState();
+}
