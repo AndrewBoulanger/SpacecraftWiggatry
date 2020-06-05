@@ -17,10 +17,13 @@ public:
 	void StopY();
 	void SetAccelX(double a);
 	void SetAccelY(double a);
+	double GetAccelY();
+	double GetThurst();
 	bool IsGrounded();
 	void SetGrounded(bool g);
 	double GetVelX();
 	double GetVelY();
+	void SetVelY(double a);
 	void SetX(float y);
 	void SetY(float y);
 private:
@@ -32,6 +35,7 @@ private:
 		m_velY,
 		m_maxVelY,
 		m_drag,
+		m_thrust,
 		m_grav;
 };
 

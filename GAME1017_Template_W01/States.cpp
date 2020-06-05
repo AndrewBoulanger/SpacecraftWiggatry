@@ -39,12 +39,24 @@ void GameState::Update()
 		m_pPlayer->SetAccelX(-1.0);
 	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
 		m_pPlayer->SetAccelX(1.0);
+
+	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !m_pPlayer->IsGrounded())
+	{
+		if (m_pPlayer->GetVelY() >= 0)
+		{
+			m_pPlayer->SetAccelY(m_pPlayer->GetThurst());
+			m_pPlayer->SetVelY(0);
+		}
+
+	}
 	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_pPlayer->IsGrounded())
 	{
 		SOMA::PlaySound("jump");
 		m_pPlayer->SetAccelY(-JUMPFORCE); // Sets the jump force.
 		m_pPlayer->SetGrounded(false);
 	}
+
+
 	// Wrap the player on screen.
 	if (m_pPlayer->GetDstP()->x < -51.0) m_pPlayer->SetX(1024.0);
 	else if (m_pPlayer->GetDstP()->x > 1024.0) m_pPlayer->SetX(-50.0);
