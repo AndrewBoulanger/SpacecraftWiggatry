@@ -3,6 +3,7 @@
 #include "EventManager.h"
 #include "SoundManager.h"
 #include "StateManager.h"
+#include "Engine.h"
 #include <SDL.h>
 
 Button::Button(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t)
@@ -62,4 +63,11 @@ void PlayButton::Execute()
 {
 	SOMA::PlaySound("beep");
 	STMA::ChangeState(new GameState);
+}
+
+QuitButton::QuitButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
+void QuitButton::Execute()
+{
+	SOMA::PlaySound("beep");
+	Engine::Instance().Running() = false;
 }

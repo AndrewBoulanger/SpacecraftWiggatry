@@ -44,6 +44,7 @@ public:
 	void Exit();
 private:
 	Button* m_playBtn;
+	Button* m_quitBtn;
 };
 
 #endif
