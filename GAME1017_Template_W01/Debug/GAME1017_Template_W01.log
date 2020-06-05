@@ -1,1 +1,16 @@
-﻿  GAME1017_Template_W01.vcxproj -> C:\Users\andre\Downloads\GAME1017_W03_Platformer\GAME1017_W03_Platformer\Debug\GAME1017_Template_W01.exe
+﻿  Button.cpp
+  CollisionManager.cpp
+  DebugManager.cpp
+  Engine.cpp
+  EventManager.cpp
+  FontManager.cpp
+  PlatformPlayer.cpp
+  SoundManager.cpp
+  StateManager.cpp
+  Label.cpp
+  Main.cpp
+  MathManager.cpp
+  States.cpp
+  TextureManager.cpp
+  Generating Code...
+  GAME1017_Template_W01.vcxproj -> C:\Users\andre\Documents\GitHub\SpacecraftWiggatry\Debug\GAME1017_Template_W01.exe
