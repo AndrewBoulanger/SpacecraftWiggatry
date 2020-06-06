@@ -4,7 +4,7 @@
 #include <iostream>
 
 PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Texture * t)
-	:Sprite(s, d, r, t)
+	:Character(s, d, r, t)
 {
 	m_grounded = true;
 	m_accelX = m_accelY = m_velX = m_velY = 0.0;
@@ -13,6 +13,10 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 	m_thrust = -GRAV;
 	m_grav = GRAV;
 	m_drag = 0.88;
+
+	health = 50;
+	speed = 10;
+	baseDamage = 10;
 }
 
 void PlatformPlayer::Update()

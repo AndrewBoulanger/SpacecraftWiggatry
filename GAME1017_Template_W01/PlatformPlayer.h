@@ -5,8 +5,9 @@
 #define JUMPFORCE 60.0
 
 #include "Sprite.h"
+#include "Character.h"
 
-class PlatformPlayer : public Sprite
+class PlatformPlayer : public Character
 {
 public:
 	PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t);
