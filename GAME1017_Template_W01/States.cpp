@@ -106,7 +106,7 @@ void GameState::CheckCollision()
 		if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
 		{ // Colliding right side of platform.
 			m_pPlayer->StopX();
-			m_pPlayer->KnockLeft(-10);
+			m_pPlayer->KnockLeft(-10); //knock the player to the right
 		}
 		else
 		{
@@ -114,6 +114,7 @@ void GameState::CheckCollision()
 			m_pPlayer->KnockLeft(10);
 		}
 		m_pPlayer->takeDamage(m_pEnemy->getBaseDamage());
+		
 	}
 }
 
@@ -124,6 +125,7 @@ void GameState::Render()
 	//draw the enemy
 	m_pEnemy->Render();
 	// Draw the player.
+	if(m_pPlayer->getICoolDown()%5 < 3)
 	m_pPlayer->Render();
 	// Draw the platforms.
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 192, 64, 0, 255);
