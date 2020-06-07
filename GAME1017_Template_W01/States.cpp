@@ -125,7 +125,7 @@ void GameState::Render()
 	//draw the enemy
 	m_pEnemy->Render();
 	// Draw the player.
-	if(m_pPlayer->getICoolDown()%5 < 3)
+	if(m_pPlayer->getICoolDown()%10 < 5)
 	m_pPlayer->Render();
 	// Draw the platforms.
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 192, 64, 0, 255);
