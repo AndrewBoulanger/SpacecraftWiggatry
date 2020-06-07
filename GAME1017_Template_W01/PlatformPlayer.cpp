@@ -34,6 +34,7 @@ void PlatformPlayer::Update()
 
 	if (iCooldown > 0) 
 		{ --iCooldown; }
+
 }
 
 void PlatformPlayer::Stop() // If you want a dead stop both axes.
@@ -66,7 +67,7 @@ void PlatformPlayer::takeDamage(int dmg)
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
 	}
-	if (getHealth() <= 0)
+	if (health <= 0)
 		STMA::ChangeState(new DeadState);
 }
 
