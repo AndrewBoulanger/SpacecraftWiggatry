@@ -28,4 +28,20 @@ public:
 	PlayButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t);
 };
 
+class QuitButton : public Button
+{
+private:
+	void Execute();
+public:
+	QuitButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t);
+};
+
+class ResumeButton : public Button
+{
+private:
+	void Execute();
+public:
+	ResumeButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t);
+};
+
 #endif
