@@ -5,16 +5,17 @@
 #define JUMPFORCE 60.0
 
 #include "Sprite.h"
+#include "Character.h"
 
-class PlatformPlayer : public Sprite
+class PlatformPlayer : public Character
 {
 public:
 	PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t);
 	void Update();
-	void Render();
 	void Stop();
 	void StopX();
 	void StopY();
+	void KnockLeft(double vel);
 	void SetAccelX(double a);
 	void SetAccelY(double a);
 	double GetAccelY();
@@ -26,6 +27,8 @@ public:
 	void SetVelY(double a);
 	void SetX(float y);
 	void SetY(float y);
+
+	void takeDamage(int dmg) override;
 private:
 	bool m_grounded;
 	double m_accelX,

@@ -38,6 +38,10 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	else return false; // SDL init fail.
 	m_fps = (Uint32)round((1 / (double)FPS) * 1000); // Sets FPS in milliseconds and rounds.
 	TEMA::RegisterTexture("Img/play.png", "play");
+	TEMA::RegisterTexture("Img/exit.png", "exit");
+	TEMA::RegisterTexture("Img/resume.png", "resume");
+	TEMA::RegisterTexture("Img/play.png", "player");
+	TEMA::RegisterTexture("Img/exit.png", "enemy");
 	STMA::ChangeState(new TitleState);
 	SOMA::AllocateChannels(16);
 	m_running = true; // Everything is okay, start the engine.
