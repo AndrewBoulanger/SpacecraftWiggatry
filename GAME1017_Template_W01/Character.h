@@ -8,6 +8,8 @@ protected:
 
 	int health;
 	int baseDamage;
+	int iFrames = 60;
+	int iCooldown;
 
 public:
 	Character(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t);
@@ -21,6 +23,10 @@ public:
 	{
 		return baseDamage;
 	};
+	int getICoolDown()
+	{
+		return iCooldown;
+	}
 
 	//setters
 	void setHealth(int health)
@@ -30,6 +36,10 @@ public:
 	void setBaseDamage(int damage)
 	{
 		baseDamage = damage;
+	}
+	void setICoolDown(int frames)
+	{
+		iCooldown = frames;
 	}
 
 	void Render();

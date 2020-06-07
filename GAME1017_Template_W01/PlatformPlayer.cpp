@@ -1,5 +1,6 @@
 #include "PlatformPlayer.h"
 #include "Engine.h"
+#include "StateManager.h"
 #include <algorithm>
 #include <iostream>
 
@@ -31,6 +32,9 @@ void PlatformPlayer::Update()
 	m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
 	m_accelX = m_accelY = 0.0;
 
+	if (iCooldown > 0) 
+		{ --iCooldown; }
+
 }
 
 void PlatformPlayer::Stop() // If you want a dead stop both axes.
@@ -57,9 +61,11 @@ double PlatformPlayer::GetThurst() { return m_thrust; }
 
 void PlatformPlayer::takeDamage(int dmg)
 {
-	health -= dmg;
-	std::cout << "Health: " << health << std::endl;
-	if (health <= 0)
-		std::cout << "the player is dead\n";
+	if (iCooldown <= 0)
+	{
+		health -= dmg;
+		iCooldown = iFrames;
+		std::cout << "Health: " << health << std::endl;
+	}
 }
 
