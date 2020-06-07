@@ -15,7 +15,6 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 	m_drag = 0.88;
 
 	health = 50;
-	speed = 10;
 	baseDamage = 10;
 }
 
@@ -32,13 +31,6 @@ void PlatformPlayer::Update()
 	m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
 	m_accelX = m_accelY = 0.0;
 
-	std::cout << m_velY << std::endl;
-}
-
-void PlatformPlayer::Render()
-{
-	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 255, 255, 255);
-	SDL_RenderFillRectF(Engine::Instance().GetRenderer(), GetDstP());
 }
 
 void PlatformPlayer::Stop() // If you want a dead stop both axes.
@@ -48,6 +40,7 @@ void PlatformPlayer::Stop() // If you want a dead stop both axes.
 }
 void PlatformPlayer::StopX() { m_velX = 0.0; }
 void PlatformPlayer::StopY() { m_velY = 0.0; }
+void PlatformPlayer::KnockLeft(double vel) { m_velX -= vel; }
 
 void PlatformPlayer::SetAccelX(double a) { m_accelX = a; }
 void PlatformPlayer::SetAccelY(double a) { m_accelY = a; }
@@ -61,4 +54,12 @@ void PlatformPlayer::SetX(float y) { m_dst.x = y; }
 void PlatformPlayer::SetY(float y) { m_dst.y = y; }
 
 double PlatformPlayer::GetThurst() { return m_thrust; }
+
+void PlatformPlayer::takeDamage(int dmg)
+{
+	health -= dmg;
+	std::cout << "Health: " << health << std::endl;
+	if (health <= 0)
+		std::cout << "the player is dead\n";
+}
 
