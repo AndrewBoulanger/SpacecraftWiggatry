@@ -25,11 +25,11 @@ void GameState::Enter()
 	std::cout << "Entering GameState..." << std::endl;
 	m_pPlayer = new PlatformPlayer({ 0,0,400,100 }, { 512.0f,548.0f,50.0f,100.0f }, 
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
-	m_pEnemy = new Enemy({ 0,0,400,100 }, {600.0f, 500.0f, 50.0f, 100.0f}, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
-	m_pPlatforms[0] = new SDL_FRect({ 462.0f,648.0f,100.0f,20.0f });
-	m_pPlatforms[1] = new SDL_FRect({ 200.0f,468.0f,100.0f,20.0f });
-	m_pPlatforms[2] = new SDL_FRect({ 724.0f,468.0f,100.0f,20.0f });
-	m_pPlatforms[3] = new SDL_FRect({ 462.0f,368.0f,100.0f,20.0f });
+	m_pEnemy = new Enemy({ 0,0,400,100 }, {800.0f, 500.0f, 50.0f, 100.0f}, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
+	m_pPlatforms[0] = new SDL_FRect({ 10.0f,648.0f,100.0f,30.0f });
+	m_pPlatforms[1] = new SDL_FRect({ 130.0f,568.0f,200.0f,30.0f });
+	m_pPlatforms[2] = new SDL_FRect({ 624.0f,368.0f,200.0f,30.0f });
+	m_pPlatforms[3] = new SDL_FRect({ 362.0f,458.0f,200.0f,30.0f });
 	m_pPlatforms[4] = new SDL_FRect({ -100.0f,668.0f,1224.0f,100.0f });
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
 }
@@ -57,10 +57,6 @@ void GameState::Update()
 		m_pPlayer->SetGrounded(false);
 	}
 
-
-	// Wrap the player on screen.
-	if (m_pPlayer->GetDstP()->x < -51.0) m_pPlayer->SetX(1024.0);
-	else if (m_pPlayer->GetDstP()->x > 1024.0) m_pPlayer->SetX(-50.0);
 	// Do the rest.
 	m_pPlayer->Update();
 	CheckCollision();
@@ -68,8 +64,6 @@ void GameState::Update()
 	{
 		STMA::PushState(new PauseState);
 	}
-	if (m_pPlayer->getHealth() <= 0)
-		STMA::ChangeState(new TitleState);
 }
 
 void GameState::CheckCollision()

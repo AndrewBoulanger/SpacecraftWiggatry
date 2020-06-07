@@ -67,5 +67,7 @@ void PlatformPlayer::takeDamage(int dmg)
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
 	}
+	if (health <= 0)
+		STMA::ChangeState(new DeadState);
 }
 
