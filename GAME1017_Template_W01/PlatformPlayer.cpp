@@ -1,5 +1,6 @@
 #include "PlatformPlayer.h"
 #include "Engine.h"
+#include "StateManager.h"
 #include <algorithm>
 #include <iostream>
 
@@ -66,8 +67,9 @@ void PlatformPlayer::takeDamage(int dmg)
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
 
+		
 		if (health <= 0)
-			std::cout << "the player is dead\n";
+			STMA::ChangeState(new DeadState);
 	}
 }
 
