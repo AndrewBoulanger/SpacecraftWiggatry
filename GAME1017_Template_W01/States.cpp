@@ -49,7 +49,6 @@ void GameState::Update()
 			m_pPlayer->SetAccelY(m_pPlayer->GetThurst());
 			m_pPlayer->SetVelY(0);
 		}
-
 	}
 	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_pPlayer->IsGrounded())
 	{
