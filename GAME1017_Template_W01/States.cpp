@@ -49,7 +49,6 @@ void GameState::Update()
 			m_pPlayer->SetAccelY(m_pPlayer->GetThurst());
 			m_pPlayer->SetVelY(0);
 		}
-
 	}
 	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_pPlayer->IsGrounded())
 	{
@@ -69,6 +68,8 @@ void GameState::Update()
 	{
 		STMA::PushState(new PauseState);
 	}
+	if (m_pPlayer->getHealth() <= 0)
+		STMA::ChangeState(new TitleState);
 }
 
 void GameState::CheckCollision()
@@ -114,7 +115,6 @@ void GameState::CheckCollision()
 			m_pPlayer->KnockLeft(10);
 		}
 		m_pPlayer->takeDamage(m_pEnemy->getBaseDamage());
-		
 	}
 }
 
@@ -216,7 +216,7 @@ DeadState::DeadState() {}
 
 void DeadState::Enter()
 {
-	std::cout << "Entering DeadState...";
+	std::cout << "Entering DeadState...\n";
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
@@ -241,6 +241,6 @@ void DeadState::Render()
 
 void DeadState::Exit()
 {
-	std::cout << "Exiting DeadState..." << std::endl;
+	std::cout << "Exiting DeadState...a" << std::endl;
 }
 // End DeadState.
