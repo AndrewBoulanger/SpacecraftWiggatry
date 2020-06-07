@@ -69,8 +69,6 @@ void GameState::Update()
 	{
 		STMA::PushState(new PauseState);
 	}
-	if (m_pPlayer->getHealth() < 1)
-		STMA::ChangeState(new DeadState);
 }
 
 void GameState::CheckCollision()
