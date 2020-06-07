@@ -69,6 +69,8 @@ void GameState::Update()
 	{
 		STMA::PushState(new PauseState);
 	}
+	if (m_pPlayer->getHealth() <= 0)
+		STMA::ChangeState(new TitleState);
 }
 
 void GameState::CheckCollision()
@@ -114,7 +116,6 @@ void GameState::CheckCollision()
 			m_pPlayer->KnockLeft(10);
 		}
 		m_pPlayer->takeDamage(m_pEnemy->getBaseDamage());
-		
 	}
 }
 
