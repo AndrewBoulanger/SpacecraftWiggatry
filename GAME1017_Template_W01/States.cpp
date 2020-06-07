@@ -69,6 +69,8 @@ void GameState::Update()
 	{
 		STMA::PushState(new PauseState);
 	}
+	if (m_pPlayer->getHealth() < 1)
+		STMA::ChangeState(new DeadState);
 }
 
 void GameState::CheckCollision()
@@ -209,7 +211,7 @@ void PauseState::Exit()
 }
 // End of PauseState
 
-// Begin TitleState.
+// Begin DeadState.
 DeadState::DeadState() {}
 
 void DeadState::Enter()
@@ -241,4 +243,4 @@ void DeadState::Exit()
 {
 	std::cout << "Exiting DeadState..." << std::endl;
 }
-// End TitleState.
+// End DeadState.
