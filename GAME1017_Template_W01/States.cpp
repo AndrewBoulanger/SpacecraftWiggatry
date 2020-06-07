@@ -22,12 +22,12 @@ GameState::GameState() {}
 void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
-	m_pPlayer = new PlatformPlayer({ 0,0,0,0 }, { 512.0f,548.0f,50.0f,100.0f }, 
+	m_pPlayer = new PlatformPlayer({ 0,0,0,0 }, { 35.0f,548.0f,50.0f,100.0f }, 
 								   Engine::Instance().GetRenderer(), nullptr);
-	m_pPlatforms[0] = new SDL_FRect({ 462.0f,648.0f,100.0f,20.0f });
-	m_pPlatforms[1] = new SDL_FRect({ 200.0f,468.0f,100.0f,20.0f });
-	m_pPlatforms[2] = new SDL_FRect({ 724.0f,468.0f,100.0f,20.0f });
-	m_pPlatforms[3] = new SDL_FRect({ 462.0f,368.0f,100.0f,20.0f });
+	m_pPlatforms[0] = new SDL_FRect({ 10.0f,648.0f,100.0f,30.0f });
+	m_pPlatforms[1] = new SDL_FRect({ 130.0f,568.0f,200.0f,30.0f });
+	m_pPlatforms[2] = new SDL_FRect({ 624.0f,368.0f,200.0f,30.0f });
+	m_pPlatforms[3] = new SDL_FRect({ 362.0f,458.0f,200.0f,30.0f });
 	m_pPlatforms[4] = new SDL_FRect({ -100.0f,668.0f,1224.0f,100.0f });
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
 }
