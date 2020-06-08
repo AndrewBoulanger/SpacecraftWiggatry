@@ -23,7 +23,7 @@ GameState::GameState() {}
 void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
-	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 512.0f,548.0f,100.0f,120.0f }, 
+	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 512.0f,548.0f,115.0f,120.0f }, 
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 545.0f, 50.0f, 120.0f}, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
 	m_pPlatforms[0] = new SDL_FRect({ 10.0f,648.0f,100.0f,30.0f });
