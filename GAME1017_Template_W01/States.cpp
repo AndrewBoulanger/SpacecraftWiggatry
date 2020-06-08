@@ -27,7 +27,7 @@ void GameState::Enter()
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {800.0f, 500.0f, 50.0f, 100.0f}, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
 	m_pPlatforms[0] = new SDL_FRect({ 10.0f,648.0f,100.0f,30.0f });
-	m_pPlatforms[1] = new SDL_FRect({ 50.0f,250.0f,200.0f,30.0f });
+	m_pPlatforms[1] = new SDL_FRect({ 130.0f,568.0f,200.0f,30.0f });
 	m_pPlatforms[2] = new SDL_FRect({ 624.0f,368.0f,200.0f,30.0f });
 	m_pPlatforms[3] = new SDL_FRect({ 362.0f,458.0f,200.0f,30.0f });
 	m_pPlatforms[4] = new SDL_FRect({ -100.0f,668.0f,1224.0f,100.0f });
@@ -44,6 +44,14 @@ void GameState::Update()
 		m_pPlayer->SetAccelX(-1.0);
 	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
 		m_pPlayer->SetAccelX(1.0);
+	if (m_pPlayer->GetX() < 0)
+	{
+		m_pPlayer->SetX(0.0);
+	}
+	if (m_pPlayer->GetX() > 970)
+	{
+		m_pPlayer->SetX(970.0);
+	}
 
 	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !m_pPlayer->IsGrounded())
 	{
@@ -119,6 +127,7 @@ void GameState::Render()
 {
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 64, 128, 255, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
+	SDL_RenderCopy(Engine::Instance().GetRenderer(), TextureManager::GetTexture("bg"), 0, 0);
 	//draw the enemy
 	m_pEnemy->Render();
 	// Draw the player.
@@ -214,9 +223,10 @@ DeadState::DeadState() {}
 void DeadState::Enter()
 {
 	std::cout << "Entering DeadState...\n";
-	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
+	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("replay"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
+	SOMA::PlayMusic("WreckingBall");
 }
 
 void DeadState::Update()

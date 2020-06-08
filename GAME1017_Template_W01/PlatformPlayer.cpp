@@ -48,6 +48,7 @@ void PlatformPlayer::KnockLeft(double vel) { m_velX -= vel; }
 
 void PlatformPlayer::SetAccelX(double a) { m_accelX = a; }
 void PlatformPlayer::SetAccelY(double a) { m_accelY = a; }
+double PlatformPlayer::GetAccelX() { return m_accelX; }
 double PlatformPlayer::GetAccelY() { return m_accelY; }
 bool PlatformPlayer::IsGrounded() { return m_grounded; }
 void PlatformPlayer::SetGrounded(bool g) { m_grounded = g; }
@@ -56,6 +57,7 @@ double PlatformPlayer::GetVelY() { return m_velY; }
 void PlatformPlayer::SetVelY(double a) { m_velY = a; }
 void PlatformPlayer::SetX(float y) { m_dst.x = y; }
 void PlatformPlayer::SetY(float y) { m_dst.y = y; }
+double PlatformPlayer::GetX() { return m_dst.x; }
 
 double PlatformPlayer::GetThurst() { return m_thrust; }
 
