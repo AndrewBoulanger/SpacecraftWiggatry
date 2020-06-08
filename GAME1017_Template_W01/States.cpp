@@ -43,6 +43,14 @@ void GameState::Update()
 		m_pPlayer->SetAccelX(-1.0);
 	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
 		m_pPlayer->SetAccelX(1.0);
+	if (m_pPlayer->GetX() < 0)
+	{
+		m_pPlayer->SetX(0.0);
+	}
+	if (m_pPlayer->GetX() > 970)
+	{
+		m_pPlayer->SetX(970.0);
+	}
 
 	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !m_pPlayer->IsGrounded())
 	{
@@ -118,6 +126,7 @@ void GameState::Render()
 {
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 64, 128, 255, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
+	SDL_RenderCopy(Engine::Instance().GetRenderer(), TextureManager::GetTexture("bg"), 0, 0);
 	//draw the enemy
 	m_pEnemy->Render();
 	// Draw the player.
