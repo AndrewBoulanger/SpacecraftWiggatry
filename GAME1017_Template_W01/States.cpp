@@ -223,9 +223,10 @@ DeadState::DeadState() {}
 void DeadState::Enter()
 {
 	std::cout << "Entering DeadState...\n";
-	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
+	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("replay"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
+	SOMA::PlayMusic("WreckingBall");
 }
 
 void DeadState::Update()
