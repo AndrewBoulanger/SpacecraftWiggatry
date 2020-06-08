@@ -18,6 +18,7 @@ public:
 	void KnockLeft(double vel);
 	void SetAccelX(double a);
 	void SetAccelY(double a);
+	double GetAccelX();
 	double GetAccelY();
 	double GetThurst();
 	bool IsGrounded();
@@ -27,6 +28,7 @@ public:
 	void SetVelY(double a);
 	void SetX(float y);
 	void SetY(float y);
+	double GetX();
 
 	void takeDamage(int dmg) override;
 private:

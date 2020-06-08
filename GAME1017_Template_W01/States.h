@@ -7,6 +7,7 @@
 #include "Button.h"
 #include "PlatformPlayer.h"
 #include "Enemy.h"
+#include "Sprite.h"
 
 class State // This is the abstract base class for all specific states.
 {
