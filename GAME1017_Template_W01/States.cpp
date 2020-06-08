@@ -32,6 +32,9 @@ void GameState::Enter()
 	m_pPlatforms[3] = new SDL_FRect({ 362.0f,458.0f,200.0f,30.0f });
 	m_pPlatforms[4] = new SDL_FRect({ -100.0f,668.0f,1224.0f,100.0f });
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
+	
+	SOMA::PlayMusic("PokerFace");
+	
 }
 
 void GameState::Update()
@@ -122,7 +125,7 @@ void GameState::Render()
 	if(m_pPlayer->getICoolDown()%10 < 5)
 	m_pPlayer->Render();
 	// Draw the platforms.
-	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 192, 64, 0, 255);
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 70, 192, 0, 255);
 	for (int i = 0; i < NUMPLATFORMS; i++)
 		SDL_RenderFillRectF(Engine::Instance().GetRenderer(), m_pPlatforms[i]);
 	// If GameState != current state.

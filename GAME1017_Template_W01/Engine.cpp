@@ -44,6 +44,9 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/exit.png", "enemy");
 	STMA::ChangeState(new TitleState);
 	SOMA::AllocateChannels(16);
+	SOMA::Load("Aud/Poker Face.mp3", "PokerFace", SOUND_MUSIC);
+	SOMA::Load("Aud/Wrecking Ball.mp3", "WreckingBall", SOUND_MUSIC);
+
 	m_running = true; // Everything is okay, start the engine.
 	cout << "Engine Init success!" << endl;
 	return true;
