@@ -27,7 +27,7 @@ void GameState::Enter()
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
 	m_pEnemy = new Enemy({ 0,0,400,100 }, {800.0f, 500.0f, 50.0f, 100.0f}, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
 	m_pPlatforms[0] = new SDL_FRect({ 10.0f,648.0f,100.0f,30.0f });
-	m_pPlatforms[1] = new SDL_FRect({ 130.0f,568.0f,200.0f,30.0f });
+	m_pPlatforms[1] = new SDL_FRect({ 750.0f,600.0f,200.0f,30.0f });
 	m_pPlatforms[2] = new SDL_FRect({ 624.0f,368.0f,200.0f,30.0f });
 	m_pPlatforms[3] = new SDL_FRect({ 362.0f,458.0f,200.0f,30.0f });
 	m_pPlatforms[4] = new SDL_FRect({ -100.0f,668.0f,1224.0f,100.0f });
