@@ -32,6 +32,8 @@ void GameState::Enter()
 	m_pPlatforms[3] = new SDL_FRect({ 362.0f,458.0f,200.0f,30.0f });
 	m_pPlatforms[4] = new SDL_FRect({ -100.0f,668.0f,1224.0f,100.0f });
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
+	
+	SOMA::PlayMusic("PokerFace");
 }
 
 void GameState::Update()
