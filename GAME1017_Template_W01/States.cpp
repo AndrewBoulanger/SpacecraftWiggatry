@@ -25,7 +25,10 @@ void GameState::Enter()
 	std::cout << "Entering GameState..." << std::endl;
 	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 512.0f,548.0f,115.0f,120.0f }, 
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
-	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 545.0f, 50.0f, 120.0f}, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
+	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 545.0f, 50.0f, 120.0f}, 
+									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
+
+	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25}, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
 	m_pPlatforms[0] = new SDL_FRect({ 10.0f,648.0f,100.0f,30.0f });
 	m_pPlatforms[1] = new SDL_FRect({ 130.0f,250.0f,200.0f,30.0f });
 	m_pPlatforms[2] = new SDL_FRect({ 624.0f,368.0f,200.0f,30.0f });
@@ -67,6 +70,7 @@ void GameState::Update()
 		m_pPlayer->SetAccelY(-JUMPFORCE); // Sets the jump force.
 		m_pPlayer->SetGrounded(false);
 	}
+	m_pReticle->SetPos(EVMA::GetMousePos());
 
 	// Do the rest.
 	m_pPlayer->Update();
@@ -132,11 +136,14 @@ void GameState::Render()
 	m_pEnemy->Render();
 	// Draw the player.
 	if(m_pPlayer->getICoolDown()%10 < 5)
-	m_pPlayer->Render();
+		m_pPlayer->Render();
+	
 	// Draw the platforms.
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 70, 192, 0, 255);
 	for (int i = 0; i < NUMPLATFORMS; i++)
 		SDL_RenderFillRectF(Engine::Instance().GetRenderer(), m_pPlatforms[i]);
+
+	m_pReticle->Render();
 	// If GameState != current state.
 	if (dynamic_cast<GameState*>(STMA::GetStates().back()))
 		State::Render();

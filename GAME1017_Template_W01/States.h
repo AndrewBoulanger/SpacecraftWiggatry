@@ -27,6 +27,7 @@ private:
 	PlatformPlayer* m_pPlayer;
 	SDL_FRect* m_pPlatforms[NUMPLATFORMS];
 	Enemy* m_pEnemy;
+	Sprite* m_pReticle;
 public:
 	GameState();
 	void Update();
