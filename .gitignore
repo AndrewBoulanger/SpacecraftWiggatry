@@ -350,3 +350,4 @@ healthchecksdb
 *.ipch
 *.ipch
 .vs/GAME1017_Template_W01/v16/ipch/AutoPCH/1a5589591f210c71/ENGINE.ipch
+*.ipch
