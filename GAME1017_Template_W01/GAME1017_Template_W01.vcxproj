@@ -156,6 +156,9 @@
     <Image Include="Img\Enemies.png" />
     <Image Include="Img\PlayerShip.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="PropertySheet.props" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
