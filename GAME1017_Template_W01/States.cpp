@@ -27,7 +27,8 @@ void GameState::Enter()
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 545.0f, 50.0f, 120.0f}, 
 									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
-
+	for (int i = 0; i < (5); i++)
+		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(25*i),0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25}, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
 	m_pPlatforms[0] = new SDL_FRect({ 10.0f,648.0f,100.0f,30.0f });
 	m_pPlatforms[1] = new SDL_FRect({ 130.0f,250.0f,200.0f,30.0f });
@@ -144,6 +145,10 @@ void GameState::Render()
 		SDL_RenderFillRectF(Engine::Instance().GetRenderer(), m_pPlatforms[i]);
 
 	m_pReticle->Render();
+
+	for (int i = 0; i < (m_pPlayer->getHealth()/10); i++)
+		hpUI[i]->Render();
+
 	// If GameState != current state.
 	if (dynamic_cast<GameState*>(STMA::GetStates().back()))
 		State::Render();
@@ -235,6 +240,7 @@ DeadState::DeadState() {}
 void DeadState::Enter()
 {
 	std::cout << "Entering DeadState...\n";
+	words = new Label("font", 220, 110, "GAME OVER", { 255,255,255,0 });
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("replay"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
@@ -253,6 +259,7 @@ void DeadState::Render()
 {
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 0, 0, 0);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
+	words->Render();
 	m_playBtn->Render();
 	m_quitBtn->Render();
 	State::Render();
