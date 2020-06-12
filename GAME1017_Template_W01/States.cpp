@@ -28,7 +28,7 @@ void GameState::Enter()
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 545.0f, 50.0f, 120.0f}, 
 									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
 	for (int i = 0; i < (5); i++)
-		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(25*i),0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
+		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25}, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
 	m_pPlatforms[0] = new SDL_FRect({ 10.0f,648.0f,100.0f,30.0f });
 	m_pPlatforms[1] = new SDL_FRect({ 130.0f,250.0f,200.0f,30.0f });
