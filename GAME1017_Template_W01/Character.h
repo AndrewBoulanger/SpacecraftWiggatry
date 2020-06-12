@@ -2,7 +2,7 @@
 #include "Sprite.h"
 #include "Engine.h"
 
-class Character : public Sprite
+class Character : public AnimatedSprite
 {
 protected:
 
@@ -12,7 +12,7 @@ protected:
 	int iCooldown;
 
 public:
-	Character(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t);
+	Character(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart = 0, int smin = 0, int smax = 0, int nf = 0, int hp = 50, int dmg =10);
 
 	//getters
 	int getHealth() const
