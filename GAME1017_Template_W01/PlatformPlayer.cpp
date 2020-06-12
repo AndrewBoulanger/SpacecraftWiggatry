@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <iostream>
 
-PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Texture * t)
-	:Character(s, d, r, t)
+PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Texture * t, int sstart, int smin, int smax, int nf)
+	:Character(s, d, r, t, sstart, smin, smax, nf)
 {
 	m_grounded = true;
 	m_accelX = m_accelY = m_velX = m_velY = 0.0;
@@ -72,4 +72,3 @@ void PlatformPlayer::takeDamage(int dmg)
 	if (health <= 0)
 		STMA::ChangeState(new DeadState);
 }
-

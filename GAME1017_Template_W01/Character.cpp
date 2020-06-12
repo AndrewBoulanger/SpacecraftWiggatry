@@ -3,8 +3,8 @@
 
 using namespace std;
 
-Character::Character(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t)
-	: Sprite(s, d, r, t), health(50), baseDamage(10) {}
+Character::Character(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart, int smin, int smax, int nf, int hp, int dmg)
+	: AnimatedSprite(s, d, r, t, sstart, smin,smax, nf), health(hp), baseDamage(dmg) {}
 
 void Character::Render()
 {
