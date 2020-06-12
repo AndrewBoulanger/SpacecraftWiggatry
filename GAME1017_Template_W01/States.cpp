@@ -166,6 +166,9 @@ void TitleState::Enter()
 {
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
+	words[0] = new Label("font", 180, 110, "SPACECRAFT", { 188,7,208,0 });
+	words[1] = new Label("font", 260, 200, "Wiggatry", { 255,255,255,0 });
+	words[2] = new Label("font", 0, 670, "ETTG", { 255,0,180,0 });
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
 }
 
@@ -181,6 +184,8 @@ void TitleState::Render()
 {
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 51, 255, 0);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
+	for (int i = 0; i < 3; i++)
+		words[i]->Render();
 	m_playBtn->Render();
 	m_quitBtn->Render();
 	State::Render();

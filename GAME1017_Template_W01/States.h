@@ -47,6 +47,7 @@ public:
 	void Enter();
 	void Exit();
 private:
+	Label* words[3];
 	Button* m_playBtn;
 	Button* m_quitBtn;
 };
