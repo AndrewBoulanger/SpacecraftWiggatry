@@ -28,6 +28,7 @@ private:
 	SDL_FRect* m_pPlatforms[NUMPLATFORMS];
 	Enemy* m_pEnemy;
 	Sprite* m_pReticle;
+	Sprite* hpUI[5];
 public:
 	GameState();
 	void Update();
@@ -74,6 +75,7 @@ public:
 	void Enter();
 	void Exit();
 private:
+	Label* words;
 	Button* m_playBtn;
 	Button* m_quitBtn;
 };
