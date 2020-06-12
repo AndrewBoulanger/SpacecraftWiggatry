@@ -14,6 +14,10 @@ public: // Inherited and public.
 	SDL_FRect* GetDstP() { return &m_dst; }
 	double& GetAngle() { return m_angle; }
 	void SetAngle(double a) { m_angle = a; }
+	void SetPos(SDL_Point point) { 
+		m_dst.x = point.x - m_dst.w*.5;
+		m_dst.y = point.y - m_dst.h*.5;
+	};
 protected: // Private BUT inherited.
 	double m_angle;
 	SDL_Rect m_src;

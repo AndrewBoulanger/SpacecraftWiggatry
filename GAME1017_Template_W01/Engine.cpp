@@ -44,6 +44,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/resume.png", "resume");
 	TEMA::RegisterTexture("Img/KikiSprite.png", "player");
 	TEMA::RegisterTexture("Img/alienWhisker.png", "enemy");
+	TEMA::RegisterTexture("Img/reticle.png", "reticle");
 	STMA::ChangeState(new TitleState);
 	SOMA::AllocateChannels(16);
 	SOMA::Load("Aud/Poker Face.mp3", "PokerFace", SOUND_MUSIC);
