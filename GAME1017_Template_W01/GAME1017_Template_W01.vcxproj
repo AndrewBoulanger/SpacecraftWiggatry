@@ -151,6 +151,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="States.h" />
     <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="img\circle.png" />
@@ -159,6 +160,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertySheet.props" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Dat\Level1.txt" />
+    <Text Include="Dat\Tiledata.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

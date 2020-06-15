@@ -1,12 +1,16 @@
 #pragma once
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
+#define ROWS 24
+#define COLS 32
 
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
+#include <array>
 #include "Label.h"
+#include "Tile.h"
 
 // Do not include any macros, initialized properties or full function definitions in this header.
 

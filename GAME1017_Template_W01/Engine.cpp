@@ -47,6 +47,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/reticle.png", "reticle");
 	TEMA::RegisterTexture("IMG/circle.png", "wig");
 	TEMA::RegisterTexture("Img/hp.png", "heart");
+	TEMA::RegisterTexture("Img/Tiles.png", "tiles");
 
 	FOMA::RegisterFont("Img/font.ttf", "font", 150);
 	STMA::ChangeState(new TitleState);

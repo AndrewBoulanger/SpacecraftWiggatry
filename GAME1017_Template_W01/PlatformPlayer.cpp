@@ -1,6 +1,8 @@
 #include "PlatformPlayer.h"
 #include "Engine.h"
 #include "StateManager.h"
+#include "EventManager.h"
+#include "SoundManager.h"
 #include <algorithm>
 #include <iostream>
 
@@ -23,6 +25,33 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 
 void PlatformPlayer::Update()
 {
+	if (EVMA::KeyHeld(SDL_SCANCODE_A))
+		SetAccelX(-1.0);
+	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+		SetAccelX(1.0);
+	if (GetX() < 0)
+	{
+		SetX(0.0);
+	}
+	if (GetX() > 970)
+	{
+		SetX(970.0);
+	}
+
+	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !IsGrounded())
+	{
+		if (GetVelY() >= 0)
+		{
+			SetAccelY(GetThurst());
+			SetVelY(0);
+		}
+	}
+	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && IsGrounded())
+	{
+		SOMA::PlaySound("jump");
+		SetAccelY(-JUMPFORCE); // Sets the jump force.
+		SetGrounded(false);
+	}
 	// Do X axis first.
 	m_velX += m_accelX;
 	m_velX *= (m_grounded?m_drag:1); 
