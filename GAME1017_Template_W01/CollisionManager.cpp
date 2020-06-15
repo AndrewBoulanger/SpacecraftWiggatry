@@ -60,7 +60,6 @@ bool CollisionManager::PlayerCollision(const SDL_Rect player, const int dX, cons
 		SDL_Rect t = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
 		if (tiles[i]->IsObstacle() && SDL_HasIntersection(&p, &t))
 		{ // Collision!
-			std::cout << "coliision!";
 			return true;
 			// Other potential code...
 		}
