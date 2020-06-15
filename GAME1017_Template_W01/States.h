@@ -30,7 +30,11 @@ private:
 	SDL_FRect* m_pPlatforms[NUMPLATFORMS];
 	Enemy* m_pEnemy;
 	Sprite* m_pReticle;
+
 	std::vector<Pickup*> m_pPickUpList;
+
+	Sprite* hpUI[5];
+
 public:
 	GameState();
 	void Update();
@@ -50,6 +54,7 @@ public:
 	void Enter();
 	void Exit();
 private:
+	Label* words[3];
 	Button* m_playBtn;
 	Button* m_quitBtn;
 };
@@ -76,6 +81,7 @@ public:
 	void Enter();
 	void Exit();
 private:
+	Label* words;
 	Button* m_playBtn;
 	Button* m_quitBtn;
 };

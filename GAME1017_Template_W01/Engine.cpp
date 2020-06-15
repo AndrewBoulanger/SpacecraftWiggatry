@@ -46,6 +46,9 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/alienWhisker.png", "enemy");
 	TEMA::RegisterTexture("Img/reticle.png", "reticle");
 	TEMA::RegisterTexture("IMG/circle.png", "wig");
+	TEMA::RegisterTexture("Img/hp.png", "heart");
+
+	FOMA::RegisterFont("Img/font.ttf", "font", 150);
 	STMA::ChangeState(new TitleState);
 	SOMA::AllocateChannels(16);
 	SOMA::Load("Aud/Poker Face.mp3", "PokerFace", SOUND_MUSIC);
