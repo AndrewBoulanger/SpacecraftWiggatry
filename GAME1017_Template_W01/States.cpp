@@ -78,6 +78,7 @@ void GameState::Update()
 
 	m_pReticle->SetPos(EVMA::GetMousePos());
 	m_pPlayer->Update();
+	m_pEnemy->Update();
 	CheckCollision();
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
 	{
