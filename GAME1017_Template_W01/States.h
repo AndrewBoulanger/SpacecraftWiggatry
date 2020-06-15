@@ -8,6 +8,8 @@
 #include "PlatformPlayer.h"
 #include "Enemy.h"
 #include "Sprite.h"
+#include "Pickup.h"
+#include <vector>
 
 class State // This is the abstract base class for all specific states.
 {
@@ -28,6 +30,7 @@ private:
 	SDL_FRect* m_pPlatforms[NUMPLATFORMS];
 	Enemy* m_pEnemy;
 	Sprite* m_pReticle;
+	std::vector<Pickup*> m_pPickUpList;
 public:
 	GameState();
 	void Update();

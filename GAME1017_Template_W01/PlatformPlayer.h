@@ -31,6 +31,30 @@ public:
 	double GetX();
 
 	void takeDamage(int dmg) override;
+	int getWigs()
+	{
+		return m_wigCount;
+	};
+	void setWigs(int wigs) 
+	{
+		m_wigCount = wigs;
+	}
+	void add1Wig()
+	{
+		++m_wigCount;
+	}
+	int getParts()
+	{
+		return m_ShipParts;
+	};
+	void setParts(int parts)
+	{
+		m_ShipParts = parts;
+	}
+	void add1ShipPart()
+	{
+		++m_ShipParts;
+	}
 private:
 	bool m_grounded;
 	double m_accelX,
@@ -42,6 +66,8 @@ private:
 		m_drag,
 		m_thrust,
 		m_grav;
+	int m_wigCount;
+	int m_ShipParts;
 };
 
 #endif

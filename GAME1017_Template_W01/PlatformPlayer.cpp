@@ -17,6 +17,8 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 
 	health = 50;
 	baseDamage = 10;
+	m_wigCount = 0;
+	m_ShipParts = 0;
 }
 
 void PlatformPlayer::Update()

@@ -19,12 +19,14 @@ public: // Inherited and public.
 		m_dst.x = point.x - m_dst.w*.5;
 		m_dst.y = point.y - m_dst.h*.5;
 	};
+	SDL_FPoint getCenter() { return { (m_dst.x + m_dst.w * 0.5f),(m_dst.y + m_dst.h * 0.5f) }; }
 protected: // Private BUT inherited.
 	double m_angle;
 	SDL_FPoint m_pivot;
 	SDL_Rect m_src;
 	SDL_FRect m_dst;
 	SDL_Renderer* m_pRend;
+	
 	SDL_Texture* m_pText;
 private: // Private NOT inherited.
 };
