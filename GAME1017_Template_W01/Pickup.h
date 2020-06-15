@@ -15,11 +15,12 @@ protected:
     pickupType type;
 
 public:
+    Pickup() {};
     Pickup(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t) 
     : Sprite(s,d,r,t) {};
     virtual void Update()
     {
-        m_dst.y += sinf(SDL_GetTicks()/200);
+        m_dst.y += .5f*sinf(SDL_GetTicks()/200);
     };
     pickupType getType()
     {
@@ -36,6 +37,7 @@ private:
     
 
 public:
+    Wig() {};
     Wig(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t)
         : Pickup(s, d, r, t)
     {
@@ -49,6 +51,7 @@ class ShipPart : public Pickup
 private:
 
 public:
+    ShipPart() {};
     ShipPart(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t)
         : Pickup(s, d, r, t)
     {
