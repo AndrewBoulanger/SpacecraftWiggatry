@@ -42,8 +42,6 @@ public:
 		iCooldown = frames;
 	}
 
-	void Render();
-
 	virtual void takeDamage(int dmg);
 
 };

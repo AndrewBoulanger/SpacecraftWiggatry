@@ -35,6 +35,10 @@ void GameState::Enter()
 	m_pPlatforms[2] = new SDL_FRect({ 624.0f,368.0f,200.0f,30.0f });
 	m_pPlatforms[3] = new SDL_FRect({ 362.0f,458.0f,200.0f,30.0f });
 	m_pPlatforms[4] = new SDL_FRect({ -100.0f,668.0f,1224.0f,100.0f });
+
+	m_pPickUpList.push_back(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
+					Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
+
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
 	
 	SOMA::PlayMusic("PokerFace");
@@ -80,6 +84,10 @@ void GameState::Update()
 	{
 		STMA::PushState(new PauseState);
 	}
+
+	for (int i = 0; i < m_pPickUpList.size(); i++)
+		if(m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
+
 }
 
 void GameState::CheckCollision()
@@ -126,6 +134,29 @@ void GameState::CheckCollision()
 		}
 		m_pPlayer->takeDamage(m_pEnemy->getBaseDamage());
 	}
+	for (int i = 0; i < m_pPickUpList.size(); i++)
+	{
+		if (COMA::CircleCircleCheck(m_pPlayer->getCenter(), m_pPickUpList[i]->getCenter(), 40, 50))
+		{
+			switch (m_pPickUpList[i]->getType())
+			{
+			case WIG:
+				m_pPlayer->add1Wig();
+				break;
+			case SHIP_PART:
+				m_pPlayer->add1ShipPart();
+				break;
+			default:
+				break;
+			}
+			delete m_pPickUpList[i];
+			m_pPickUpList[i] = nullptr;
+			std::cout << "collected\n";
+			m_pPickUpList.erase(m_pPickUpList.begin()+i);
+			m_pPickUpList.shrink_to_fit();
+		}
+	}
+
 }
 
 void GameState::Render()
@@ -146,19 +177,36 @@ void GameState::Render()
 
 	m_pReticle->Render();
 
+	for (int i = 0; i < m_pPickUpList.size(); i++)
+		m_pPickUpList[i]->Render();
+
 	for (int i = 0; i < (m_pPlayer->getHealth()/10); i++)
 		hpUI[i]->Render();
+
 
 	// If GameState != current state.
 	if (dynamic_cast<GameState*>(STMA::GetStates().back()))
 		State::Render();
+
 }
 
 void GameState::Exit()
 {
 	delete m_pPlayer;
+	delete m_pEnemy;
+	delete m_pReticle;
 	for (int i = 0; i < NUMPLATFORMS; i++)
+	{
 		delete m_pPlatforms[i];
+		m_pPlatforms[i] = nullptr;
+	}
+	for (int i = 0; i < m_pPickUpList.size(); i++)
+	{
+		delete m_pPickUpList[i];
+		m_pPickUpList[i] = nullptr;
+	}
+	m_pPickUpList.clear();
+	m_pPickUpList.shrink_to_fit();
 }
 
 void GameState::Resume() { }
