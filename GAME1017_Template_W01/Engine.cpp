@@ -45,7 +45,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/KikiSprite.png", "player");
 	TEMA::RegisterTexture("Img/alienWhisker.png", "enemy");
 	TEMA::RegisterTexture("Img/reticle.png", "reticle");
-	TEMA::RegisterTexture("IMG/circle.png", "wig");
+	TEMA::RegisterTexture("IMG/wig1.png", "wig");
 	TEMA::RegisterTexture("Img/hp.png", "heart");
 
 	FOMA::RegisterFont("Img/font.ttf", "font", 150);
@@ -53,7 +53,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	SOMA::AllocateChannels(16);
 	SOMA::Load("Aud/Poker Face.mp3", "PokerFace", SOUND_MUSIC);
 	SOMA::Load("Aud/Wrecking Ball.mp3", "WreckingBall", SOUND_MUSIC);
-	SOMA::SetMusicVolume(10);
+	SOMA::SetMusicVolume(15);
 
 	m_running = true; // Everything is okay, start the engine.
 	cout << "Engine Init success!" << endl;
