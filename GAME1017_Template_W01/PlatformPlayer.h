@@ -7,6 +7,8 @@
 #include "Sprite.h"
 #include "Character.h"
 
+class Hookshot;
+
 class PlatformPlayer : public Character
 {
 public:
@@ -29,6 +31,7 @@ public:
 	void SetX(float y);
 	void SetY(float y);
 	double GetX();
+	virtual void Render();
 
 	void takeDamage(int dmg) override;
 	int getWigs()
@@ -55,8 +58,30 @@ public:
 	{
 		++m_ShipParts;
 	}
+
+	bool getGrapplehook()
+	{
+		return m_grapplehook;
+	}
+
+	void setGrapplehook(bool g)
+	{
+		m_grapplehook = g;
+	}
+
+	void setMoveHook(bool h)
+	{
+		m_movehook = h;
+	}
+
+	void setHookshot();
+
+	Hookshot* getHookShot() { return m_hookShot; }
+
 private:
 	bool m_grounded;
+	bool m_grapplehook = false;
+	bool m_movehook = false;
 	double m_accelX,
 		m_accelY,
 		m_velX,
@@ -68,6 +93,7 @@ private:
 		m_grav;
 	int m_wigCount;
 	int m_ShipParts;
+	Hookshot* m_hookShot;
 };
 
 #endif

@@ -7,6 +7,8 @@
 #include "Engine.h"
 #include "Button.h"
 #include "Enemy.h"
+#include "PlatformPlayer.h"
+#include "HookShot.h"
 #include <iostream>
 
 // Begin State. CTRL+M+H and CTRL+M+U to turn on/off collapsed code.
@@ -19,6 +21,17 @@ void State::Resume() {}
 
 // Begin GameState.
 GameState::GameState() {}
+
+SDL_FRect** GameState::getPlatform()
+{
+	return m_pPlatforms;
+}
+
+PlatformPlayer* GameState::getPlayer()
+{
+	return 	m_pPlayer;
+
+}
 
 void GameState::Enter()
 {
@@ -40,7 +53,6 @@ void GameState::Enter()
 					Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
 
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
-	
 	SOMA::PlayMusic("PokerFace");
 	
 }
@@ -88,6 +100,24 @@ void GameState::Update()
 
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		if(m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
+
+	if (EVMA::MousePressed(1))
+	{
+		if (m_pPlayer->getHookShot()->gethookFixed() == false)
+		{
+			m_pPlayer->setGrapplehook(true);
+			//m_pPlayer->setHookshot();
+			m_pPlayer->getHookShot()->calHookAngle();
+			m_pPlayer->setMoveHook(true);
+		}
+		else
+		{
+			m_pPlayer->setGrapplehook(false);
+			m_pPlayer->getHookShot()->sethookFixed(false);
+			m_pPlayer->setMoveHook(false);
+			m_pPlayer->getHookShot()->setlerpCo(0);
+		}
+	}
 
 }
 
