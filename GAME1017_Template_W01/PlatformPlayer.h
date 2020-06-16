@@ -5,18 +5,20 @@
 #define JUMPFORCE 60.0
 
 #include "Sprite.h"
+#include "Character.h"
 
-class PlatformPlayer : public Sprite
+class PlatformPlayer : public Character
 {
 public:
-	PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t);
+	PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart = 0, int smin = 0, int smax = 0, int nf = 0);
 	void Update();
-	void Render();
 	void Stop();
 	void StopX();
 	void StopY();
+	void KnockLeft(double vel);
 	void SetAccelX(double a);
 	void SetAccelY(double a);
+	double GetAccelX();
 	double GetAccelY();
 	double GetThurst();
 	bool IsGrounded();
@@ -26,6 +28,33 @@ public:
 	void SetVelY(double a);
 	void SetX(float y);
 	void SetY(float y);
+	double GetX();
+
+	void takeDamage(int dmg) override;
+	int getWigs()
+	{
+		return m_wigCount;
+	};
+	void setWigs(int wigs) 
+	{
+		m_wigCount = wigs;
+	}
+	void add1Wig()
+	{
+		++m_wigCount;
+	}
+	int getParts()
+	{
+		return m_ShipParts;
+	};
+	void setParts(int parts)
+	{
+		m_ShipParts = parts;
+	}
+	void add1ShipPart()
+	{
+		++m_ShipParts;
+	}
 private:
 	bool m_grounded;
 	double m_accelX,
@@ -37,6 +66,8 @@ private:
 		m_drag,
 		m_thrust,
 		m_grav;
+	int m_wigCount;
+	int m_ShipParts;
 };
 
 #endif

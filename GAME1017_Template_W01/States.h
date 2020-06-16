@@ -6,6 +6,10 @@
 #include <SDL.h>
 #include "Button.h"
 #include "PlatformPlayer.h"
+#include "Enemy.h"
+#include "Sprite.h"
+#include "Pickup.h"
+#include <vector>
 
 class State // This is the abstract base class for all specific states.
 {
@@ -24,6 +28,13 @@ class GameState : public State
 private:
 	PlatformPlayer* m_pPlayer;
 	SDL_FRect* m_pPlatforms[NUMPLATFORMS];
+	Enemy* m_pEnemy;
+	Sprite* m_pReticle;
+
+	std::vector<Pickup*> m_pPickUpList;
+
+	Sprite* hpUI[5];
+
 public:
 	GameState();
 	void Update();
@@ -43,7 +54,36 @@ public:
 	void Enter();
 	void Exit();
 private:
+	Label* words[3];
 	Button* m_playBtn;
+	Button* m_quitBtn;
+};
+
+class PauseState : public State
+{
+public:
+	PauseState();
+	void Update();
+	void Render();
+	void Enter();
+	void Exit();
+private:
+	Button* m_resumeBtn;
+	Button* m_menuBtn;
+};
+
+class DeadState : public State
+{
+public:
+	DeadState();
+	void Update();
+	void Render();
+	void Enter();
+	void Exit();
+private:
+	Label* words;
+	Button* m_playBtn;
+	Button* m_quitBtn;
 };
 
 #endif

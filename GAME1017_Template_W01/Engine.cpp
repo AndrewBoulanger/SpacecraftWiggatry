@@ -37,9 +37,24 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	}
 	else return false; // SDL init fail.
 	m_fps = (Uint32)round((1 / (double)FPS) * 1000); // Sets FPS in milliseconds and rounds.
+	TEMA::RegisterTexture("Img/background.jpg", "bg");
 	TEMA::RegisterTexture("Img/play.png", "play");
+	TEMA::RegisterTexture("Img/exit.png", "exit");
+	TEMA::RegisterTexture("Img/replay.png", "replay");
+	TEMA::RegisterTexture("Img/resume.png", "resume");
+	TEMA::RegisterTexture("Img/KikiSprite.png", "player");
+	TEMA::RegisterTexture("Img/alienWhisker.png", "enemy");
+	TEMA::RegisterTexture("Img/reticle.png", "reticle");
+	TEMA::RegisterTexture("IMG/wig1.png", "wig");
+	TEMA::RegisterTexture("Img/hp.png", "heart");
+
+	FOMA::RegisterFont("Img/font.ttf", "font", 150);
 	STMA::ChangeState(new TitleState);
 	SOMA::AllocateChannels(16);
+	SOMA::Load("Aud/Poker Face.mp3", "PokerFace", SOUND_MUSIC);
+	SOMA::Load("Aud/Wrecking Ball.mp3", "WreckingBall", SOUND_MUSIC);
+	SOMA::SetMusicVolume(15);
+
 	m_running = true; // Everything is okay, start the engine.
 	cout << "Engine Init success!" << endl;
 	return true;
@@ -96,7 +111,7 @@ int Engine::Run()
 {
 	if (m_running) // What does this do and what can it prevent?
 		return -1; 
-	if (Init("GAME1017 Engine Template", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, 0) == false)
+	if (Init("SPACECRAFT: Wiggatry", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, 0) == false)
 		return 1;
 	while (m_running) // Main engine loop.
 	{
