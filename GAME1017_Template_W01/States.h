@@ -37,6 +37,8 @@ private:
 
 public:
 	GameState();
+	SDL_FRect** getPlatform();
+	PlatformPlayer* getPlayer();
 	void Update();
 	void CheckCollision();
 	void Render();

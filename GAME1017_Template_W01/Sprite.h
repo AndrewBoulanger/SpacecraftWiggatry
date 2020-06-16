@@ -19,6 +19,10 @@ public: // Inherited and public.
 		m_dst.x = point.x - m_dst.w*.5;
 		m_dst.y = point.y - m_dst.h*.5;
 	};
+	void SetHookPos(SDL_Point point) {
+		m_dst.x = point.x;
+		m_dst.y = point.y;
+	};
 	SDL_FPoint getCenter() { return { (m_dst.x + m_dst.w * 0.5f),(m_dst.y + m_dst.h * 0.5f) }; }
 protected: // Private BUT inherited.
 	double m_angle;
