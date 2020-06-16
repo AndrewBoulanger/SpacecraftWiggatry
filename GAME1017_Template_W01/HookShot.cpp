@@ -6,6 +6,7 @@
 #include "TextureManager.h"
 #include "math.h"
 #include <iostream>
+#include "CollisionManager.h"
 
 
 Hookshot::Hookshot(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t)
@@ -22,66 +23,17 @@ Hookshot::~Hookshot()
 
 }
 
-void Hookshot::calHookAngle()
+void Hookshot::calHookAngle(SDL_FRect* playerPos)
 {
-	SDL_FRect* playerdst = ((GameState*)(STMA::GetStates().back()))->getPlayer()->GetDstP();
+	SDL_FRect* playerdst = playerPos;
+	SDL_FPoint pPos = { playerdst->x, playerdst->y };
+	SDL_Point mPos = EVMA::GetMousePos();
 
-	if (EVMA::KeyHeld(SDL_SCANCODE_A))
-	{
-		
-		if (EVMA::KeyHeld(SDL_SCANCODE_W))
-		{
-			shotAngle = 135;
-			velX = cos(MathManager::Deg2Rad(135)) * speed;
-			velY = -sin(MathManager::Deg2Rad(135)) * speed;
+	shotAngle = -MAMA::Rad2Deg(MAMA::AngleBetweenPoints(mPos.y - (playerdst->y + playerdst->h * .5), mPos.x - (playerdst->x + playerdst->w * .5)));
+
+		velX = cos(MathManager::Deg2Rad(shotAngle)) * speed;
+			velY = -sin(MathManager::Deg2Rad(shotAngle)) * speed;
 			int a = 10;
-		}
-		//x cos180 y sin180
-		else
-		{
-			m_dst.x = playerdst->x - m_dst.w;
-			m_dst.y = (playerdst->y + playerdst->h * 0.5) - (m_dst.h * 0.5);
-			shotAngle = 180;
-			velX = cos(MathManager::Deg2Rad(180)) * speed;
-			velY = -sin(MathManager::Deg2Rad(180)) * speed;}
-		}
-
-	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
-	{
-		if (EVMA::KeyHeld(SDL_SCANCODE_W))
-		{
-			shotAngle = 45;
-			velX = cos(MathManager::Deg2Rad(45)) * speed;
-			velY = -sin(MathManager::Deg2Rad(45)) * speed;
-		}
-		//x cos0 y sin0
-		else
-		{
-			m_dst.x = playerdst->x + playerdst->w + m_dst.w;
-			m_dst.y = (playerdst->y + playerdst->h * 0.5) - (m_dst.h * 0.5);
-			shotAngle = 0;
-			velX = cos(MathManager::Deg2Rad(0)) * speed;
-			velY = -sin(MathManager::Deg2Rad(0)) * speed;
-		}
-	}
-
-	else if (EVMA::KeyHeld(SDL_SCANCODE_W))
-	{
-		m_dst.x = (playerdst->x + (playerdst->w * 0.5)) - (m_dst.w * 0.5);
-		m_dst.y = playerdst->y - m_dst.h;
-		shotAngle = 90;
-		velX = cos(MathManager::Deg2Rad(90)) * speed;
-		velY = -sin(MathManager::Deg2Rad(90)) * speed;
-	}
-
-	else
-	{
-		m_dst.x = playerdst->x + playerdst->w + m_dst.w;
-		m_dst.y = (playerdst->y + playerdst->h * 0.5) - (m_dst.h * 0.5);
-		shotAngle = 0;
-		velX = cos(MathManager::Deg2Rad(0)) * speed;
-		velY = -sin(MathManager::Deg2Rad(0)) * speed;
-	}
 }
 
 void Hookshot::move()
