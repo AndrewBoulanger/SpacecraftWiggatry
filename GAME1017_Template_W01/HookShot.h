@@ -21,7 +21,7 @@ public:
 	float getVelX() { return velX; }
 	float getVelY() { return velY; }
 
-	void calHookAngle();
+	void calHookAngle(SDL_FRect* playerPos);
 	void move();
 	void Collision();
 	void setLine();

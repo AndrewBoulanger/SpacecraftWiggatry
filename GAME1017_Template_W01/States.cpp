@@ -106,8 +106,8 @@ void GameState::Update()
 		if (m_pPlayer->getHookShot()->gethookFixed() == false)
 		{
 			m_pPlayer->setGrapplehook(true);
-			//m_pPlayer->setHookshot();
-			m_pPlayer->getHookShot()->calHookAngle();
+			m_pPlayer->setHookshot();
+			m_pPlayer->getHookShot()->calHookAngle(m_pPlayer->GetDstP());
 			m_pPlayer->setMoveHook(true);
 		}
 		else
