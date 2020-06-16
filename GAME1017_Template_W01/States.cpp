@@ -26,7 +26,7 @@ GameState::GameState() {}
 void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
-	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 512.0f,548.0f,115.0f,120.0f }, 
+	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 50.0f,32.0f,96.0f,96.0f }, 
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 545.0f, 50.0f, 120.0f}, 
 									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
@@ -78,7 +78,7 @@ void GameState::Update()
 
 	m_pReticle->SetPos(EVMA::GetMousePos());
 	m_pPlayer->Update();
-	m_pEnemy->Update();
+	//m_pEnemy->Update();
 	CheckCollision();
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
 	{
@@ -92,20 +92,6 @@ void GameState::Update()
 
 void GameState::CheckCollision()
 {
-	//if (COMA::AABBCheck(*m_pPlayer->GetDstP(), m_level.x))
-	//{
-	//	if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
-	//	{ // Colliding right side of platform.
-	//		m_pPlayer->StopX();
-	//		m_pPlayer->KnockLeft(-10); //knock the player to the right
-	//	}
-	//	else
-	//	{
-	//		m_pPlayer->Stop();
-	//		m_pPlayer->KnockLeft(10);
-	//	}
-	//}
-
 	//for (int i = 0; i < NUMPLATFORMS; i++) // For each platform.
 	//{
 	//	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pPlatforms[i]))
