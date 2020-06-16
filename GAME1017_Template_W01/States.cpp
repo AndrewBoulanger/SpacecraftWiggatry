@@ -91,6 +91,7 @@ void GameState::Update()
 
 	// Do the rest.
 	m_pPlayer->Update();
+	m_pEnemy->Update();
 	CheckCollision();
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
 	{
