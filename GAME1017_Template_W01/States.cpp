@@ -102,10 +102,20 @@ void GameState::Update()
 
 	if (EVMA::MousePressed(1))
 	{
-		m_pPlayer->setGrapplehook(true);
-		m_pPlayer->setHookshot();
-		m_pPlayer->getHookShot()->calHookAngle();
-		m_pPlayer->setMoveHook(true);
+		if (m_pPlayer->getHookShot()->gethookFixed() == false)
+		{
+			m_pPlayer->setGrapplehook(true);
+			//m_pPlayer->setHookshot();
+			m_pPlayer->getHookShot()->calHookAngle();
+			m_pPlayer->setMoveHook(true);
+		}
+		else
+		{
+			m_pPlayer->setGrapplehook(false);
+			m_pPlayer->getHookShot()->sethookFixed(false);
+			m_pPlayer->setMoveHook(false);
+			m_pPlayer->getHookShot()->setlerpCo(0);
+		}
 	}
 
 }

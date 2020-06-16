@@ -100,5 +100,5 @@ void PlatformPlayer::setHookshot()
 	point.x = m_dst.x + m_dst.w * 0.5;
 	point.y = m_dst.y + m_dst.h * 0.5;
 	//m_hookShot->SetPos(point);
-	m_hookShot->setFixed(false);
+	m_hookShot->sethookFixed(false);
 }

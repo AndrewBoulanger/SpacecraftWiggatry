@@ -28,6 +28,8 @@ public:
 	float MyLerp(float a, float b, float t);
 	void Update();
 	void Render();
-	void setFixed(bool b);
+	bool gethookFixed() { return hookFixed; }
+	void sethookFixed(bool b);
+	void setlerpCo(float lc);
 
 };

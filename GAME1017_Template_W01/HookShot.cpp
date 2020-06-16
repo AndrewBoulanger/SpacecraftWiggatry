@@ -167,13 +167,13 @@ void Hookshot::Update()
 
 		if (lerpCo <= 1.0f)
 		{
-			playerdst->x = MyLerp(playerdst->x, m_dst.x, lerpCo);
+			playerdst->x = MyLerp(playerdst->x, m_dst.x  + (m_dst.w * 0.5) - (playerdst->w * 0.5), lerpCo);
 			playerdst->y = MyLerp(playerdst->y, m_dst.y, lerpCo);
 			lerpCo += 0.01f;
 		}
 		else
 		{
-			playerdst->x = m_dst.x;
+			playerdst->x = m_dst.x + (m_dst.w * 0.5) - (playerdst->w * 0.5);
 			playerdst->y = m_dst.y;
 		}
 	}
@@ -190,7 +190,12 @@ void Hookshot::Render()
 	SDL_RenderCopyF(m_pRend, m_pText, &m_src, &m_dst);
 }
 
-void Hookshot::setFixed(bool b)
+void Hookshot::sethookFixed(bool b)
 {
 	hookFixed = b;
+}
+
+void Hookshot::setlerpCo(float lc)
+{
+	lerpCo = lc;
 }
