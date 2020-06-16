@@ -33,6 +33,12 @@ PlatformPlayer* GameState::getPlayer()
 
 }
 
+Enemy* GameState::getEnemy()
+{
+	return 	m_pEnemy;
+
+}
+
 void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
@@ -117,6 +123,10 @@ void GameState::Update()
 			m_pPlayer->setMoveHook(false);
 			m_pPlayer->getHookShot()->setlerpCo(0);
 		}
+	}
+	if (EVMA::MousePressed(3))
+	{
+		m_pPlayer->snatch();
 	}
 
 }
