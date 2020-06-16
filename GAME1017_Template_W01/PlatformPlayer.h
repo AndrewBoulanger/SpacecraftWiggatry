@@ -6,8 +6,10 @@
 
 #include "Sprite.h"
 #include "Character.h"
+#include <vector>
 
 class Hookshot;
+class Wig;
 
 class PlatformPlayer : public Character
 {
@@ -75,8 +77,10 @@ public:
 	}
 
 	void setHookshot();
+	void snatch();
 
 	Hookshot* getHookShot() { return m_hookShot; }
+
 
 private:
 	bool m_grounded;
@@ -93,7 +97,9 @@ private:
 		m_grav;
 	int m_wigCount;
 	int m_ShipParts;
+	float m_distance = 0;
 	Hookshot* m_hookShot;
+	std::vector<Wig*> m_vecwigCollection;
 };
 
 #endif

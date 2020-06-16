@@ -102,3 +102,21 @@ void PlatformPlayer::setHookshot()
 	//m_hookShot->SetPos(point);
 	m_hookShot->sethookFixed(false);
 }
+
+void PlatformPlayer::snatch()
+{
+	SDL_FRect* EnemyDstP = ((GameState*)(STMA::GetStates().back()))->getEnemy()->GetDstP();
+	float PlayerX = m_dst.x + (m_dst.w * 0.5);
+	float PlayerY = m_dst.y + (m_dst.h * 0.5);
+	float EnemyX = EnemyDstP->x + (EnemyDstP->w * 0.5);
+	float EnemyY = EnemyDstP->y + (EnemyDstP->h * 0.5);
+
+	m_distance = sqrtf(((PlayerX - EnemyX) * (PlayerX - EnemyX)) + ((PlayerY - EnemyY) * (PlayerY - EnemyY)));
+
+	if (m_distance < 100)
+	{
+		Enemy* Enemy = ((GameState*)(STMA::GetStates().back()))->getEnemy();
+		Enemy->setHasWig(false);
+		m_vecwigCollection.push_back(Enemy->getenemysWig());
+	}
+}
