@@ -45,7 +45,6 @@ public:
 	void Exit();
 	void Resume();
 	std::array < std::array<Tile*, COLS>, ROWS>& GetLevel() { return m_level; }
-	static GameState& Instance();
 };
 
 class TitleState : public State

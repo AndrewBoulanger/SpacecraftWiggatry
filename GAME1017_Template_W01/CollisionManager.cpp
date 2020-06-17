@@ -1,6 +1,7 @@
 #include "CollisionManager.h"
 #include "DebugManager.h"
 #include "MathManager.h"
+#include "StateManager.h"
 #include "States.h"
 #include "Sprite.h"
 
@@ -52,32 +53,32 @@ bool CollisionManager::PlayerCollision(const SDL_Rect player, const int dX, cons
 	int playerX = player.x / 32;
 	int playerY = player.y / 32;
 	SDL_Rect p = { player.x + dX + 8 , player.y + dY + 6, player.w - 16, player.h - 16 }; // Adjusted bounding box.
-	Tile* tiles[16] = { GameState::Instance().GetLevel()[playerY][playerX],																				// Left
-					   GameState::Instance().GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],										// MiddleLeft
-					   GameState::Instance().GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 2)],										// MiddleRight
-					   GameState::Instance().GetLevel()[playerY][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],										// Right tile.
+	Tile* tiles[16] = { static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[playerY][playerX],	// Bottom																// Left
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],										// MiddleLeft
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 2)],										// MiddleRight
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[playerY][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],										// Right tile.
 					// Second row
-					   GameState::Instance().GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][playerX],
-					   GameState::Instance().GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
-					   GameState::Instance().GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 1 == COLS ? COLS - 1 : playerX + 2)],
-					   GameState::Instance().GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][playerX],
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 1 == COLS ? COLS - 1 : playerX + 2)],
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],
 					// Third row
-					   GameState::Instance().GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 2)][playerX],
-					   GameState::Instance().GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
-					   GameState::Instance().GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 == COLS ? COLS - 1 : playerX + 2)],
-					   GameState::Instance().GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 2)][playerX],
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 == COLS ? COLS - 1 : playerX + 2)],
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],
 					// Fourth row hahahahahahahaha
-					   GameState::Instance().GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][playerX],
-					   GameState::Instance().GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
-					   GameState::Instance().GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 2)],
-					   GameState::Instance().GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)] };
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][playerX],
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 2)],
+					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)] };
 	for (int i = 0; i < 4; i++)
 	{
 		SDL_Rect t = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
 		if (tiles[i]->IsObstacle() && SDL_HasIntersection(&p, &t))
 		{ // Collision!
+			std::cout << "cooool\n";
 			return true;
-			// Other potential code...
 		}
 	}
 	return false;

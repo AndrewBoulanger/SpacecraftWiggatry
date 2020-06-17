@@ -28,10 +28,10 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 void PlatformPlayer::Update()
 {
 	if (EVMA::KeyHeld(SDL_SCANCODE_A)) {
-		//if (m_dst.x > 0 && !COMA::PlayerCollision({ (int)m_dst.x, (int)m_dst.y, (int)32, (int)32 }, -GetAccelX(), 0))
-		//{	
+		if (m_dst.x > 0 && !COMA::PlayerCollision({ (int)m_dst.x, (int)m_dst.y, (int)32, (int)32 }, -GetAccelX(), 0))
+		{	
 			SetAccelX(-1.0);
-		//}
+		}
 	}
 	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
 		SetAccelX(1.0);

@@ -91,7 +91,7 @@ void GameState::Update()
 }
 
 void GameState::CheckCollision()
-{
+{	// previous platforms cc
 	//for (int i = 0; i < NUMPLATFORMS; i++) // For each platform.
 	//{
 	//	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pPlatforms[i]))
@@ -206,12 +206,6 @@ void GameState::Exit()
 	}
 	m_pPickUpList.clear();
 	m_pPickUpList.shrink_to_fit();
-}
-
-GameState& GameState::Instance()
-{
-	static GameState instance; // C++11 will prevent this line from running more than once. Magic statics.
-	return instance;
 }
 
 void GameState::Resume() { }
