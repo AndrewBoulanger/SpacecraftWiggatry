@@ -5,8 +5,10 @@
 #include "EventManager.h"
 #include "CollisionManager.h"
 #include "SoundManager.h"
+#include "TextureManager.h"
 #include <algorithm>
 #include <iostream>
+#include "HookShot.h"
 
 PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Texture * t, int sstart, int smin, int smax, int nf)
 	:Character(s, d, r, t, sstart, smin, smax, nf)
@@ -23,6 +25,9 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 	baseDamage = 10;
 	m_wigCount = 0;
 	m_ShipParts = 0;
+	m_hookShot = new Hookshot({ 0,0,36,36 }, { d.x, d.y, 36, 36 }, r, TEMA::GetTexture("hookshot"));
+
+	// SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t
 }
 
 void PlatformPlayer::Update()
@@ -82,6 +87,10 @@ void PlatformPlayer::Update()
 	if (iCooldown > 0) 
 		{ --iCooldown; }
 
+	if (m_movehook)
+	{
+		m_hookShot->Update();
+	}
 }
 
 void PlatformPlayer::Stop() // If you want a dead stop both axes.
@@ -106,6 +115,16 @@ void PlatformPlayer::SetX(float y) { m_dst.x = y; }
 void PlatformPlayer::SetY(float y) { m_dst.y = y; }
 double PlatformPlayer::GetX() { return m_dst.x; }
 
+void PlatformPlayer::Render()
+{ 
+	SDL_RenderCopyExF(m_pRend, m_pText, GetSrcP(), GetDstP(), m_angle, 0, SDL_FLIP_NONE);
+	
+	if (m_grapplehook)
+	{
+		m_hookShot->Render();
+	}
+}
+
 double PlatformPlayer::GetThurst() { return m_thrust; }
 
 void PlatformPlayer::takeDamage(int dmg)
@@ -118,4 +137,31 @@ void PlatformPlayer::takeDamage(int dmg)
 	}
 	if (health <= 0)
 		STMA::ChangeState(new DeadState);
+}
+
+void PlatformPlayer::setHookshot()
+{
+	SDL_Point point;
+	point.x = m_dst.x + m_dst.w * 0.5;
+	point.y = m_dst.y + m_dst.h * 0.5;
+	m_hookShot->SetPos(point);
+	m_hookShot->sethookFixed(false);
+}
+
+void PlatformPlayer::snatch()
+{
+	SDL_FRect* EnemyDstP = ((GameState*)(STMA::GetStates().back()))->getEnemy()->GetDstP();
+	float PlayerX = m_dst.x + (m_dst.w * 0.5);
+	float PlayerY = m_dst.y + (m_dst.h * 0.5);
+	float EnemyX = EnemyDstP->x + (EnemyDstP->w * 0.5);
+	float EnemyY = EnemyDstP->y + (EnemyDstP->h * 0.5);
+
+	m_distance = sqrtf(((PlayerX - EnemyX) * (PlayerX - EnemyX)) + ((PlayerY - EnemyY) * (PlayerY - EnemyY)));
+
+	if (m_distance < 100)
+	{
+		Enemy* Enemy = ((GameState*)(STMA::GetStates().back()))->getEnemy();
+		Enemy->setHasWig(false);
+		m_vecwigCollection.push_back(Enemy->getenemysWig());
+	}
 }

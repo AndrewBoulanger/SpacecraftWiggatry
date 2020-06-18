@@ -8,6 +8,11 @@ Enemy::Enemy(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstar
 	hasWig = true;
 }
 
+void Enemy::setHasWig(bool b)
+{
+	hasWig = b;
+}
+
 void Enemy::Update()
 {
 	if (hasWig)
