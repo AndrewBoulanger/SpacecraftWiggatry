@@ -27,28 +27,30 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 
 void PlatformPlayer::Update()
 {
-	if (EVMA::KeyHeld(SDL_SCANCODE_A)) {
-		if (m_dst.x > 0 && !COMA::PlayerCollision({ (int)m_dst.x, (int)m_dst.y, (int)32, (int)32 }, -GetAccelX(), 0))
-		{	
+	// Player L/R movement
+	if (EVMA::KeyHeld(SDL_SCANCODE_A))
 			SetAccelX(-1.0);
-		}
-	}
 	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
-		SetAccelX(1.0);
-	if (GetX() < 0)
-	{
-		SetX(0.0);
-	}
-	if (GetX() > 970)
-	{
-		SetX(970.0);
-	}
+			SetAccelX(1.0);
+
+	// Collision check, dst adjustment
+	//if (COMA::PlayerCollisionBottom({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, GetAccelY(), 0))
+	//{
+	//	SetGrounded(true);
+	//	StopY();
+	//	SetAccelY(-m_grav);
+
+	//}
+	if (COMA::PlayerCollisionLeft({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, -GetAccelX(), 0))
+		SetAccelX(1.0);	
+	if (COMA::PlayerCollisionRight({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, GetAccelX(), 0))
+		SetAccelX(-1.0);
 
 	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !IsGrounded())
 	{
 		if (GetVelY() >= 0)
 		{
-			SetAccelY(GetThurst());
+			SetAccelY(GetThrust());
 			SetVelY(0);
 		}
 	}
@@ -59,16 +61,7 @@ void PlatformPlayer::Update()
 		SetGrounded(false);
 	}
 	if (m_dst.y > 610){	SetGrounded(true);	m_dst.y = 610; } // TEMPORARYYY!!!! DELETE SOON
-	//if (m_dst.y > 0 && COMA::PlayerCollision({ (int)(m_dst.x), (int)(m_dst.y), (int)64, (int)64 }, (int)GetAccelX(), (int)GetAccelY()))
-	//{
-	//	m_dst.x += (float)GetAccelX();
-	//	m_dst.y += (float)GetAccelY();
-	//}
-	//if (m_dst.y < 768 - 32 && !COMA::PlayerCollision({ (int)m_dst.x, (int)(m_dst.y), (int)32, (int)32 }, 0, GetAccelY()))
-	//{
-	//	m_dst.y += GetAccelY();
-	//}
-	// Do X axis first.
+
 	m_velX += m_accelX;
 	m_velX *= (m_grounded?m_drag:1); 
 	m_velX = std::min(std::max(m_velX, -(m_maxVelX)), (m_maxVelX));
@@ -105,8 +98,9 @@ void PlatformPlayer::SetVelY(double a) { m_velY = a; }
 void PlatformPlayer::SetX(float y) { m_dst.x = y; }
 void PlatformPlayer::SetY(float y) { m_dst.y = y; }
 double PlatformPlayer::GetX() { return m_dst.x; }
+double PlatformPlayer::GetY() { return m_dst.y; }
 
-double PlatformPlayer::GetThurst() { return m_thrust; }
+double PlatformPlayer::GetThrust() { return m_thrust; }
 
 void PlatformPlayer::takeDamage(int dmg)
 {

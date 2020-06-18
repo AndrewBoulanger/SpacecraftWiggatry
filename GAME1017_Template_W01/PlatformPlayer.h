@@ -2,7 +2,7 @@
 #ifndef _PLATFORMPLAYER_H_
 #define _PLATFORMPLAYER_H_
 #define GRAV 6.0
-#define JUMPFORCE 60.0
+#define JUMPFORCE 80.0
 
 #include "Sprite.h"
 #include "Character.h"
@@ -20,7 +20,7 @@ public:
 	void SetAccelY(double a);
 	double GetAccelX();
 	double GetAccelY();
-	double GetThurst();
+	double GetThrust();
 	bool IsGrounded();
 	void SetGrounded(bool g);
 	double GetVelX();
@@ -29,6 +29,7 @@ public:
 	void SetX(float y);
 	void SetY(float y);
 	double GetX();
+	double GetY();
 
 	void takeDamage(int dmg) override;
 	int getWigs()
