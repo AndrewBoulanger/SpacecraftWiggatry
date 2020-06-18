@@ -119,7 +119,11 @@
     <ClInclude Include="Pickup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+
+    <ClInclude Include="Tile.h">
+
     <ClInclude Include="HookShot.h">
+
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -136,5 +140,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertySheet.props" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Dat\Level1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Dat\Tiledata.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

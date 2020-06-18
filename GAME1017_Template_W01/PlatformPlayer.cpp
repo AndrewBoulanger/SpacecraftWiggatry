@@ -1,6 +1,10 @@
 #include "PlatformPlayer.h"
 #include "Engine.h"
 #include "StateManager.h"
+#include "States.h"
+#include "EventManager.h"
+#include "CollisionManager.h"
+#include "SoundManager.h"
 #include "TextureManager.h"
 #include <algorithm>
 #include <iostream>
@@ -28,6 +32,47 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 
 void PlatformPlayer::Update()
 {
+	if (EVMA::KeyHeld(SDL_SCANCODE_A)) {
+		if (m_dst.x > 0 && !COMA::PlayerCollision({ (int)m_dst.x, (int)m_dst.y, (int)32, (int)32 }, -GetAccelX(), 0))
+		{	
+			SetAccelX(-1.0);
+		}
+	}
+	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+		SetAccelX(1.0);
+	if (GetX() < 0)
+	{
+		SetX(0.0);
+	}
+	if (GetX() > 970)
+	{
+		SetX(970.0);
+	}
+
+	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !IsGrounded())
+	{
+		if (GetVelY() >= 0)
+		{
+			SetAccelY(GetThurst());
+			SetVelY(0);
+		}
+	}
+	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && IsGrounded())
+	{
+		SOMA::PlaySound("jump");
+		SetAccelY(-JUMPFORCE); // Sets the jump force.
+		SetGrounded(false);
+	}
+	if (m_dst.y > 610){	SetGrounded(true);	m_dst.y = 610; } // TEMPORARYYY!!!! DELETE SOON
+	//if (m_dst.y > 0 && COMA::PlayerCollision({ (int)(m_dst.x), (int)(m_dst.y), (int)64, (int)64 }, (int)GetAccelX(), (int)GetAccelY()))
+	//{
+	//	m_dst.x += (float)GetAccelX();
+	//	m_dst.y += (float)GetAccelY();
+	//}
+	//if (m_dst.y < 768 - 32 && !COMA::PlayerCollision({ (int)m_dst.x, (int)(m_dst.y), (int)32, (int)32 }, 0, GetAccelY()))
+	//{
+	//	m_dst.y += GetAccelY();
+	//}
 	// Do X axis first.
 	m_velX += m_accelX;
 	m_velX *= (m_grounded?m_drag:1); 
