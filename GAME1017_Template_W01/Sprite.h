@@ -3,6 +3,7 @@
 #define _SPRITE_H_
 
 #include "SDL.h"
+#include <iostream>
 
 class Sprite // Inline class.
 {
