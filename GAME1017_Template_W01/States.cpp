@@ -59,34 +59,7 @@ void GameState::Enter()
 
 void GameState::Update()
 {
-	// Get input.
-	if (EVMA::KeyHeld(SDL_SCANCODE_A))
-		m_pPlayer->SetAccelX(-1.0);
-	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
-		m_pPlayer->SetAccelX(1.0);
-	if (m_pPlayer->GetX() < 0)
-	{
-		m_pPlayer->SetX(0.0);
-	}
-	if (m_pPlayer->GetX() > 970)
-	{
-		m_pPlayer->SetX(970.0);
-	}
 
-	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !m_pPlayer->IsGrounded())
-	{
-		if (m_pPlayer->GetVelY() >= 0)
-		{
-			m_pPlayer->SetAccelY(m_pPlayer->GetThurst());
-			m_pPlayer->SetVelY(0);
-		}
-	}
-	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_pPlayer->IsGrounded())
-	{
-		SOMA::PlaySound("jump");
-		m_pPlayer->SetAccelY(-JUMPFORCE); // Sets the jump force.
-		m_pPlayer->SetGrounded(false);
-	}
 	m_pReticle->SetPos(EVMA::GetMousePos());
 
 	// Do the rest.
@@ -100,24 +73,6 @@ void GameState::Update()
 
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		if(m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
-
-	if (EVMA::MousePressed(1))
-	{
-		if (m_pPlayer->getHookShot()->gethookFixed() == false)
-		{
-			m_pPlayer->setGrapplehook(true);
-			m_pPlayer->setHookshot();
-			m_pPlayer->getHookShot()->calHookAngle(m_pPlayer->GetDstP());
-			m_pPlayer->setMoveHook(true);
-		}
-		else
-		{
-			m_pPlayer->setGrapplehook(false);
-			m_pPlayer->getHookShot()->sethookFixed(false);
-			m_pPlayer->setMoveHook(false);
-			m_pPlayer->getHookShot()->setlerpCo(0);
-		}
-	}
 
 }
 
@@ -192,7 +147,7 @@ void GameState::CheckCollision()
 
 void GameState::Render()
 {
-	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 64, 128, 255, 255);
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
 	SDL_RenderCopy(Engine::Instance().GetRenderer(), TextureManager::GetTexture("bg"), 0, 0);
 	//draw the enemy
@@ -207,6 +162,7 @@ void GameState::Render()
 		SDL_RenderFillRectF(Engine::Instance().GetRenderer(), m_pPlatforms[i]);
 
 	m_pReticle->Render();
+	
 
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		m_pPickUpList[i]->Render();
@@ -258,9 +214,9 @@ void TitleState::Enter()
 
 void TitleState::Update()
 {
-	if (m_playBtn->Update() == 1)
+	if (m_playBtn->ButtonUpdate() == 1)
 		return; 
-	if (m_quitBtn->Update() == 1)
+	if (m_quitBtn->ButtonUpdate() == 1)
 		return;
 }
 
@@ -292,7 +248,7 @@ void PauseState::Enter()
 
 void PauseState::Update()
 {
-	if (m_resumeBtn->Update() == 1)
+	if (m_resumeBtn->ButtonUpdate() == 1)
 		return;
 }
 
@@ -328,9 +284,9 @@ void DeadState::Enter()
 
 void DeadState::Update()
 {
-	if (m_playBtn->Update() == 1)
+	if (m_playBtn->ButtonUpdate() == 1)
 		return;
-	if (m_quitBtn->Update() == 1)
+	if (m_quitBtn->ButtonUpdate() == 1)
 		return;
 }
 

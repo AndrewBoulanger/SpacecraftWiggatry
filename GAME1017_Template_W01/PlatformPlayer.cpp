@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <iostream>
 #include "HookShot.h"
+#include "EventManager.h"
+#include "SoundManager.h"
 
 PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Texture * t, int sstart, int smin, int smax, int nf)
 	:Character(s, d, r, t, sstart, smin, smax, nf)
@@ -46,6 +48,56 @@ void PlatformPlayer::Update()
 	{
 		m_hookShot->Update();
 	}
+
+	if (EVMA::KeyHeld(SDL_SCANCODE_A))
+		m_accelX = -1.0;
+	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+		m_accelX = 1.0;
+	if (m_dst.x < 0)
+	{
+		m_dst.x = 0.0;
+	}
+	if (m_dst.x > 970)
+	{
+		m_dst.x = 970;
+	}
+
+	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !m_grounded)
+	{
+		if (m_velY >= 0)
+		{
+			m_accelY = m_thrust;
+			m_velY = 0;
+		}
+	}
+	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_grounded)
+	{
+		SOMA::PlaySound("jump");
+		m_accelY = -JUMPFORCE ; // Sets the jump force.
+		m_grounded = false;
+	}
+
+	if (EVMA::MousePressed(1))
+	{
+		if (m_hookShot->gethookFixed() == false)  
+		{
+			m_grapplehook = true; //m_pPlayer->setGrapplehook(true);
+			setHookshot();//m_pPlayer->setHookshot();
+			m_hookShot->calHookAngle(&m_dst); //m_pPlayer->getHookShot()->calHookAngle(m_pPlayer->GetDstP());
+			m_movehook = true;
+			m_grav = 0;
+		}
+		else
+		{
+			m_grapplehook = false; 
+			m_hookShot->sethookFixed(false);//m_pPlayer->getHookShot()->sethookFixed(false);
+			m_movehook = false;//m_pPlayer->setMoveHook(false);
+			m_hookShot->setlerpCo(0); //m_pPlayer->getHookShot()->setlerpCo(0);
+			m_grav = GRAV;
+		}
+	}
+
+
 }
 
 void PlatformPlayer::Stop() // If you want a dead stop both axes.
@@ -77,6 +129,7 @@ void PlatformPlayer::Render()
 	if (m_grapplehook)
 	{
 		m_hookShot->Render();
+		SDL_RenderDrawLineF(m_pRend, getCenter().x, getCenter().y, m_hookShot->getCenter().x, m_hookShot->getCenter().y);
 	}
 }
 

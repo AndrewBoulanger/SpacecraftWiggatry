@@ -1,8 +1,8 @@
 #pragma once
 #ifndef _PLATFORMPLAYER_H_
 #define _PLATFORMPLAYER_H_
-#define GRAV 6.0
-#define JUMPFORCE 60.0
+#define GRAV 3.0
+#define JUMPFORCE 40.0
 
 #include "Sprite.h"
 #include "Character.h"
@@ -32,6 +32,8 @@ public:
 	void SetY(float y);
 	double GetX();
 	virtual void Render();
+	void SetGrav(double grav) { m_grav = grav; }
+	
 
 	void takeDamage(int dmg) override;
 	int getWigs()
@@ -94,6 +96,7 @@ private:
 	int m_wigCount;
 	int m_ShipParts;
 	Hookshot* m_hookShot;
+
 };
 
 #endif

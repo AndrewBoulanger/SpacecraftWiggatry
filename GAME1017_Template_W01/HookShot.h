@@ -12,7 +12,9 @@ private:
 	float lerpCo = 0;
 	bool hookFixed = false;
 	SDL_FRect line;
-
+	SDL_FRect* playerdst;
+	SDL_FPoint pPos;
+	SDL_FPoint targetPos;
 
 public:
 	Hookshot(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t);
