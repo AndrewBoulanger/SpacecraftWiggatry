@@ -18,6 +18,7 @@ public:
 	static bool MousePressed(const int b);
 	static bool MouseReleased(const int b);
 	static SDL_Point& GetMousePos();
+	static SDL_FPoint& GetMousePosF();
 	static void Quit();
 private:
 	// Keyboard state containers.
@@ -28,6 +29,7 @@ private:
 	static int s_lastKeyDown;
 	static int s_lastKeyUp;
 	static SDL_Point s_mousePos;
+	static SDL_FPoint s_mousePosF;
 	static Uint32 s_mouseCurr;
 	static Uint32 s_mouseLast;
 private: 

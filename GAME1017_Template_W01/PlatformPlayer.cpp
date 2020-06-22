@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <iostream>
 #include "HookShot.h"
+#include "EventManager.h"
+#include "SoundManager.h"
 
 PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Texture * t, int sstart, int smin, int smax, int nf)
 	:Character(s, d, r, t, sstart, smin, smax, nf)
@@ -25,71 +27,86 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 	baseDamage = 10;
 	m_wigCount = 0;
 	m_ShipParts = 0;
-	m_hookShot = new Hookshot({ 0,0,36,36 }, { d.x, d.y, 36, 36 }, r, TEMA::GetTexture("hookshot"));
+	m_hookShot = new Hookshot({ 0,0,36,36 }, { d.x, d.y, 32, 32 }, r, TEMA::GetTexture("hookshot"));
 
 	// SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t
 }
 
+PlatformPlayer::~PlatformPlayer()
+{
+	delete m_hookShot;
+}
+
 void PlatformPlayer::Update()
 {
-	if (EVMA::KeyHeld(SDL_SCANCODE_A)) {
-		if (m_dst.x > 0 && !COMA::PlayerCollision({ (int)m_dst.x, (int)m_dst.y, (int)32, (int)32 }, -GetAccelX(), 0))
-		{	
-			SetAccelX(-1.0);
-		}
-	}
-	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
-		SetAccelX(1.0);
-	if (GetX() < 0)
-	{
-		SetX(0.0);
-	}
-	if (GetX() > 970)
-	{
-		SetX(970.0);
-	}
-
-	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !IsGrounded())
-	{
-		if (GetVelY() >= 0)
-		{
-			SetAccelY(GetThurst());
-			SetVelY(0);
-		}
-	}
-	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && IsGrounded())
-	{
-		SOMA::PlaySound("jump");
-		SetAccelY(-JUMPFORCE); // Sets the jump force.
-		SetGrounded(false);
-	}
-	if (m_dst.y > 610){	SetGrounded(true);	m_dst.y = 610; } // TEMPORARYYY!!!! DELETE SOON
-	//if (m_dst.y > 0 && COMA::PlayerCollision({ (int)(m_dst.x), (int)(m_dst.y), (int)64, (int)64 }, (int)GetAccelX(), (int)GetAccelY()))
-	//{
-	//	m_dst.x += (float)GetAccelX();
-	//	m_dst.y += (float)GetAccelY();
-	//}
-	//if (m_dst.y < 768 - 32 && !COMA::PlayerCollision({ (int)m_dst.x, (int)(m_dst.y), (int)32, (int)32 }, 0, GetAccelY()))
-	//{
-	//	m_dst.y += GetAccelY();
-	//}
-	// Do X axis first.
+	 //Do X axis first.
 	m_velX += m_accelX;
 	m_velX *= (m_grounded?m_drag:1); 
 	m_velX = std::min(std::max(m_velX, -(m_maxVelX)), (m_maxVelX));
-	m_dst.x += (int)m_velX; // Had to cast it to int to get crisp collision with side of platform.
+	if(!COMA::PlayerCollision(m_dst, m_velX, 0))
+		m_dst.x += (int)m_velX; // Had to cast it to int to get crisp collision with side of platform.
 	// Now do Y axis.
 	m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
 	m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav*5));
-	m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
+	if (!COMA::PlayerCollision(m_dst, 0, m_velY))
+		m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
+	else
+		m_grounded = true;
+
 	m_accelX = m_accelY = 0.0;
+
+	
 
 	if (iCooldown > 0) 
 		{ --iCooldown; }
 
 	if (m_movehook)
 	{
-		m_hookShot->Update();
+		m_hookShot->Update(m_grav);
+	}
+
+	//inputs
+	if (EVMA::KeyHeld(SDL_SCANCODE_A))
+		m_accelX = -1.0;
+	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+		m_accelX = 1.0;
+
+	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !m_grounded)
+	{
+		if (m_velY >= 0)
+		{
+			m_accelY = m_thrust;
+			m_velY = 0;
+		}
+	}
+	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_grounded)
+	{
+		SOMA::PlaySound("jump");
+		m_accelY = -JUMPFORCE ; // Sets the jump force.
+		m_grounded = false;
+	}
+
+	if (EVMA::MousePressed(1))
+	{
+		if (m_hookShot->gethookFixed() == false)  
+		{
+			m_grapplehook = true; 
+			setHookshot();
+			m_hookShot->calHookAngle(&m_dst); 
+			m_movehook = true;
+		}
+		else
+		{
+			m_grapplehook = false; 
+			m_hookShot->sethookFixed(false);
+			m_movehook = false;
+			m_hookShot->setlerpCo(0); 
+			m_grav = GRAV;
+		}
+	}
+	if (EVMA::MousePressed(3))
+	{
+		snatch();
 	}
 }
 
@@ -122,6 +139,7 @@ void PlatformPlayer::Render()
 	if (m_grapplehook)
 	{
 		m_hookShot->Render();
+		SDL_RenderDrawLineF(m_pRend, getCenter().x, getCenter().y, m_hookShot->getCenter().x, m_hookShot->getCenter().y);
 	}
 }
 

@@ -66,6 +66,9 @@
     <ClCompile Include="HookShot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -124,6 +127,9 @@
 
     <ClInclude Include="HookShot.h">
 
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

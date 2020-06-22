@@ -17,7 +17,7 @@ bool Button::MouseCollision()
 		    my < (m_dst.y + m_dst.h) && my > m_dst.y);
 }
 
-int Button::Update()
+int Button::ButtonUpdate()
 {
 	bool col = MouseCollision();
 	switch (m_state)

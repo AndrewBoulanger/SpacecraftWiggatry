@@ -97,6 +97,11 @@ SDL_Point& EventManager::GetMousePos()
 	return s_mousePos;
 }
 
+SDL_FPoint& EventManager::GetMousePosF()
+{
+	return s_mousePosF;
+}
+
 void EventManager::Quit()
 {
 	delete s_keysLast;
@@ -109,5 +114,6 @@ int EventManager::s_numKeys;
 int EventManager::s_lastKeyDown;
 int EventManager::s_lastKeyUp;
 SDL_Point EventManager::s_mousePos = { 0,0 };
+SDL_FPoint EventManager::s_mousePosF = { 0,0 };
 Uint32 EventManager::s_mouseCurr;
 Uint32 EventManager::s_mouseLast;

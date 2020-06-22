@@ -25,10 +25,10 @@ void State::Resume() {}
 // Begin GameState.
 GameState::GameState() {}
 
-SDL_FRect** GameState::getPlatform()
-{
-	return m_pPlatforms;
-}
+//SDL_FRect** GameState::getPlatform()
+//{
+//	return m_pPlatforms;
+//}
 
 PlatformPlayer* GameState::getPlayer()
 {
@@ -45,9 +45,9 @@ Enemy* GameState::getEnemy()
 void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
-	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 50.0f,32.0f,96.0f,96.0f }, 
+	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 50.0f,100.0f,96.0f,96.0f }, 
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
-	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 545.0f, 50.0f, 120.0f}, 
+	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f}, 
 									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
 	for (int i = 0; i < (5); i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
@@ -86,7 +86,7 @@ void GameState::Enter()
 	m_pPickUpList.push_back(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
 					Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
 
-	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
+	
 	SOMA::PlayMusic("PokerFace");
 	
 }
@@ -96,7 +96,7 @@ void GameState::Update()
 
 	m_pReticle->SetPos(EVMA::GetMousePos());
 	m_pPlayer->Update();
-	//m_pEnemy->Update();
+	m_pEnemy->Update();
 	CheckCollision();
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
 	{
@@ -106,59 +106,47 @@ void GameState::Update()
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		if(m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
 
-	if (EVMA::MousePressed(1))
-	{
-		if (m_pPlayer->getHookShot()->gethookFixed() == false)
-		{
-			m_pPlayer->setGrapplehook(true);
-			m_pPlayer->setHookshot();
-			m_pPlayer->getHookShot()->calHookAngle(m_pPlayer->GetDstP());
-			m_pPlayer->setMoveHook(true);
-		}
-		else
-		{
-			m_pPlayer->setGrapplehook(false);
-			m_pPlayer->getHookShot()->sethookFixed(false);
-			m_pPlayer->setMoveHook(false);
-			m_pPlayer->getHookShot()->setlerpCo(0);
-		}
-	}
-	if (EVMA::MousePressed(3))
-	{
-		m_pPlayer->snatch();
-	}
 
 }
 
 void GameState::CheckCollision()
-{	// previous platforms cc
-	//for (int i = 0; i < NUMPLATFORMS; i++) // For each platform.
+{	
+
+	//SDL_FRect tileHit = COMA::PlayerCollision({m_pPlayer->GetDstP()->x, m_pPlayer->GetDstP()->y, 96,96 }, m_pPlayer->GetVelX(), m_pPlayer->GetVelY());
+	//if (tileHit.w != NULL)
 	//{
-	//	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pPlatforms[i]))
-	//	{
-	//		if (m_pPlayer->GetDstP()->x + m_pPlayer->GetDstP()->w - m_pPlayer->GetVelX() <= m_pPlatforms[i]->x)
-	//		{ // Collision from left.
-	//			m_pPlayer->StopX(); // Stop the player from moving horizontally.
-	//			m_pPlayer->SetX(m_pPlatforms[i]->x - m_pPlayer->GetDstP()->w);
-	//		}
-	//		else if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pPlatforms[i]->x + m_pPlatforms[i]->w)
-	//		{ // Colliding right side of platform.
-	//			m_pPlayer->StopX();
-	//			m_pPlayer->SetX(m_pPlatforms[i]->x + m_pPlatforms[i]->w);
-	//		}
-	//		else if (m_pPlayer->GetDstP()->y + m_pPlayer->GetDstP()->h - (float)m_pPlayer->GetVelY() <= m_pPlatforms[i]->y)
-	//		{ // Colliding top side of platform.
-	//			m_pPlayer->SetGrounded(true);
-	//			m_pPlayer->StopY();
-	//			m_pPlayer->SetY(m_pPlatforms[i]->y - m_pPlayer->GetDstP()->h - 1);
-	//		}
-	//		else if (m_pPlayer->GetDstP()->y - (float)m_pPlayer->GetVelY() >= m_pPlatforms[i]->y + m_pPlatforms[i]->h)
-	//		{ // Colliding bottom side of platform.
-	//			m_pPlayer->StopY();
-	//			m_pPlayer->SetY(m_pPlatforms[i]->y + m_pPlatforms[i]->h);
-	//		}
+	//	m_pPlayer->SetGrounded(true);
+	//
+	//	if (m_pPlayer->GetDstP()->y + m_pPlayer->GetDstP()->h - (float)m_pPlayer->GetVelY() <= tileHit.y)
+	//	{ // Colliding top side of platform.
+	//		m_pPlayer->SetGrounded(true);
+	//		m_pPlayer->StopY();
+	//		m_pPlayer->SetY(tileHit.y - m_pPlayer->GetDstP()->h - 1);
+	//		//std::cout << "below\n";
+	//	}
+	//	if (m_pPlayer->GetDstP()->y - (float)m_pPlayer->GetVelY() >= tileHit.y + tileHit.h)
+	//	{ // Colliding bottom side of platform.
+	//		m_pPlayer->StopY();
+	//		m_pPlayer->SetY(tileHit.y + tileHit.h +1);
+	//		std::cout << "above\n";
+	//	}
+	//	if (m_pPlayer->GetDstP()->x + m_pPlayer->GetDstP()->w - (float)m_pPlayer->GetVelX() <= tileHit.x)
+	//	{ // Collision from left.
+	//		m_pPlayer->StopX(); // Stop the player from moving horizontally.
+	//		m_pPlayer->SetX(tileHit.x - m_pPlayer->GetDstP()->w );
+	//		std::cout << "left\n";
+	//	}
+	//	if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= tileHit.x + tileHit.w)
+	//	{ // Colliding right side of platform.
+	//		m_pPlayer->StopX();
+	//		m_pPlayer->SetX(tileHit.x );
+	//		std::cout << "right\n";
 	//	}
 	//}
+
+	if (m_pPlayer->GetDstP()->y > 655)
+		m_pPlayer->SetY(655 );
+
 	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pEnemy->GetDstP()))
 	{
 		if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
@@ -195,12 +183,11 @@ void GameState::CheckCollision()
 			m_pPickUpList.shrink_to_fit();
 		}
 	}
-
 }
 
 void GameState::Render()
 {
-	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 64, 128, 255, 255);
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
 	SDL_RenderCopy(Engine::Instance().GetRenderer(), TextureManager::GetTexture("bg"), 0, 0);
 	for (int row = 0; row < ROWS; row++)
@@ -220,6 +207,7 @@ void GameState::Render()
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 70, 192, 0, 255);
 
 	m_pReticle->Render();
+	
 
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		m_pPickUpList[i]->Render();
@@ -266,9 +254,9 @@ void TitleState::Enter()
 
 void TitleState::Update()
 {
-	if (m_playBtn->Update() == 1)
+	if (m_playBtn->ButtonUpdate() == 1)
 		return; 
-	if (m_quitBtn->Update() == 1)
+	if (m_quitBtn->ButtonUpdate() == 1)
 		return;
 }
 
@@ -300,7 +288,7 @@ void PauseState::Enter()
 
 void PauseState::Update()
 {
-	if (m_resumeBtn->Update() == 1)
+	if (m_resumeBtn->ButtonUpdate() == 1)
 		return;
 }
 
@@ -336,9 +324,9 @@ void DeadState::Enter()
 
 void DeadState::Update()
 {
-	if (m_playBtn->Update() == 1)
+	if (m_playBtn->ButtonUpdate() == 1)
 		return;
-	if (m_quitBtn->Update() == 1)
+	if (m_quitBtn->ButtonUpdate() == 1)
 		return;
 }
 
