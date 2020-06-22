@@ -16,6 +16,10 @@ public:
 
     bool getHasWig()
     {return hasWig; }
+    Wig* getenemysWig()
+    { return enemysWig; }
+
+    void setHasWig(bool b);
     void removeWig()
     {
         hasWig = false;

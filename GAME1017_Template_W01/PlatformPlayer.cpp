@@ -5,8 +5,10 @@
 #include "EventManager.h"
 #include "CollisionManager.h"
 #include "SoundManager.h"
+#include "TextureManager.h"
 #include <algorithm>
 #include <iostream>
+#include "HookShot.h"
 
 PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Texture * t, int sstart, int smin, int smax, int nf)
 	:Character(s, d, r, t, sstart, smin, smax, nf)
@@ -23,36 +25,35 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 	baseDamage = 10;
 	m_wigCount = 0;
 	m_ShipParts = 0;
+	m_hookShot = new Hookshot({ 0,0,36,36 }, { d.x, d.y, 36, 36 }, r, TEMA::GetTexture("hookshot"));
+
+	// SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t
 }
 
 void PlatformPlayer::Update()
 {
-	// Player L/R movement
-	if (EVMA::KeyHeld(SDL_SCANCODE_A))
+	if (EVMA::KeyHeld(SDL_SCANCODE_A)) {
+		if (m_dst.x > 0 && !COMA::PlayerCollision({ (int)m_dst.x, (int)m_dst.y, (int)32, (int)32 }, -GetAccelX(), 0))
+		{	
 			SetAccelX(-1.0);
-	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
-			SetAccelX(1.0);
-
-	// Collision check, dst adjustment
-	if(COMA::PlayerCollisionBottom({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, 0, GetAccelY()));
-	{
-		SetGrounded(true);
-		m_dst.y -= (int)m_velY;
+		}
 	}
-
-	// Check collision
-	if (COMA::PlayerCollisionLeft({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, -GetAccelX(), 0))
-		SetAccelX(1.0);	
-	if (COMA::PlayerCollisionRight({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, GetAccelX(), 0))
-		SetAccelX(-1.0);
-	if (COMA::PlayerCollisionTop({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, GetAccelY(), 0))
-		SetAccelY(1.0);
+	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+		SetAccelX(1.0);
+	if (GetX() < 0)
+	{
+		SetX(0.0);
+	}
+	if (GetX() > 970)
+	{
+		SetX(970.0);
+	}
 
 	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !IsGrounded())
 	{
 		if (GetVelY() >= 0)
 		{
-			SetAccelY(GetThrust());
+			SetAccelY(GetThurst());
 			SetVelY(0);
 		}
 	}
@@ -62,8 +63,17 @@ void PlatformPlayer::Update()
 		SetAccelY(-JUMPFORCE); // Sets the jump force.
 		SetGrounded(false);
 	}
-	//if (m_dst.y > 635){	SetGrounded(true);	m_dst.y = 635; } // TEMPORARYYY!!!! DELETE SOON
-
+	if (m_dst.y > 610){	SetGrounded(true);	m_dst.y = 610; } // TEMPORARYYY!!!! DELETE SOON
+	//if (m_dst.y > 0 && COMA::PlayerCollision({ (int)(m_dst.x), (int)(m_dst.y), (int)64, (int)64 }, (int)GetAccelX(), (int)GetAccelY()))
+	//{
+	//	m_dst.x += (float)GetAccelX();
+	//	m_dst.y += (float)GetAccelY();
+	//}
+	//if (m_dst.y < 768 - 32 && !COMA::PlayerCollision({ (int)m_dst.x, (int)(m_dst.y), (int)32, (int)32 }, 0, GetAccelY()))
+	//{
+	//	m_dst.y += GetAccelY();
+	//}
+	// Do X axis first.
 	m_velX += m_accelX;
 	m_velX *= (m_grounded?m_drag:1); 
 	m_velX = std::min(std::max(m_velX, -(m_maxVelX)), (m_maxVelX));
@@ -77,6 +87,10 @@ void PlatformPlayer::Update()
 	if (iCooldown > 0) 
 		{ --iCooldown; }
 
+	if (m_movehook)
+	{
+		m_hookShot->Update();
+	}
 }
 
 void PlatformPlayer::Stop() // If you want a dead stop both axes.
@@ -101,7 +115,17 @@ void PlatformPlayer::SetX(float y) { m_dst.x = y; }
 void PlatformPlayer::SetY(float y) { m_dst.y = y; }
 double PlatformPlayer::GetX() { return m_dst.x; }
 
-double PlatformPlayer::GetThrust() { return m_thrust; }
+void PlatformPlayer::Render()
+{ 
+	SDL_RenderCopyExF(m_pRend, m_pText, GetSrcP(), GetDstP(), m_angle, 0, SDL_FLIP_NONE);
+	
+	if (m_grapplehook)
+	{
+		m_hookShot->Render();
+	}
+}
+
+double PlatformPlayer::GetThurst() { return m_thrust; }
 
 void PlatformPlayer::takeDamage(int dmg)
 {
@@ -113,4 +137,31 @@ void PlatformPlayer::takeDamage(int dmg)
 	}
 	if (health <= 0)
 		STMA::ChangeState(new DeadState);
+}
+
+void PlatformPlayer::setHookshot()
+{
+	SDL_Point point;
+	point.x = m_dst.x + m_dst.w * 0.5;
+	point.y = m_dst.y + m_dst.h * 0.5;
+	m_hookShot->SetPos(point);
+	m_hookShot->sethookFixed(false);
+}
+
+void PlatformPlayer::snatch()
+{
+	SDL_FRect* EnemyDstP = ((GameState*)(STMA::GetStates().back()))->getEnemy()->GetDstP();
+	float PlayerX = m_dst.x + (m_dst.w * 0.5);
+	float PlayerY = m_dst.y + (m_dst.h * 0.5);
+	float EnemyX = EnemyDstP->x + (EnemyDstP->w * 0.5);
+	float EnemyY = EnemyDstP->y + (EnemyDstP->h * 0.5);
+
+	m_distance = sqrtf(((PlayerX - EnemyX) * (PlayerX - EnemyX)) + ((PlayerY - EnemyY) * (PlayerY - EnemyY)));
+
+	if (m_distance < 100)
+	{
+		Enemy* Enemy = ((GameState*)(STMA::GetStates().back()))->getEnemy();
+		Enemy->setHasWig(false);
+		m_vecwigCollection.push_back(Enemy->getenemysWig());
+	}
 }

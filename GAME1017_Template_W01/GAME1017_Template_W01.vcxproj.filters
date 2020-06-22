@@ -63,6 +63,9 @@
     <ClCompile Include="Enemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HookShot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -116,7 +119,11 @@
     <ClInclude Include="Pickup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+
     <ClInclude Include="Tile.h">
+
+    <ClInclude Include="HookShot.h">
+
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

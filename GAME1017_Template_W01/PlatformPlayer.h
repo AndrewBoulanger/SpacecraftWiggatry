@@ -2,10 +2,14 @@
 #ifndef _PLATFORMPLAYER_H_
 #define _PLATFORMPLAYER_H_
 #define GRAV 6.0
-#define JUMPFORCE 80.0
+#define JUMPFORCE 60.0
 
 #include "Sprite.h"
 #include "Character.h"
+#include <vector>
+
+class Hookshot;
+class Wig;
 
 class PlatformPlayer : public Character
 {
@@ -20,7 +24,7 @@ public:
 	void SetAccelY(double a);
 	double GetAccelX();
 	double GetAccelY();
-	double GetThrust();
+	double GetThurst();
 	bool IsGrounded();
 	void SetGrounded(bool g);
 	double GetVelX();
@@ -29,7 +33,7 @@ public:
 	void SetX(float y);
 	void SetY(float y);
 	double GetX();
-	double GetY();
+	virtual void Render();
 
 	void takeDamage(int dmg) override;
 	int getWigs()
@@ -56,8 +60,32 @@ public:
 	{
 		++m_ShipParts;
 	}
+
+	bool getGrapplehook()
+	{
+		return m_grapplehook;
+	}
+
+	void setGrapplehook(bool g)
+	{
+		m_grapplehook = g;
+	}
+
+	void setMoveHook(bool h)
+	{
+		m_movehook = h;
+	}
+
+	void setHookshot();
+	void snatch();
+
+	Hookshot* getHookShot() { return m_hookShot; }
+
+
 private:
 	bool m_grounded;
+	bool m_grapplehook = false;
+	bool m_movehook = false;
 	double m_accelX,
 		m_accelY,
 		m_velX,
@@ -69,6 +97,9 @@ private:
 		m_grav;
 	int m_wigCount;
 	int m_ShipParts;
+	float m_distance = 0;
+	Hookshot* m_hookShot;
+	std::vector<Wig*> m_vecwigCollection;
 };
 
 #endif
