@@ -27,7 +27,7 @@ Hookshot::~Hookshot()
 void Hookshot::calHookAngle(SDL_FRect* playerPos)
 {
 	playerdst = playerPos;
-	pPos = { playerdst->x, playerdst->y };
+	
 	SDL_Point mPos = EVMA::GetMousePos();
 
 	shotAngle = -MAMA::Rad2Deg(MAMA::AngleBetweenPoints(mPos.y - (playerdst->y + playerdst->h * .5), mPos.x - (playerdst->x + playerdst->w * .5)));
@@ -48,27 +48,27 @@ void Hookshot::Collision()
 	SDL_Rect temp;
 	SDL_Rect Hookdst;
 	SDL_Rect Platformdst;
-	SDL_FRect** PlatformArray = ((GameState*)(STMA::GetStates().back()))->getPlatform();
+	//SDL_FRect** PlatformArray = ((GameState*)(STMA::GetStates().back()))->getPlatform();
 
 	Hookdst.x = m_dst.x;
 	Hookdst.y = m_dst.y;
 	Hookdst.w = m_dst.w;
 	Hookdst.h = m_dst.h;
 
-	for (int i = 0; i < NUMPLATFORMS; ++i)
-	{
-		Platformdst.x = PlatformArray[i]->x;
-		Platformdst.y = PlatformArray[i]->y;
-		Platformdst.w = PlatformArray[i]->w;
-		Platformdst.h = PlatformArray[i]->h;
+	//for (int i = 0; i < NUMPLATFORMS; ++i)
+	//{
+	//	Platformdst.x = PlatformArray[i]->x;
+	//	Platformdst.y = PlatformArray[i]->y;
+	//	Platformdst.w = PlatformArray[i]->w;
+	//	Platformdst.h = PlatformArray[i]->h;
 
-		if (SDL_IntersectRect(&Hookdst, &Platformdst, &temp))
-		{
-			Hookdst.y = Hookdst.y + temp.h;
-			//m_dst.y = Hookdst.y;
-			hookFixed = true;
-		}
-	}
+	//	if (SDL_IntersectRect(&Hookdst, &Platformdst, &temp))
+	//	{
+	//		Hookdst.y = Hookdst.y + temp.h;
+	//		//m_dst.y = Hookdst.y;
+	//		hookFixed = true;
+	//	}
+	//}
 }
 
 
@@ -77,7 +77,7 @@ float Hookshot::MyLerp(float a, float b, float t)
 	return a + t * (b - a);
 }
 
-void Hookshot::Update()
+void Hookshot::Update(double& grav)
 {
 	if (hookFixed == false)
 	{
@@ -93,11 +93,13 @@ void Hookshot::Update()
 			playerdst->x = MyLerp(playerdst->x, m_dst.x  + (m_dst.w * 0.5) - (playerdst->w * 0.5), lerpCo);
 			playerdst->y = MyLerp(playerdst->y, m_dst.y, lerpCo);
 			lerpCo += 0.01f;
+			grav = 0;
 		}
 		else
 		{
 			playerdst->x = m_dst.x + (m_dst.w * 0.5) - (playerdst->w * 0.5);
 			playerdst->y = m_dst.y;
+			grav = (double)GRAV;
 		}
 	}
 }

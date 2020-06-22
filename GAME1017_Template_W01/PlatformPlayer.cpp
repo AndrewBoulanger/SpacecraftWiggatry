@@ -32,6 +32,11 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 	// SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t
 }
 
+PlatformPlayer::~PlatformPlayer()
+{
+	delete m_hookShot;
+}
+
 void PlatformPlayer::Update()
 {
 	if (EVMA::KeyHeld(SDL_SCANCODE_A)) {
@@ -91,7 +96,7 @@ void PlatformPlayer::Update()
 
 	if (m_movehook)
 	{
-		m_hookShot->Update();
+		m_hookShot->Update(m_grav);
 	}
 
 	if (EVMA::KeyHeld(SDL_SCANCODE_A))
@@ -126,22 +131,26 @@ void PlatformPlayer::Update()
 	{
 		if (m_hookShot->gethookFixed() == false)  
 		{
-			m_grapplehook = true; //m_pPlayer->setGrapplehook(true);
-			setHookshot();//m_pPlayer->setHookshot();
-			m_hookShot->calHookAngle(&m_dst); //m_pPlayer->getHookShot()->calHookAngle(m_pPlayer->GetDstP());
+			m_grapplehook = true; 
+			setHookshot();
+			m_hookShot->calHookAngle(&m_dst); 
 			m_movehook = true;
-			m_grav = 0;
+			//m_grav = 0;
 		}
 		else
 		{
 			m_grapplehook = false; 
-			m_hookShot->sethookFixed(false);//m_pPlayer->getHookShot()->sethookFixed(false);
-			m_movehook = false;//m_pPlayer->setMoveHook(false);
-			m_hookShot->setlerpCo(0); //m_pPlayer->getHookShot()->setlerpCo(0);
-			m_grav = GRAV;
+			m_hookShot->sethookFixed(false);
+			m_movehook = false;
+			m_hookShot->setlerpCo(0); 
+		//	m_grav = GRAV;
 		}
 	}
-
+	if (EVMA::MousePressed(3))
+	{
+		snatch();
+	}
+	std::cout << m_grav << "\n";
 
 }
 

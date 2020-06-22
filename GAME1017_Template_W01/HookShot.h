@@ -13,7 +13,6 @@ private:
 	bool hookFixed = false;
 	SDL_FRect line;
 	SDL_FRect* playerdst;
-	SDL_FPoint pPos;
 	SDL_FPoint targetPos;
 
 public:
@@ -26,9 +25,8 @@ public:
 	void calHookAngle(SDL_FRect* playerPos);
 	void move();
 	void Collision();
-	void setLine();
 	float MyLerp(float a, float b, float t);
-	void Update();
+	void Update(double& grav);
 	void Render();
 	bool gethookFixed() { return hookFixed; }
 	void sethookFixed(bool b);

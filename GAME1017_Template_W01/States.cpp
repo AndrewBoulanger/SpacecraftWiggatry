@@ -25,10 +25,10 @@ void State::Resume() {}
 // Begin GameState.
 GameState::GameState() {}
 
-SDL_FRect** GameState::getPlatform()
-{
-	return m_pPlatforms;
-}
+//SDL_FRect** GameState::getPlatform()
+//{
+//	return m_pPlatforms;
+//}
 
 PlatformPlayer* GameState::getPlayer()
 {
@@ -86,7 +86,7 @@ void GameState::Enter()
 	m_pPickUpList.push_back(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
 					Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
 
-	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
+	
 	SOMA::PlayMusic("PokerFace");
 	
 }
@@ -96,7 +96,7 @@ void GameState::Update()
 
 	m_pReticle->SetPos(EVMA::GetMousePos());
 	m_pPlayer->Update();
-	//m_pEnemy->Update();
+	m_pEnemy->Update();
 	CheckCollision();
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
 	{
@@ -107,10 +107,6 @@ void GameState::Update()
 		if(m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
 
 
-	if (EVMA::MousePressed(3))
-	{
-		m_pPlayer->snatch();
-	}
 }
 
 void GameState::CheckCollision()
