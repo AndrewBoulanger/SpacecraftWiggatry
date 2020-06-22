@@ -17,6 +17,7 @@ public:
 
 	static bool LinePointCheck(const SDL_FPoint object1_start, const SDL_FPoint object1_end, const SDL_FPoint object2);
 	static bool PlayerCollision(const SDL_FRect player, const int dX, const int dY);
+	static bool SmallTileCollision(const SDL_FRect player, const int dX, const int dY);
 private:
 	CollisionManager() {}
 };

@@ -27,7 +27,7 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 	baseDamage = 10;
 	m_wigCount = 0;
 	m_ShipParts = 0;
-	m_hookShot = new Hookshot({ 0,0,36,36 }, { d.x, d.y, 36, 36 }, r, TEMA::GetTexture("hookshot"));
+	m_hookShot = new Hookshot({ 0,0,36,36 }, { d.x, d.y, 32, 32 }, r, TEMA::GetTexture("hookshot"));
 
 	// SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t
 }
@@ -101,6 +101,7 @@ void PlatformPlayer::Update()
 			m_hookShot->sethookFixed(false);
 			m_movehook = false;
 			m_hookShot->setlerpCo(0); 
+			m_grav = GRAV;
 		}
 	}
 	if (EVMA::MousePressed(3))

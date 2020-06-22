@@ -45,30 +45,12 @@ void Hookshot::move()
 
 void Hookshot::Collision()
 {
-	SDL_Rect temp;
-	SDL_Rect Hookdst; //might be able to just use m_dst
-	SDL_Rect Platformdst;
-	//SDL_FRect** PlatformArray = ((GameState*)(STMA::GetStates().back()))->getPlatform();
 
-	Hookdst.x = m_dst.x;
-	Hookdst.y = m_dst.y;
-	Hookdst.w = m_dst.w;
-	Hookdst.h = m_dst.h;
-
-	//for (int i = 0; i < NUMPLATFORMS; ++i)
-	//{
-	//	Platformdst.x = PlatformArray[i]->x;
-	//	Platformdst.y = PlatformArray[i]->y;
-	//	Platformdst.w = PlatformArray[i]->w;
-	//	Platformdst.h = PlatformArray[i]->h;
-
-	//	if (SDL_IntersectRect(&Hookdst, &Platformdst, &temp))
-	//	{
-	//		Hookdst.y = Hookdst.y + temp.h;
-	//		//m_dst.y = Hookdst.y;
-	//		hookFixed = true;
-	//	}
-	//}
+	if (COMA::SmallTileCollision(m_dst, velX *.1, velY*.1))
+		{
+			hookFixed = true;
+		}
+	
 }
 
 
@@ -82,9 +64,8 @@ void Hookshot::Update(double& grav)
 	if (hookFixed == false)
 	{
 		move();
+		Collision();
 	}
-	
-	Collision();
 
 	if (hookFixed == true)
 	{
@@ -99,7 +80,6 @@ void Hookshot::Update(double& grav)
 		{
 			playerdst->x = m_dst.x + (m_dst.w * 0.5) - (playerdst->w * 0.5);
 			playerdst->y = m_dst.y;
-			grav = GRAV;
 		}
 	}
 }

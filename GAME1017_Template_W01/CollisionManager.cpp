@@ -52,7 +52,7 @@ bool CollisionManager::PlayerCollision(const SDL_FRect player, const int dX, con
 {
 	int playerX = player.x / 32;
 	int playerY = player.y / 32;
-	SDL_Rect p = { player.x + dX + 24, player.y + dY+26, player.w-46, player.h-46}; // Adjusted bounding box.
+	SDL_Rect p = { player.x + dX + 24, player.y + dY+26, player.w-48, player.h-48}; // Adjusted bounding box.
 	Tile* tiles[16] = { static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[playerY][playerX],	// Bottom		players tile											// Left
 					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],										// MiddleLeft
 					   static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 2)],										// MiddleRight
@@ -76,6 +76,28 @@ bool CollisionManager::PlayerCollision(const SDL_FRect player, const int dX, con
 	{ 
 		SDL_Rect t = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
 		if (tiles[i]->IsObstacle() && SDL_HasIntersection(&p, &t) )
+		{ // Collision!
+			return true;
+		}
+	}
+	return false;
+}
+
+bool CollisionManager::SmallTileCollision(const SDL_FRect target, const int dX, const int dY)
+{
+	int targetX = target.x / 32;
+	int targetY = target.y / 32;
+	SDL_Rect sprite = { target.x + dX + 8, target.y + dY + 8, target.w - 16, target.h - 16 }; // Adjusted bounding box.
+	Tile* tiles[4] = {
+		static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[targetY][targetX],	// Bottom		players tile											// Left
+		static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[targetY][(targetX + 1 >= COLS ? COLS - 1 : targetX + 1)],										// MiddleLeft
+		static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(targetY + 1 >= ROWS ? ROWS - 1 : targetY + 1)][targetY],
+		static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(targetY + 1 == ROWS ? ROWS - 1 : targetY + 1)][(targetY + 1 >= COLS ? COLS - 1 : targetY + 1)],									// Right tile.
+	};
+	for (int i = 0; i < 4; i++)
+	{
+		SDL_Rect tile = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
+		if (tiles[i]->IsObstacle() && SDL_HasIntersection(&sprite, &tile))
 		{ // Collision!
 			std::cout << "cool\n";
 			return true;
