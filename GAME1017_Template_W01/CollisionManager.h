@@ -19,6 +19,7 @@ public:
 	static bool PlayerCollisionLeft(const SDL_Rect player, const int dX, const int dY);
 	static bool PlayerCollisionRight(const SDL_Rect player, const int dX, const int dY);
 	static bool PlayerCollisionBottom(const SDL_Rect player, const int dX, const int dY);
+	static bool PlayerCollisionTop(const SDL_Rect player, const int dX, const int dY);
 private:
 	CollisionManager() {}
 };

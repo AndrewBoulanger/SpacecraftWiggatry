@@ -34,17 +34,19 @@ void PlatformPlayer::Update()
 			SetAccelX(1.0);
 
 	// Collision check, dst adjustment
-	//if (COMA::PlayerCollisionBottom({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, GetAccelY(), 0))
-	//{
-	//	SetGrounded(true);
-	//	StopY();
-	//	SetAccelY(-m_grav);
+	if(COMA::PlayerCollisionBottom({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, 0, GetAccelY()));
+	{
+		SetGrounded(true);
+		m_dst.y -= (int)m_velY;
+	}
 
-	//}
+	// Check collision
 	if (COMA::PlayerCollisionLeft({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, -GetAccelX(), 0))
 		SetAccelX(1.0);	
 	if (COMA::PlayerCollisionRight({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, GetAccelX(), 0))
 		SetAccelX(-1.0);
+	if (COMA::PlayerCollisionTop({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, GetAccelY(), 0))
+		SetAccelY(1.0);
 
 	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !IsGrounded())
 	{
@@ -60,7 +62,7 @@ void PlatformPlayer::Update()
 		SetAccelY(-JUMPFORCE); // Sets the jump force.
 		SetGrounded(false);
 	}
-	if (m_dst.y > 610){	SetGrounded(true);	m_dst.y = 610; } // TEMPORARYYY!!!! DELETE SOON
+	//if (m_dst.y > 635){	SetGrounded(true);	m_dst.y = 635; } // TEMPORARYYY!!!! DELETE SOON
 
 	m_velX += m_accelX;
 	m_velX *= (m_grounded?m_drag:1); 
@@ -98,7 +100,6 @@ void PlatformPlayer::SetVelY(double a) { m_velY = a; }
 void PlatformPlayer::SetX(float y) { m_dst.x = y; }
 void PlatformPlayer::SetY(float y) { m_dst.y = y; }
 double PlatformPlayer::GetX() { return m_dst.x; }
-double PlatformPlayer::GetY() { return m_dst.y; }
 
 double PlatformPlayer::GetThrust() { return m_thrust; }
 
