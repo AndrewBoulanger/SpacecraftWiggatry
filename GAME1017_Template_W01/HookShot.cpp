@@ -46,7 +46,7 @@ void Hookshot::move()
 void Hookshot::Collision()
 {
 	SDL_Rect temp;
-	SDL_Rect Hookdst;
+	SDL_Rect Hookdst; //might be able to just use m_dst
 	SDL_Rect Platformdst;
 	//SDL_FRect** PlatformArray = ((GameState*)(STMA::GetStates().back()))->getPlatform();
 
@@ -99,7 +99,7 @@ void Hookshot::Update(double& grav)
 		{
 			playerdst->x = m_dst.x + (m_dst.w * 0.5) - (playerdst->w * 0.5);
 			playerdst->y = m_dst.y;
-			grav = (double)GRAV;
+			grav = GRAV;
 		}
 	}
 }

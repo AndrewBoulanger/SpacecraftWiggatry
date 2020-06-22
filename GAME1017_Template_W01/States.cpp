@@ -45,9 +45,9 @@ Enemy* GameState::getEnemy()
 void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
-	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 50.0f,32.0f,96.0f,96.0f }, 
+	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 50.0f,100.0f,96.0f,96.0f }, 
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
-	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 545.0f, 50.0f, 120.0f}, 
+	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f}, 
 									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
 	for (int i = 0; i < (5); i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
@@ -111,6 +111,42 @@ void GameState::Update()
 
 void GameState::CheckCollision()
 {	
+
+	//SDL_FRect tileHit = COMA::PlayerCollision({m_pPlayer->GetDstP()->x, m_pPlayer->GetDstP()->y, 96,96 }, m_pPlayer->GetVelX(), m_pPlayer->GetVelY());
+	//if (tileHit.w != NULL)
+	//{
+	//	m_pPlayer->SetGrounded(true);
+	//
+	//	if (m_pPlayer->GetDstP()->y + m_pPlayer->GetDstP()->h - (float)m_pPlayer->GetVelY() <= tileHit.y)
+	//	{ // Colliding top side of platform.
+	//		m_pPlayer->SetGrounded(true);
+	//		m_pPlayer->StopY();
+	//		m_pPlayer->SetY(tileHit.y - m_pPlayer->GetDstP()->h - 1);
+	//		//std::cout << "below\n";
+	//	}
+	//	if (m_pPlayer->GetDstP()->y - (float)m_pPlayer->GetVelY() >= tileHit.y + tileHit.h)
+	//	{ // Colliding bottom side of platform.
+	//		m_pPlayer->StopY();
+	//		m_pPlayer->SetY(tileHit.y + tileHit.h +1);
+	//		std::cout << "above\n";
+	//	}
+	//	if (m_pPlayer->GetDstP()->x + m_pPlayer->GetDstP()->w - (float)m_pPlayer->GetVelX() <= tileHit.x)
+	//	{ // Collision from left.
+	//		m_pPlayer->StopX(); // Stop the player from moving horizontally.
+	//		m_pPlayer->SetX(tileHit.x - m_pPlayer->GetDstP()->w );
+	//		std::cout << "left\n";
+	//	}
+	//	if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= tileHit.x + tileHit.w)
+	//	{ // Colliding right side of platform.
+	//		m_pPlayer->StopX();
+	//		m_pPlayer->SetX(tileHit.x );
+	//		std::cout << "right\n";
+	//	}
+	//}
+
+	if (m_pPlayer->GetDstP()->y > 655)
+		m_pPlayer->SetY(655 );
+
 	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pEnemy->GetDstP()))
 	{
 		if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
@@ -147,7 +183,6 @@ void GameState::CheckCollision()
 			m_pPickUpList.shrink_to_fit();
 		}
 	}
-
 }
 
 void GameState::Render()
