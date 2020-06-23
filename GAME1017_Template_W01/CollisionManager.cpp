@@ -54,16 +54,16 @@ bool CollisionManager::PlayerCollisionLeft(const SDL_Rect player, const int dX, 
 	int playerX = player.x / 32;
 	int playerY = player.y / 32;
 	SDL_Rect p = { player.x + dX + 8 , player.y + dY + 6, player.w - 16, player.h - 16 };
-	Tile* tiles[4] = {  static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[playerY][playerX],
+	Tile* tiles[4] = { static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[playerY][playerX],
 						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][playerX],
 						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 2)][playerX],
-						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][playerX] };
-	for (int i = 0; i < 4; i++)
+						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][playerX]};
+	for (int i = 0; i < 2; i++)
 	{
 		SDL_Rect t = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
 		if (tiles[i]->IsObstacle() && SDL_HasIntersection(&p, &t))
 		{ // Collision!
-			std::cout << "left cooool\n";
+			std::cout << "LEFT\t";
 			return true;
 		}
 	}
@@ -74,15 +74,16 @@ bool CollisionManager::PlayerCollisionRight(const SDL_Rect player, const int dX,
 	int playerX = player.x / 32;
 	int playerY = player.y / 32;
 	SDL_Rect p = { player.x + dX + 8 , player.y + dY + 6, player.w - 16, player.h - 16 };
-	Tile* tiles[3] = {  static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],
-						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],
-						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)] };
-	for (int i = 0; i < 3; i++)
+	Tile* tiles[4] = { static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[playerY][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],
+						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],		//11
+						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],		//12
+						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)]};	//13
+	for (int i = 0; i < 4; i++)
 	{
 		SDL_Rect t = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
 		if (tiles[i]->IsObstacle() && SDL_HasIntersection(&p, &t))
 		{ // Collision!
-			std::cout << "right cooool\n";
+			std::cout << "RIGHT\t";
 			return true;
 		}
 	}
@@ -92,16 +93,16 @@ bool CollisionManager::PlayerCollisionBottom(const SDL_Rect player, const int dX
 {
 	int playerX = player.x / 32;
 	int playerY = player.y / 32;
-	SDL_Rect p = { player.x + dX + 8 , player.y + dY, player.w - 16, player.h};
+	SDL_Rect p = { player.x + dX + 8 , player.y + dY + 50, player.w - 16, player.h};
 	Tile* tiles[2] = {  static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
-						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 2)] };
+						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 2)]};
 	for (int i = 0; i < 2; i++)
 	{
 		SDL_Rect t = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
 		if (tiles[i]->IsObstacle() && SDL_HasIntersection(&p, &t))
 		{ // Collision!
-			std::cout << "Bottom collllll";
-			return true;
+			//std::cout << "BOTTOM\t";
+			return true;	
 		}
 	}
 	return false;
@@ -111,7 +112,7 @@ bool CollisionManager::PlayerCollisionTop(const SDL_Rect player, const int dX, c
 {
 	int playerX = player.x / 32;
 	int playerY = player.y / 32;
-	SDL_Rect p = { player.x + dX + 8 , player.y + dY, player.w - 16, player.h };
+	SDL_Rect p = { player.x + dX + 8 , player.y + dY + 6, player.w - 16, player.h};
 	Tile* tiles[2] = {  static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
 						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 2)] };
 	for (int i = 0; i < 2; i++)
@@ -119,13 +120,14 @@ bool CollisionManager::PlayerCollisionTop(const SDL_Rect player, const int dX, c
 		SDL_Rect t = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
 		if (tiles[i]->IsObstacle() && SDL_HasIntersection(&p, &t))
 		{ // Collision!
-			std::cout << "Top collllll";
+			std::cout << "TOP\t";
 			return true;
 		}
 	}
 	return false;
 }
 
+// Potentially delete later
 bool CollisionManager::PlayerCollision(const SDL_Rect player, const int dX, const int dY)
 {
 	int playerX = player.x / 32;

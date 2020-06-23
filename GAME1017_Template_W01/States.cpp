@@ -25,10 +25,10 @@ void State::Resume() {}
 // Begin GameState.
 GameState::GameState() {}
 
-SDL_FRect** GameState::getPlatform()
-{
-	return m_pPlatforms;
-}
+//SDL_FRect** GameState::getPlatform()
+//{
+//	return m_pPlatforms;
+//}
 
 PlatformPlayer* GameState::getPlayer()
 {

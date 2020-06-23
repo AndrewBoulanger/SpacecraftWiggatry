@@ -42,33 +42,33 @@ void Hookshot::move()
 	m_dst.y += velY * 0.1;
 }
 
-void Hookshot::Collision()
-{
-	SDL_Rect temp;
-	SDL_Rect Hookdst;
-	SDL_Rect Platformdst;
-	SDL_FRect** PlatformArray = ((GameState*)(STMA::GetStates().back()))->getPlatform();
-
-	Hookdst.x = m_dst.x;
-	Hookdst.y = m_dst.y;
-	Hookdst.w = m_dst.w;
-	Hookdst.h = m_dst.h;
-
-	for (int i = 0; i < NUMPLATFORMS; ++i)
-	{
-		Platformdst.x = PlatformArray[i]->x;
-		Platformdst.y = PlatformArray[i]->y;
-		Platformdst.w = PlatformArray[i]->w;
-		Platformdst.h = PlatformArray[i]->h;
-
-		if (SDL_IntersectRect(&Hookdst, &Platformdst, &temp))
-		{
-			Hookdst.y = Hookdst.y + temp.h;
-			m_dst.y = Hookdst.y;
-			hookFixed = true;
-		}
-	}
-}
+//void Hookshot::Collision()
+//{
+//	SDL_Rect temp;
+//	SDL_Rect Hookdst;
+//	SDL_Rect Platformdst;
+//	SDL_FRect** PlatformArray = ((GameState*)(STMA::GetStates().back()))->getPlatform();
+//
+//	Hookdst.x = m_dst.x;
+//	Hookdst.y = m_dst.y;
+//	Hookdst.w = m_dst.w;
+//	Hookdst.h = m_dst.h;
+//
+//	for (int i = 0; i < NUMPLATFORMS; ++i)
+//	{
+//		Platformdst.x = PlatformArray[i]->x;
+//		Platformdst.y = PlatformArray[i]->y;
+//		Platformdst.w = PlatformArray[i]->w;
+//		Platformdst.h = PlatformArray[i]->h;
+//
+//		if (SDL_IntersectRect(&Hookdst, &Platformdst, &temp))
+//		{
+//			Hookdst.y = Hookdst.y + temp.h;
+//			m_dst.y = Hookdst.y;
+//			hookFixed = true;
+//		}
+//	}
+//}
 
 void Hookshot::setLine()
 {
@@ -110,7 +110,7 @@ void Hookshot::Update()
 		move();
 	}
 	
-	Collision();
+	//Collision();
 	setLine();
 
 	if (hookFixed == true)

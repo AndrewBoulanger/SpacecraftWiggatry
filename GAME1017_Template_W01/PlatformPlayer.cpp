@@ -32,22 +32,21 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 
 void PlatformPlayer::Update()
 {
-	if (EVMA::KeyHeld(SDL_SCANCODE_A)) {
-		if (m_dst.x > 0 && !COMA::PlayerCollision({ (int)m_dst.x, (int)m_dst.y, (int)32, (int)32 }, -GetAccelX(), 0))
-		{	
-			SetAccelX(-1.0);
-		}
-	}
+	// Player L/R movement
+	if (EVMA::KeyHeld(SDL_SCANCODE_A))
+		SetAccelX(-1.0);
 	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
 		SetAccelX(1.0);
-	if (GetX() < 0)
-	{
-		SetX(0.0);
-	}
-	if (GetX() > 970)
-	{
-		SetX(970.0);
-	}
+	//else
+	//	SetAccelX(0.0);
+
+	// Check collision
+	if (COMA::PlayerCollisionLeft({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, -GetAccelX(), 0))
+		SetAccelX(1.0);
+	if (COMA::PlayerCollisionRight({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, GetAccelX(), 0))
+		SetAccelX(-1.0);
+	if (COMA::PlayerCollisionTop({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, -GetAccelY(), 0));
+		m_dst.y = (m_dst.y + 5.0);
 
 	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !IsGrounded())
 	{
@@ -62,26 +61,28 @@ void PlatformPlayer::Update()
 		SOMA::PlaySound("jump");
 		SetAccelY(-JUMPFORCE); // Sets the jump force.
 		SetGrounded(false);
+		std::cout << "not grounded\n";
 	}
-	if (m_dst.y > 610){	SetGrounded(true);	m_dst.y = 610; } // TEMPORARYYY!!!! DELETE SOON
-	//if (m_dst.y > 0 && COMA::PlayerCollision({ (int)(m_dst.x), (int)(m_dst.y), (int)64, (int)64 }, (int)GetAccelX(), (int)GetAccelY()))
-	//{
-	//	m_dst.x += (float)GetAccelX();
-	//	m_dst.y += (float)GetAccelY();
-	//}
-	//if (m_dst.y < 768 - 32 && !COMA::PlayerCollision({ (int)m_dst.x, (int)(m_dst.y), (int)32, (int)32 }, 0, GetAccelY()))
-	//{
-	//	m_dst.y += GetAccelY();
-	//}
+	//if (m_dst.y > 635){	SetGrounded(true);	m_dst.y = 625; } // TEMPORARYYY!!!! DELETE SOON
 	// Do X axis first.
 	m_velX += m_accelX;
 	m_velX *= (m_grounded?m_drag:1); 
 	m_velX = std::min(std::max(m_velX, -(m_maxVelX)), (m_maxVelX));
-	m_dst.x += (int)m_velX; // Had to cast it to int to get crisp collision with side of platform.
+	m_dst.x += (int)m_velX;
+
 	// Now do Y axis.
-	m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
-	m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav*5));
-	m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
+	if (!COMA::PlayerCollisionBottom({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, 0, GetAccelY()))
+	{
+		m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
+		m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav * 5));
+		m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
+	}
+	if (COMA::PlayerCollisionBottom({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, 0, GetAccelY()))
+	{
+		SetGrounded(true);
+		std::cout << "grounded\n";
+		m_dst.y = (m_dst.y - ((int)(m_dst.y) % 32));
+	}
 	m_accelX = m_accelY = 0.0;
 
 	if (iCooldown > 0) 
@@ -91,6 +92,8 @@ void PlatformPlayer::Update()
 	{
 		m_hookShot->Update();
 	}
+	if (m_dst.y > 768)
+		health = 0;
 }
 
 void PlatformPlayer::Stop() // If you want a dead stop both axes.
