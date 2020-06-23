@@ -4,12 +4,15 @@
 #include "SoundManager.h"
 #include "StateManager.h" // Make sure this is NOT in "States.h" or circular reference.
 #include "TextureManager.h"
+#include "MathManager.h"
 #include "Engine.h"
 #include "Button.h"
 #include "Enemy.h"
 #include "PlatformPlayer.h"
 #include "HookShot.h"
 #include <iostream>
+#include <fstream>
+
 
 // Begin State. CTRL+M+H and CTRL+M+U to turn on/off collapsed code.
 void State::Render()
@@ -22,10 +25,10 @@ void State::Resume() {}
 // Begin GameState.
 GameState::GameState() {}
 
-SDL_FRect** GameState::getPlatform()
-{
-	return m_pPlatforms;
-}
+//SDL_FRect** GameState::getPlatform()
+//{
+//	return m_pPlatforms;
+//}
 
 PlatformPlayer* GameState::getPlayer()
 {
@@ -42,60 +45,56 @@ Enemy* GameState::getEnemy()
 void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
-	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 512.0f,548.0f,115.0f,120.0f }, 
+	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 50.0f,100.0f,96.0f,96.0f }, 
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
-	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 545.0f, 50.0f, 120.0f}, 
+	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f}, 
 									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
 	for (int i = 0; i < (5); i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
-	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25}, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
-	m_pPlatforms[0] = new SDL_FRect({ 10.0f,648.0f,100.0f,30.0f });
-	m_pPlatforms[1] = new SDL_FRect({ 130.0f,250.0f,200.0f,30.0f });
-	m_pPlatforms[2] = new SDL_FRect({ 624.0f,368.0f,200.0f,30.0f });
-	m_pPlatforms[3] = new SDL_FRect({ 362.0f,458.0f,200.0f,30.0f });
-	m_pPlatforms[4] = new SDL_FRect({ -100.0f,668.0f,1224.0f,100.0f });
+	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
+
+	std::ifstream inFile("Dat/Tiledata.txt");
+	if (inFile.is_open())
+	{ // Create map of Tile prototypes.
+		char key;
+		int x, y;
+		bool o, h;
+		while (!inFile.eof())
+		{
+			inFile >> key >> x >> y >> o >> h;
+			m_tiles.emplace(key, new Tile({ x * 32, y * 32, 32, 32 }, { 0,0,32,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("tiles"), o, h));
+		}
+	}
+	inFile.close();
+	inFile.open("Dat/Level1.txt");
+	if (inFile.is_open())
+	{ // Build the level from Tile prototypes.
+		char key;
+		for (int row = 0; row < ROWS; row++)
+		{
+			for (int col = 0; col < COLS; col++)
+			{
+				inFile >> key;
+				m_level[row][col] = m_tiles[key]->Clone(); // Prototype design pattern used.
+				m_level[row][col]->GetDstP()->x = (float)(32 * col);
+				m_level[row][col]->GetDstP()->y = (float)(32 * row);
+			}
+		}
+	}
+	inFile.close();
 
 	m_pPickUpList.push_back(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
 					Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
 
-	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
+	
 	SOMA::PlayMusic("PokerFace");
 	
 }
 
 void GameState::Update()
 {
-	// Get input.
-	if (EVMA::KeyHeld(SDL_SCANCODE_A))
-		m_pPlayer->SetAccelX(-1.0);
-	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
-		m_pPlayer->SetAccelX(1.0);
-	if (m_pPlayer->GetX() < 0)
-	{
-		m_pPlayer->SetX(0.0);
-	}
-	if (m_pPlayer->GetX() > 970)
-	{
-		m_pPlayer->SetX(970.0);
-	}
 
-	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !m_pPlayer->IsGrounded())
-	{
-		if (m_pPlayer->GetVelY() >= 0)
-		{
-			m_pPlayer->SetAccelY(m_pPlayer->GetThurst());
-			m_pPlayer->SetVelY(0);
-		}
-	}
-	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_pPlayer->IsGrounded())
-	{
-		SOMA::PlaySound("jump");
-		m_pPlayer->SetAccelY(-JUMPFORCE); // Sets the jump force.
-		m_pPlayer->SetGrounded(false);
-	}
 	m_pReticle->SetPos(EVMA::GetMousePos());
-
-	// Do the rest.
 	m_pPlayer->Update();
 	m_pEnemy->Update();
 	CheckCollision();
@@ -107,59 +106,46 @@ void GameState::Update()
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		if(m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
 
-	if (EVMA::MousePressed(1))
-	{
-		if (m_pPlayer->getHookShot()->gethookFixed() == false)
-		{
-			m_pPlayer->setGrapplehook(true);
-			m_pPlayer->setHookshot();
-			m_pPlayer->getHookShot()->calHookAngle(m_pPlayer->GetDstP());
-			m_pPlayer->setMoveHook(true);
-		}
-		else
-		{
-			m_pPlayer->setGrapplehook(false);
-			m_pPlayer->getHookShot()->sethookFixed(false);
-			m_pPlayer->setMoveHook(false);
-			m_pPlayer->getHookShot()->setlerpCo(0);
-		}
-	}
-	if (EVMA::MousePressed(3))
-	{
-		m_pPlayer->snatch();
-	}
 
 }
 
 void GameState::CheckCollision()
-{
-	for (int i = 0; i < NUMPLATFORMS; i++) // For each platform.
-	{
-		if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pPlatforms[i]))
-		{
-			if (m_pPlayer->GetDstP()->x + m_pPlayer->GetDstP()->w - m_pPlayer->GetVelX() <= m_pPlatforms[i]->x)
-			{ // Collision from left.
-				m_pPlayer->StopX(); // Stop the player from moving horizontally.
-				m_pPlayer->SetX(m_pPlatforms[i]->x - m_pPlayer->GetDstP()->w);
-			}
-			else if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pPlatforms[i]->x + m_pPlatforms[i]->w)
-			{ // Colliding right side of platform.
-				m_pPlayer->StopX();
-				m_pPlayer->SetX(m_pPlatforms[i]->x + m_pPlatforms[i]->w);
-			}
-			else if (m_pPlayer->GetDstP()->y + m_pPlayer->GetDstP()->h - (float)m_pPlayer->GetVelY() <= m_pPlatforms[i]->y)
-			{ // Colliding top side of platform.
-				m_pPlayer->SetGrounded(true);
-				m_pPlayer->StopY();
-				m_pPlayer->SetY(m_pPlatforms[i]->y - m_pPlayer->GetDstP()->h - 1);
-			}
-			else if (m_pPlayer->GetDstP()->y - (float)m_pPlayer->GetVelY() >= m_pPlatforms[i]->y + m_pPlatforms[i]->h)
-			{ // Colliding bottom side of platform.
-				m_pPlayer->StopY();
-				m_pPlayer->SetY(m_pPlatforms[i]->y + m_pPlatforms[i]->h);
-			}
-		}
-	}
+{	
+
+	//SDL_FRect tileHit = COMA::PlayerCollision({m_pPlayer->GetDstP()->x, m_pPlayer->GetDstP()->y, 96,96 }, m_pPlayer->GetVelX(), m_pPlayer->GetVelY());
+	//if (tileHit.w != NULL)
+	//{
+	//	m_pPlayer->SetGrounded(true);
+	//
+	//	if (m_pPlayer->GetDstP()->y + m_pPlayer->GetDstP()->h - (float)m_pPlayer->GetVelY() <= tileHit.y)
+	//	{ // Colliding top side of platform.
+	//		m_pPlayer->SetGrounded(true);
+	//		m_pPlayer->StopY();
+	//		m_pPlayer->SetY(tileHit.y - m_pPlayer->GetDstP()->h - 1);
+	//		//std::cout << "below\n";
+	//	}
+	//	if (m_pPlayer->GetDstP()->y - (float)m_pPlayer->GetVelY() >= tileHit.y + tileHit.h)
+	//	{ // Colliding bottom side of platform.
+	//		m_pPlayer->StopY();
+	//		m_pPlayer->SetY(tileHit.y + tileHit.h +1);
+	//		std::cout << "above\n";
+	//	}
+	//	if (m_pPlayer->GetDstP()->x + m_pPlayer->GetDstP()->w - (float)m_pPlayer->GetVelX() <= tileHit.x)
+	//	{ // Collision from left.
+	//		m_pPlayer->StopX(); // Stop the player from moving horizontally.
+	//		m_pPlayer->SetX(tileHit.x - m_pPlayer->GetDstP()->w );
+	//		std::cout << "left\n";
+	//	}
+	//	if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= tileHit.x + tileHit.w)
+	//	{ // Colliding right side of platform.
+	//		m_pPlayer->StopX();
+	//		m_pPlayer->SetX(tileHit.x );
+	//		std::cout << "right\n";
+	//	}
+	//}
+
+	if (m_pPlayer->GetDstP()->y > 655)
+		m_pPlayer->SetY(655 );
 
 	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pEnemy->GetDstP()))
 	{
@@ -197,14 +183,20 @@ void GameState::CheckCollision()
 			m_pPickUpList.shrink_to_fit();
 		}
 	}
-
 }
 
 void GameState::Render()
 {
-	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 64, 128, 255, 255);
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
 	SDL_RenderCopy(Engine::Instance().GetRenderer(), TextureManager::GetTexture("bg"), 0, 0);
+	for (int row = 0; row < ROWS; row++)
+	{
+		for (int col = 0; col < COLS; col++)
+		{
+			m_level[row][col]->Render();
+		}
+	}
 	//draw the enemy
 	m_pEnemy->Render();
 	// Draw the player.
@@ -213,10 +205,9 @@ void GameState::Render()
 	
 	// Draw the platforms.
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 70, 192, 0, 255);
-	for (int i = 0; i < NUMPLATFORMS; i++)
-		SDL_RenderFillRectF(Engine::Instance().GetRenderer(), m_pPlatforms[i]);
 
 	m_pReticle->Render();
+	
 
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		m_pPickUpList[i]->Render();
@@ -236,11 +227,6 @@ void GameState::Exit()
 	delete m_pPlayer;
 	delete m_pEnemy;
 	delete m_pReticle;
-	for (int i = 0; i < NUMPLATFORMS; i++)
-	{
-		delete m_pPlatforms[i];
-		m_pPlatforms[i] = nullptr;
-	}
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 	{
 		delete m_pPickUpList[i];
@@ -268,9 +254,9 @@ void TitleState::Enter()
 
 void TitleState::Update()
 {
-	if (m_playBtn->Update() == 1)
+	if (m_playBtn->ButtonUpdate() == 1)
 		return; 
-	if (m_quitBtn->Update() == 1)
+	if (m_quitBtn->ButtonUpdate() == 1)
 		return;
 }
 
@@ -302,7 +288,7 @@ void PauseState::Enter()
 
 void PauseState::Update()
 {
-	if (m_resumeBtn->Update() == 1)
+	if (m_resumeBtn->ButtonUpdate() == 1)
 		return;
 }
 
@@ -338,9 +324,9 @@ void DeadState::Enter()
 
 void DeadState::Update()
 {
-	if (m_playBtn->Update() == 1)
+	if (m_playBtn->ButtonUpdate() == 1)
 		return;
-	if (m_quitBtn->Update() == 1)
+	if (m_quitBtn->ButtonUpdate() == 1)
 		return;
 }
 

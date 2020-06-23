@@ -1,7 +1,6 @@
 #pragma once
 #ifndef _STATES_H_
 #define _STATES_H_
-#define NUMPLATFORMS 5
 
 #include <SDL.h>
 #include "Button.h"
@@ -10,6 +9,7 @@
 #include "Sprite.h"
 #include "Pickup.h"
 #include <vector>
+#include <map>
 
 class State // This is the abstract base class for all specific states.
 {
@@ -27,11 +27,12 @@ class GameState : public State
 {
 private:
 	PlatformPlayer* m_pPlayer;
-	SDL_FRect* m_pPlatforms[NUMPLATFORMS];
 	Enemy* m_pEnemy;
 	Sprite* m_pReticle;
 
 	std::vector<Pickup*> m_pPickUpList;
+	std::array<std::array<Tile*, COLS>, ROWS> m_level;
+	std::map<char, Tile*> m_tiles;
 
 	Sprite* hpUI[5];
 
@@ -46,6 +47,7 @@ public:
 	void Enter();
 	void Exit();
 	void Resume();
+	std::array < std::array<Tile*, COLS>, ROWS>& GetLevel() { return m_level; }
 };
 
 class TitleState : public State
