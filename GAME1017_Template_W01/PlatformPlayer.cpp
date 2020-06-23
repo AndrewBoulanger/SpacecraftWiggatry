@@ -42,9 +42,9 @@ void PlatformPlayer::Update()
 
 	// Check collision
 	if (COMA::PlayerCollisionLeft({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, -GetAccelX(), 0))
-		SetAccelX(1.0);
+		m_dst.x -= (int)m_velX;
 	if (COMA::PlayerCollisionRight({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, GetAccelX(), 0))
-		SetAccelX(-1.0);
+		m_dst.x -= (int)m_velX;
 	if (COMA::PlayerCollisionTop({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, -GetAccelY(), 0));
 		m_dst.y = (m_dst.y + 5.0);
 
