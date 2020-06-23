@@ -9,7 +9,7 @@
 class Button : public Sprite
 {
 public:
-	int Update();
+	int ButtonUpdate();
 	void Render();
 protected: // Private but inherited!
 	Button(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t);

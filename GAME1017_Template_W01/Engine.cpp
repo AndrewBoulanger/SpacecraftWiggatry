@@ -60,6 +60,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	SOMA::AllocateChannels(16);
 	SOMA::Load("Aud/Poker Face.mp3", "PokerFace", SOUND_MUSIC);
 	SOMA::Load("Aud/Wrecking Ball.mp3", "WreckingBall", SOUND_MUSIC);
+	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
 	SOMA::SetMusicVolume(15);
 
 	m_running = true; // Everything is okay, start the engine.
