@@ -39,6 +39,13 @@ PlatformPlayer::~PlatformPlayer()
 
 void PlatformPlayer::Update()
 {
+	// Check collision
+	if (COMA::PlayerCollisionLeft({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, -GetAccelX(), 0))
+		m_dst.x -= (int)m_velX;
+	if (COMA::PlayerCollisionRight({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, GetAccelX(), 0))
+		m_dst.x -= (int)m_velX;
+	if (COMA::PlayerCollisionTop({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, -GetAccelY(), 0))
+		m_dst.y -= (int)m_velY;
 	 //Do X axis first.
 	m_velX += m_accelX;
 	m_velX *= (m_grounded?m_drag:1); 
@@ -46,12 +53,18 @@ void PlatformPlayer::Update()
 	if(!COMA::PlayerCollision(m_dst, m_velX, 0))
 		m_dst.x += (int)m_velX; // Had to cast it to int to get crisp collision with side of platform.
 	// Now do Y axis.
-	m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
-	m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav*5));
-	if (!COMA::PlayerCollision(m_dst, 0, m_velY))
+	if (!COMA::PlayerCollisionBottom({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, 0, GetAccelY()))
+	{
+		m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
+		m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav * 5));
 		m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
-	else
-		m_grounded = true;
+	}
+	if (COMA::PlayerCollisionBottom({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, 0, GetAccelY()))
+	{
+		SetGrounded(true);
+		std::cout << "grounded\n";
+		m_dst.y = (m_dst.y - ((int)(m_dst.y) % 32));
+	}
 
 	m_accelX = m_accelY = 0.0;
 

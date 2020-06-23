@@ -49,6 +49,7 @@ void GameState::Enter()
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f}, 
 									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
+	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
 	for (int i = 0; i < (5); i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
@@ -102,6 +103,8 @@ void GameState::Update()
 	{
 		STMA::PushState(new PauseState);
 	}
+	if (m_pauseBtn->ButtonUpdate() == 1)
+		return;
 
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		if(m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
@@ -207,6 +210,7 @@ void GameState::Render()
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 70, 192, 0, 255);
 
 	m_pReticle->Render();
+	m_pauseBtn->Render();
 	
 
 	for (int i = 0; i < m_pPickUpList.size(); i++)
