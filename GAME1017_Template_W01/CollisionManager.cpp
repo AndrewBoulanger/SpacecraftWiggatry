@@ -94,9 +94,11 @@ bool CollisionManager::PlayerCollisionBottom(const SDL_Rect player, const int dX
 	int playerX = player.x / 32;
 	int playerY = player.y / 32;
 	SDL_Rect p = { player.x + dX + 8 , player.y + dY + 50, player.w - 16, player.h};
-	Tile* tiles[2] = {  static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
-						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 2)]};
-	for (int i = 0; i < 2; i++)
+	Tile* tiles[4] = { static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][playerX],
+						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
+						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 2)],
+						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)]};
+	for (int i = 0; i < 4; i++)
 	{
 		SDL_Rect t = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
 		if (tiles[i]->IsObstacle() && SDL_HasIntersection(&p, &t))

@@ -37,16 +37,14 @@ void PlatformPlayer::Update()
 		SetAccelX(-1.0);
 	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
 		SetAccelX(1.0);
-	//else
-	//	SetAccelX(0.0);
 
 	// Check collision
 	if (COMA::PlayerCollisionLeft({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, -GetAccelX(), 0))
 		m_dst.x -= (int)m_velX;
 	if (COMA::PlayerCollisionRight({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, GetAccelX(), 0))
 		m_dst.x -= (int)m_velX;
-	if (COMA::PlayerCollisionTop({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, -GetAccelY(), 0));
-		m_dst.y = (m_dst.y + 5.0);
+	if (COMA::PlayerCollisionTop({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, -GetAccelY(), 0))
+		m_dst.y -= (int)m_velY;
 
 	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !IsGrounded())
 	{
@@ -63,14 +61,13 @@ void PlatformPlayer::Update()
 		SetGrounded(false);
 		std::cout << "not grounded\n";
 	}
-	//if (m_dst.y > 635){	SetGrounded(true);	m_dst.y = 625; } // TEMPORARYYY!!!! DELETE SOON
 	// Do X axis first.
 	m_velX += m_accelX;
 	m_velX *= (m_grounded?m_drag:1); 
 	m_velX = std::min(std::max(m_velX, -(m_maxVelX)), (m_maxVelX));
 	m_dst.x += (int)m_velX;
 
-	// Now do Y axis.
+	//Y axis.
 	if (!COMA::PlayerCollisionBottom({ (int)m_dst.x, (int)m_dst.y, (int)96, (int)96 }, 0, GetAccelY()))
 	{
 		m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
@@ -83,6 +80,7 @@ void PlatformPlayer::Update()
 		std::cout << "grounded\n";
 		m_dst.y = (m_dst.y - ((int)(m_dst.y) % 32));
 	}
+
 	m_accelX = m_accelY = 0.0;
 
 	if (iCooldown > 0) 
