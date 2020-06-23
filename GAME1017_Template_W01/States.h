@@ -29,6 +29,7 @@ private:
 	PlatformPlayer* m_pPlayer;
 	Enemy* m_pEnemy;
 	Sprite* m_pReticle;
+	Button* m_pauseBtn;
 
 	std::vector<Pickup*> m_pPickUpList;
 	std::array<std::array<Tile*, COLS>, ROWS> m_level;

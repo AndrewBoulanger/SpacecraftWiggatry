@@ -42,6 +42,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/exit.png", "exit");
 	TEMA::RegisterTexture("Img/replay.png", "replay");
 	TEMA::RegisterTexture("Img/resume.png", "resume");
+	TEMA::RegisterTexture("Img/pause.png", "pause");
 	TEMA::RegisterTexture("Img/KikiSprite.png", "player");
 	TEMA::RegisterTexture("Img/alienWhisker.png", "enemy");
 	TEMA::RegisterTexture("Img/reticle.png", "reticle");

@@ -49,6 +49,7 @@ void GameState::Enter()
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 400.0f, 50.0f, 120.0f}, 
 									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
+	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
 	for (int i = 0; i < (5); i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
@@ -98,14 +99,16 @@ void GameState::Update()
 	m_pPlayer->Update();
 	//m_pEnemy->Update();
 	CheckCollision();
+
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
 	{
 		STMA::PushState(new PauseState);
 	}
+	if (m_pauseBtn->Update() == 1)
+		return;
 
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		if(m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
-
 	if (EVMA::MousePressed(1))
 	{
 		if (m_pPlayer->getHookShot()->gethookFixed() == false)
@@ -127,7 +130,6 @@ void GameState::Update()
 	{
 		m_pPlayer->snatch();
 	}
-
 }
 
 void GameState::CheckCollision()
@@ -226,6 +228,7 @@ void GameState::Render()
 
 	for (int i = 0; i < (m_pPlayer->getHealth()/10); i++)
 		hpUI[i]->Render();
+	m_pauseBtn->Render();
 
 
 	// If GameState != current state.

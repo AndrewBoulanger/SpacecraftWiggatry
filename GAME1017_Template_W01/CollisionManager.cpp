@@ -58,7 +58,7 @@ bool CollisionManager::PlayerCollisionLeft(const SDL_Rect player, const int dX, 
 						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][playerX],
 						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 2)][playerX],
 						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][playerX]};
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		SDL_Rect t = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
 		if (tiles[i]->IsObstacle() && SDL_HasIntersection(&p, &t))
@@ -94,11 +94,11 @@ bool CollisionManager::PlayerCollisionBottom(const SDL_Rect player, const int dX
 	int playerX = player.x / 32;
 	int playerY = player.y / 32;
 	SDL_Rect p = { player.x + dX + 8 , player.y + dY + 50, player.w - 16, player.h};
-	Tile* tiles[4] = { static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][playerX],
-						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
+	Tile* tiles[4] = {  static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
 						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 2)],
+						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][playerX],
 						static_cast<GameState*>(STMA::GetStates().back())->GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)]};
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 2; i++) // 4 for all bottom tiles, 2 for just two centered
 	{
 		SDL_Rect t = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
 		if (tiles[i]->IsObstacle() && SDL_HasIntersection(&p, &t))
