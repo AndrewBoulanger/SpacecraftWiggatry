@@ -98,8 +98,8 @@ private:
 		m_drag,
 		m_thrust,
 		m_grav;
-	int m_wigCount;
-	int m_ShipParts;
+	int m_wigCount = 0;
+	int m_ShipParts = 0;
 	float m_distance = 0;
 	Hookshot* m_hookShot;
 

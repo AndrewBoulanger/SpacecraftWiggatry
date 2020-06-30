@@ -30,6 +30,8 @@ private:
 	Enemy* m_pEnemy;
 	Sprite* m_pReticle;
 	Button* m_pauseBtn;
+	char buff[10];
+
 
 	std::vector<Pickup*> m_pPickUpList;
 	std::array<std::array<Tile*, COLS>, ROWS> m_level;
@@ -37,10 +39,10 @@ private:
 
 	Sprite* hpUI[5];
 	Sprite* wigUI;
+	Label* words[1]; // 0 = wig counter, may possibly add ship parts
 
 public:
 	GameState();
-	SDL_FRect** getPlatform();
 	PlatformPlayer* getPlayer();
 	Enemy* getEnemy();
 	void Update();

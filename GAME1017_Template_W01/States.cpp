@@ -4,6 +4,7 @@
 #include "SoundManager.h"
 #include "StateManager.h" // Make sure this is NOT in "States.h" or circular reference.
 #include "TextureManager.h"
+#include "FontManager.h"
 #include "MathManager.h"
 #include "Engine.h"
 #include "Button.h"
@@ -12,6 +13,7 @@
 #include "HookShot.h"
 #include <iostream>
 #include <fstream>
+#include <string>
 
 
 // Begin State. CTRL+M+H and CTRL+M+U to turn on/off collapsed code.
@@ -40,6 +42,7 @@ Enemy* GameState::getEnemy()
 void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
+	// FOMA::SetSize("Img/font.ttf", "font", 35); not working DX
 	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 50.0f,100.0f,96.0f,96.0f }, 
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f}, 
@@ -48,6 +51,8 @@ void GameState::Enter()
 	for (int i = 0; i < (5); i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
 	wigUI = new Sprite({ 0,0, 100,100 }, { (float)(185),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig"));
+	sprintf_s(buff, "%d", m_pPlayer->getWigs()); // convertersion
+	words[0] = new Label("font", 225, 0, buff, { 188,7,208,0 });
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
 
 	std::ifstream inFile("Dat/Tiledata.txt");
@@ -94,6 +99,7 @@ void GameState::Update()
 	m_pReticle->SetPos(EVMA::GetMousePos());
 	m_pPlayer->Update();
 	m_pEnemy->Update();
+	//words[0]->SetText((char*)(m_pPlayer->getWigs()));
 	CheckCollision();
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
 	{
@@ -104,7 +110,8 @@ void GameState::Update()
 
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		if(m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
-
+	sprintf_s(buff, "%d", m_pPlayer->getWigs());
+	words[0]->SetText(buff);
 
 }
 
@@ -211,10 +218,11 @@ void GameState::Render()
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		m_pPickUpList[i]->Render();
 
-	for (int i = 0; i < (m_pPlayer->getHealth()/10); i++)
+	for (int i = 0; i < (m_pPlayer->getHealth() / 10); i++)
 		hpUI[i]->Render();
 
 	wigUI->Render();
+	words[0]->Render();
 
 	// If GameState != current state.
 	if (dynamic_cast<GameState*>(STMA::GetStates().back()))
