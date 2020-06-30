@@ -7,8 +7,6 @@
 #include "StateManager.h"
 #include "TextureManager.h"
 #include <iostream>
-#define WIDTH 1024
-#define HEIGHT 768
 #define FPS 60
 using namespace std;
 

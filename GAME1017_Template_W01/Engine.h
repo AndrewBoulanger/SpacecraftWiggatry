@@ -2,7 +2,7 @@
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
 #define ROWS 24
-#define COLS 32
+#define COLS 70
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -11,6 +11,9 @@
 #include <array>
 #include "Label.h"
 #include "Tile.h"
+
+#define WIDTH 1024
+#define HEIGHT 768
 
 // Do not include any macros, initialized properties or full function definitions in this header.
 

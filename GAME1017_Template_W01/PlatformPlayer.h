@@ -16,7 +16,7 @@ class PlatformPlayer : public Character
 public:
 	PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart = 0, int smin = 0, int smax = 0, int nf = 0);
 	~PlatformPlayer();
-	void Update();
+	void Update(bool sX, bool sY);
 	void Stop();
 	void StopX();
 	void StopY();
