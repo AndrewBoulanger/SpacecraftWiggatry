@@ -25,11 +25,6 @@ void State::Resume() {}
 // Begin GameState.
 GameState::GameState() {}
 
-//SDL_FRect** GameState::getPlatform()
-//{
-//	return m_pPlatforms;
-//}
-
 PlatformPlayer* GameState::getPlayer()
 {
 	return 	m_pPlayer;
@@ -52,6 +47,7 @@ void GameState::Enter()
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
 	for (int i = 0; i < (5); i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
+	wigUI = new Sprite({ 0,0, 100,100 }, { (float)(185),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig"));
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
 
 	std::ifstream inFile("Dat/Tiledata.txt");
@@ -192,7 +188,6 @@ void GameState::Render()
 {
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
-	SDL_RenderCopy(Engine::Instance().GetRenderer(), TextureManager::GetTexture("bg"), 0, 0);
 	for (int row = 0; row < ROWS; row++)
 	{
 		for (int col = 0; col < COLS; col++)
@@ -219,6 +214,7 @@ void GameState::Render()
 	for (int i = 0; i < (m_pPlayer->getHealth()/10); i++)
 		hpUI[i]->Render();
 
+	wigUI->Render();
 
 	// If GameState != current state.
 	if (dynamic_cast<GameState*>(STMA::GetStates().back()))

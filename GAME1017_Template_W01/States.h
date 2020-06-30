@@ -36,6 +36,7 @@ private:
 	std::map<char, Tile*> m_tiles;
 
 	Sprite* hpUI[5];
+	Sprite* wigUI;
 
 public:
 	GameState();
