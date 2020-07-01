@@ -2,7 +2,7 @@
 #ifndef _PLATFORMPLAYER_H_
 #define _PLATFORMPLAYER_H_
 #define GRAV 3.0
-#define JUMPFORCE 50.0
+#define JUMPFORCE 40.0
 
 #include "Sprite.h"
 #include "Character.h"

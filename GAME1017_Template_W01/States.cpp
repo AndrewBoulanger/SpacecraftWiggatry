@@ -43,7 +43,7 @@ void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
 	// FOMA::SetSize("Img/font.ttf", "font", 35); not working DX
-	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 150.0f,100.0f,96.0f,96.0f }, 
+	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 150.0f,500.0f,96.0f,96.0f }, 
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f}, 
 									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
@@ -119,7 +119,7 @@ void GameState::Update()
 
 	// Panning
 	m_bgScrollX = m_bgScrollY = false;
-	if (m_pPlayer->GetVelX() > 0 && m_pPlayer->GetDstP()->x > WIDTH * 0.7f)
+	if (m_pPlayer->GetVelX() > 0 && m_pPlayer->GetDstP()->x > WIDTH * 0.5f)
 	{
 		if (m_level[0][COLS - 1]->GetDstP()->x > WIDTH - 32)
 		{
@@ -127,7 +127,7 @@ void GameState::Update()
 			UpdateTiles((float)m_pPlayer->GetVelX(), true);
 		}
 	}
-	else if (m_pPlayer->GetVelX() < 0 && m_pPlayer->GetDstP()->x < WIDTH * 0.2f)
+	else if (m_pPlayer->GetVelX() < 0 && m_pPlayer->GetDstP()->x < WIDTH * 0.4f)
 	{
 		if (m_level[0][0]->GetDstP()->x < 0)
 		{
