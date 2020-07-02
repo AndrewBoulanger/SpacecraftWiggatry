@@ -30,6 +30,7 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 	m_hookShot = new Hookshot({ 0,0,36,36 }, { d.x, d.y, 32, 32 }, r, TEMA::GetTexture("hookshot"));
 
 	// SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t
+
 }
 
 PlatformPlayer::~PlatformPlayer()
@@ -88,16 +89,15 @@ void PlatformPlayer::Update()
 
 	if (EVMA::MousePressed(1))
 	{
+		m_grapplehook = !m_grapplehook;
 		if (m_hookShot->gethookFixed() == false)  
 		{
-			m_grapplehook = true; 
 			setHookshot();
 			m_hookShot->calHookAngle(&m_dst); 
 			m_movehook = true;
 		}
 		else
 		{
-			m_grapplehook = false; 
 			m_hookShot->sethookFixed(false);
 			m_movehook = false;
 			m_hookShot->setlerpCo(0); 
@@ -107,6 +107,10 @@ void PlatformPlayer::Update()
 	if (EVMA::MousePressed(3))
 	{
 		snatch();
+	}
+	if (m_hookShot->GetDstP()->x <= 0 || m_hookShot->GetDstP()->x >= 1000 || m_hookShot->GetDstP()->y <= 0 || m_hookShot->GetDstP()->y >= 740)
+	{
+		RemoveHookShot();
 	}
 }
 
@@ -182,4 +186,13 @@ void PlatformPlayer::snatch()
 		Enemy->setHasWig(false);
 		m_vecwigCollection.push_back(Enemy->getenemysWig());
 	}
+}
+
+void PlatformPlayer::RemoveHookShot()
+{
+	m_grapplehook = false;
+	m_hookShot->sethookFixed(false);
+	m_movehook = false;
+	m_hookShot->setlerpCo(0);
+	m_grav = GRAV;
 }

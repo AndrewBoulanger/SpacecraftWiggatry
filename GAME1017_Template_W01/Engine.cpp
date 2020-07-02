@@ -61,7 +61,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	SOMA::Load("Aud/Wrecking Ball.mp3", "WreckingBall", SOUND_MUSIC);
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
 	SOMA::SetMusicVolume(15);
-
+	
 	m_running = true; // Everything is okay, start the engine.
 	cout << "Engine Init success!" << endl;
 	return true;
@@ -97,6 +97,7 @@ void Engine::Render()
 	// Draw anew.
 	STMA::Render();
 	SDL_RenderPresent(m_pRenderer);
+
 }
 
 void Engine::Clean()

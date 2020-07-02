@@ -1,12 +1,13 @@
 #pragma once
 #ifndef _PLATFORMPLAYER_H_
 #define _PLATFORMPLAYER_H_
-#define GRAV 3.0
-#define JUMPFORCE 50.0
+#define GRAV 5.0
+#define JUMPFORCE 60.0
 
 #include "Sprite.h"
 #include "Character.h"
 #include <vector>
+#include <array>
 
 class Hookshot;
 class Wig;
@@ -36,8 +37,8 @@ public:
 	double GetX();
 	virtual void Render();
 	void SetGrav(double grav) { m_grav = grav; }
+	void RemoveHookShot();
 	
-
 	void takeDamage(int dmg) override;
 	int getWigs()
 	{
@@ -105,6 +106,7 @@ private:
 
 	std::vector<Wig*> m_vecwigCollection;
 
+	
 };
 
 #endif

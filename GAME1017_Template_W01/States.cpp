@@ -25,10 +25,6 @@ void State::Resume() {}
 // Begin GameState.
 GameState::GameState() {}
 
-//SDL_FRect** GameState::getPlatform()
-//{
-//	return m_pPlatforms;
-//}
 
 PlatformPlayer* GameState::getPlayer()
 {
@@ -106,44 +102,10 @@ void GameState::Update()
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		if(m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
 
-
 }
 
 void GameState::CheckCollision()
 {	
-
-	//SDL_FRect tileHit = COMA::PlayerCollision({m_pPlayer->GetDstP()->x, m_pPlayer->GetDstP()->y, 96,96 }, m_pPlayer->GetVelX(), m_pPlayer->GetVelY());
-	//if (tileHit.w != NULL)
-	//{
-	//	m_pPlayer->SetGrounded(true);
-	//
-	//	if (m_pPlayer->GetDstP()->y + m_pPlayer->GetDstP()->h - (float)m_pPlayer->GetVelY() <= tileHit.y)
-	//	{ // Colliding top side of platform.
-	//		m_pPlayer->SetGrounded(true);
-	//		m_pPlayer->StopY();
-	//		m_pPlayer->SetY(tileHit.y - m_pPlayer->GetDstP()->h - 1);
-	//		//std::cout << "below\n";
-	//	}
-	//	if (m_pPlayer->GetDstP()->y - (float)m_pPlayer->GetVelY() >= tileHit.y + tileHit.h)
-	//	{ // Colliding bottom side of platform.
-	//		m_pPlayer->StopY();
-	//		m_pPlayer->SetY(tileHit.y + tileHit.h +1);
-	//		std::cout << "above\n";
-	//	}
-	//	if (m_pPlayer->GetDstP()->x + m_pPlayer->GetDstP()->w - (float)m_pPlayer->GetVelX() <= tileHit.x)
-	//	{ // Collision from left.
-	//		m_pPlayer->StopX(); // Stop the player from moving horizontally.
-	//		m_pPlayer->SetX(tileHit.x - m_pPlayer->GetDstP()->w );
-	//		std::cout << "left\n";
-	//	}
-	//	if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= tileHit.x + tileHit.w)
-	//	{ // Colliding right side of platform.
-	//		m_pPlayer->StopX();
-	//		m_pPlayer->SetX(tileHit.x );
-	//		std::cout << "right\n";
-	//	}
-	//}
-
 	if (m_pPlayer->GetDstP()->y > 655)
 		m_pPlayer->SetY(655 );
 
