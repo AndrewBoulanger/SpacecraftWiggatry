@@ -7,8 +7,6 @@
 #include "StateManager.h"
 #include "TextureManager.h"
 #include <iostream>
-#define WIDTH 1024
-#define HEIGHT 768
 #define FPS 60
 using namespace std;
 
@@ -37,18 +35,18 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	}
 	else return false; // SDL init fail.
 	m_fps = (Uint32)round((1 / (double)FPS) * 1000); // Sets FPS in milliseconds and rounds.
-	TEMA::RegisterTexture("Img/background.jpg", "bg");
 	TEMA::RegisterTexture("Img/play.png", "play");
 	TEMA::RegisterTexture("Img/exit.png", "exit");
 	TEMA::RegisterTexture("Img/replay.png", "replay");
 	TEMA::RegisterTexture("Img/resume.png", "resume");
+	TEMA::RegisterTexture("Img/pause.png", "pause");
 	TEMA::RegisterTexture("Img/KikiSprite.png", "player");
 	TEMA::RegisterTexture("Img/alienWhisker.png", "enemy");
 	TEMA::RegisterTexture("Img/reticle.png", "reticle");
 	TEMA::RegisterTexture("IMG/wig1.png", "wig");
 	TEMA::RegisterTexture("Img/hp.png", "heart");
 
-	TEMA::RegisterTexture("Img/Tiles.png", "tiles");
+	TEMA::RegisterTexture("Img/Tiles2.png", "tiles");
 
 	TEMA::RegisterTexture("Img/reticle.png", "hookshot");
 	TEMA::RegisterTexture("Img/line.png", "line(temp)");

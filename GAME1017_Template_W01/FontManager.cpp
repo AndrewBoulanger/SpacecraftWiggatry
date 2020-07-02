@@ -1,4 +1,5 @@
 #include "FontManager.h"
+#include "Engine.h"
 #include <iostream>
 
 void FontManager::RegisterFont(const char * path, const std::string key, const int size)
