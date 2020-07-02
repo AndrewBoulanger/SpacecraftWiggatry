@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include "Label.h"
 #include "FontManager.h"
+#include "States.h"
 #include <cstring>
 
 Label::Label(std::string key, const float x, const float y, const char* str,

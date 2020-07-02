@@ -11,6 +11,7 @@ public:
 	bool IsObstacle() { return m_obstacle; }
 	bool IsHazard() { return m_hazard; }
 	Tile* Clone() { return new Tile(m_src, m_dst, m_pRend, m_pText, m_obstacle, m_hazard); }
+	float GetYPosition() { return m_dst.y; };
 private:
 	bool m_obstacle,
 		m_hazard;

@@ -29,25 +29,33 @@ private:
 	PlatformPlayer* m_pPlayer;
 	Enemy* m_pEnemy;
 	Sprite* m_pReticle;
+	Button* m_pauseBtn;
+	char buff[10]; // convert from int
 
 	std::vector<Pickup*> m_pPickUpList;
-	std::array<std::array<Tile*, COLS>, ROWS> m_level;
+
 	std::map<char, Tile*> m_tiles;
+	std::array<std::array<Tile*, COLS>, ROWS> m_level;
+	std::vector<Tile*> m_platforms;
+	bool m_bgScrollX = false, m_bgScrollY = false;
 
 	Sprite* hpUI[5];
+	Sprite* wigUI;
+	Label* words[1]; // 0 = wig counter, may possibly add ship parts
 
 public:
 	GameState();
-	SDL_FRect** getPlatform();
 	PlatformPlayer* getPlayer();
 	Enemy* getEnemy();
 	void Update();
+	void UpdateTiles(float scroll, bool x = false);
 	void CheckCollision();
 	void Render();
 	void Enter();
 	void Exit();
 	void Resume();
 	std::array < std::array<Tile*, COLS>, ROWS>& GetLevel() { return m_level; }
+	PlatformPlayer* GetPlayer() { return m_pPlayer; }
 };
 
 class TitleState : public State
