@@ -14,6 +14,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "SpriteManager.h"
+#include "Utilities.h"
 
 
 // Begin State. CTRL+M+H and CTRL+M+U to turn on/off collapsed code.
@@ -55,44 +57,17 @@ void GameState::Enter()
 	words[0] = new Label("font", 225, 0, buff, { 188,7,208,0 });
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
 
-	std::ifstream inFile("Dat/Tiledata.txt");
-	if (inFile.is_open())
-	{ // Create map of Tile prototypes.
-		char key;
-		int x, y;
-		bool o, h;
-		while (!inFile.eof())
-		{
-			inFile >> key >> x >> y >> o >> h;
-			m_tiles.emplace(key, new Tile({ x * 32, y * 32, 32, 32 }, { 0,0,32,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("tiles"), o, h));
-		}
-	}
-	inFile.close();
-	inFile.open("Dat/Level1.txt");
-	if (inFile.is_open())
-	{ // Build the level from Tile prototypes.
-		char key;
-		for (int row = 0; row < ROWS; row++)
-		{
-			for (int col = 0; col < COLS; col++)
-			{
-				inFile >> key;
-				m_level[row][col] = m_tiles[key]->Clone(); // Prototype design pattern used.
-				m_level[row][col]->GetDstP()->x = (float)(32 * col);
-				m_level[row][col]->GetDstP()->y = (float)(32 * row);
-				if (m_level[row][col]->IsObstacle())
-					m_platforms.push_back(m_level[row][col]);
-			}
-		}
-	}
-	inFile.close();
+	Engine::LoadLevel("Dat/Level1.txt");
+	m_level = Engine::GetLevel();
+	m_platforms = SPMR::GetPlatforms();
 
 	m_pPickUpList.push_back(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
 					Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
 
-	
 	SOMA::PlayMusic("PokerFace");
-	
+	std::cout << m_platforms.size() << "\n";
+	SPMR::PushSprite(m_pPlayer, Regular);
+	SPMR::PushSprite(m_pEnemy, Regular);
 }
 
 void GameState::Update()
@@ -113,47 +88,46 @@ void GameState::Update()
 
 	// UI
 	for (int i = 0; i < m_pPickUpList.size(); i++)
-		if(m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
+		if (m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
 	sprintf_s(buff, "%d", m_pPlayer->getWigs());
 	words[0]->SetText(buff);
 
-	// Panning
-	m_bgScrollX = m_bgScrollY = false;
-	if (m_pPlayer->GetVelX() > 0 && m_pPlayer->GetDstP()->x > WIDTH * 0.5f)
-	{
-		if (m_level[0][COLS - 1]->GetDstP()->x > WIDTH - 32)
-		{
-			m_bgScrollX = true;
-			UpdateTiles((float)m_pPlayer->GetVelX(), true);
-		}
-	}
-	else if (m_pPlayer->GetVelX() < 0 && m_pPlayer->GetDstP()->x < WIDTH * 0.4f)
-	{
-		if (m_level[0][0]->GetDstP()->x < 0)
-		{
-			m_bgScrollX = true;
-			UpdateTiles((float)m_pPlayer->GetVelX(), true);
-		}
-	}
-	if (m_pPlayer->GetVelY() > 0 && m_pPlayer->GetDstP()->y > HEIGHT * 0.7f)
+	//// Panning
+	//m_bgScrollX = m_bgScrollY = false;
+	//if (m_pPlayer->GetVelX() > 0 && m_pPlayer->GetDstP()->x > WIDTH * 0.5f)
+	//{
+	//	if (m_level[0][COLS - 1]->GetDstP()->x > WIDTH - 32)
+	//	{
+	//		m_bgScrollX = true;
+	//		UpdateTiles((float)m_pPlayer->GetVelX(), true);
+	//	}
+	//}
+	//else if (m_pPlayer->GetVelX() < 0 && m_pPlayer->GetDstP()->x < WIDTH * 0.4f)
+	//{
+	//	if (m_level[0][0]->GetDstP()->x < 0)
+	//	{
+	//		m_bgScrollX = true;
+	//		UpdateTiles((float)m_pPlayer->GetVelX(), true);
+	//	}
+	//}
+	/*if (m_pPlayer->GetVelY() > 0 && m_pPlayer->GetDstP()->y > HEIGHT * 0.7f)
 	{
 		if (m_level[ROWS - 1][0]->GetDstP()->y > HEIGHT - 32)
 		{
 			m_bgScrollY = true;
 			UpdateTiles((float)m_pPlayer->GetVelY());
 		}
-	}
-	else if (m_pPlayer->GetVelY() < 0 && m_pPlayer->GetDstP()->y < HEIGHT * 0.3f)
-	{
-		if (m_level[0][0]->GetDstP()->y < 0)
-		{
-			m_bgScrollY = true;
-			UpdateTiles((float)m_pPlayer->GetVelY());
-		}
-	}
+	}*/
+	//else if (m_pPlayer->GetVelY() < 0 && m_pPlayer->GetDstP()->y < HEIGHT * 0.3f)
+	//{
+	//	if (m_level[0][0]->GetDstP()->y < 0)
+	//	{
+	//		m_bgScrollY = true;
+	//		UpdateTiles((float)m_pPlayer->GetVelY());
+	//	}
+	//}
 	m_pPlayer->Update(m_bgScrollX, m_bgScrollY); // Change to player Update here.
 	CheckCollision();
-
 }
 
 void GameState::UpdateTiles(float scroll, bool x)
@@ -173,69 +147,33 @@ void GameState::UpdateTiles(float scroll, bool x)
 void GameState::CheckCollision()
 {	
 
-	//SDL_FRect tileHit = COMA::PlayerCollision({m_pPlayer->GetDstP()->x, m_pPlayer->GetDstP()->y, 96,96 }, m_pPlayer->GetVelX(), m_pPlayer->GetVelY());
-	//if (tileHit.w != NULL)
+	//for (unsigned i = 0; i < m_platforms.size(); i++) // For each platform.
 	//{
-	//	m_pPlayer->SetGrounded(true);
-	//
-	//	if (m_pPlayer->GetDstP()->y + m_pPlayer->GetDstP()->h - (float)m_pPlayer->GetVelY() <= tileHit.y)
-	//	{ // Colliding top side of platform.
-	//		m_pPlayer->SetGrounded(true);
-	//		m_pPlayer->StopY();
-	//		m_pPlayer->SetY(tileHit.y - m_pPlayer->GetDstP()->h - 1);
-	//		//std::cout << "below\n";
-	//	}
-	//	if (m_pPlayer->GetDstP()->y - (float)m_pPlayer->GetVelY() >= tileHit.y + tileHit.h)
-	//	{ // Colliding bottom side of platform.
-	//		m_pPlayer->StopY();
-	//		m_pPlayer->SetY(tileHit.y + tileHit.h +1);
-	//		std::cout << "above\n";
-	//	}
-	//	if (m_pPlayer->GetDstP()->x + m_pPlayer->GetDstP()->w - (float)m_pPlayer->GetVelX() <= tileHit.x)
-	//	{ // Collision from left.
-	//		m_pPlayer->StopX(); // Stop the player from moving horizontally.
-	//		m_pPlayer->SetX(tileHit.x - m_pPlayer->GetDstP()->w );
-	//		std::cout << "left\n";
-	//	}
-	//	if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= tileHit.x + tileHit.w)
-	//	{ // Colliding right side of platform.
-	//		m_pPlayer->StopX();
-	//		m_pPlayer->SetX(tileHit.x );
-	//		std::cout << "right\n";
+	//	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_platforms[i]->GetDstP()))
+	//	{
+	//		if (m_pPlayer->GetDstP()->y + m_pPlayer->GetDstP()->h - (float)m_pPlayer->GetVelY() <= m_platforms[i]->GetDstP()->y)
+	//		{ // Colliding top side of platform.
+	//			m_pPlayer->SetGrounded(true);
+	//			m_pPlayer->StopY();
+	//			m_pPlayer->SetY(m_platforms[i]->GetDstP()->y - m_pPlayer->GetDstP()->h);
+	//		}
+	//		else if (m_pPlayer->GetDstP()->y - (float)m_pPlayer->GetVelY() >= m_platforms[i]->GetDstP()->y + m_platforms[i]->GetDstP()->h)
+	//		{ // Colliding bottom side of platform.
+	//			m_pPlayer->StopY();
+	//			m_pPlayer->SetY(m_platforms[i]->GetDstP()->y + m_platforms[i]->GetDstP()->h);
+	//		}
+	//		else if (m_pPlayer->GetDstP()->x + m_pPlayer->GetDstP()->w - m_pPlayer->GetVelX() <= m_platforms[i]->GetDstP()->x)
+	//		{ // Collision from left.
+	//			m_pPlayer->StopX(); // Stop the player from moving horizontally.
+	//			m_pPlayer->SetX(m_platforms[i]->GetDstP()->x - m_pPlayer->GetDstP()->w);
+	//		}
+	//		else if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_platforms[i]->GetDstP()->x + m_platforms[i]->GetDstP()->w)
+	//		{ // Colliding right side of platform.
+	//			m_pPlayer->StopX();
+	//			m_pPlayer->SetX(m_platforms[i]->GetDstP()->x + m_platforms[i]->GetDstP()->w);
+	//		}
 	//	}
 	//}
-
-	for (unsigned i = 0; i < m_platforms.size(); i++) // For each platform.
-	{
-		if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_platforms[i]->GetDstP()))
-		{
-			if (m_pPlayer->GetDstP()->y + m_pPlayer->GetDstP()->h - (float)m_pPlayer->GetVelY() <= m_platforms[i]->GetDstP()->y)
-			{ // Colliding top side of platform.
-				m_pPlayer->SetGrounded(true);
-				m_pPlayer->StopY();
-				m_pPlayer->SetY(m_platforms[i]->GetDstP()->y - m_pPlayer->GetDstP()->h);
-			}
-			else if (m_pPlayer->GetDstP()->y - (float)m_pPlayer->GetVelY() >= m_platforms[i]->GetDstP()->y + m_platforms[i]->GetDstP()->h)
-			{ // Colliding bottom side of platform.
-				m_pPlayer->StopY();
-				m_pPlayer->SetY(m_platforms[i]->GetDstP()->y + m_platforms[i]->GetDstP()->h);
-			}
-			else if (m_pPlayer->GetDstP()->x + m_pPlayer->GetDstP()->w - m_pPlayer->GetVelX() <= m_platforms[i]->GetDstP()->x)
-			{ // Collision from left.
-				m_pPlayer->StopX(); // Stop the player from moving horizontally.
-				m_pPlayer->SetX(m_platforms[i]->GetDstP()->x - m_pPlayer->GetDstP()->w);
-			}
-			else if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_platforms[i]->GetDstP()->x + m_platforms[i]->GetDstP()->w)
-			{ // Colliding right side of platform.
-				m_pPlayer->StopX();
-				m_pPlayer->SetX(m_platforms[i]->GetDstP()->x + m_platforms[i]->GetDstP()->w);
-			}
-		}
-	}
-
-
-	if (m_pPlayer->GetDstP()->y > 655)
-		m_pPlayer->SetY(655 );
 
 	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pEnemy->GetDstP()))
 	{
@@ -289,15 +227,15 @@ void GameState::Render()
 	//draw the enemy
 	m_pEnemy->Render();
 	// Draw the player.
-	if(m_pPlayer->getICoolDown()%10 < 5)
-		m_pPlayer->Render();
+
+	m_pPlayer->Render();
 	
-	// Draw the platforms.
-	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 70, 192, 0, 255);
+	//// Draw the platforms.
+	//SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 70, 192, 0, 255);
 
 	m_pReticle->Render();
 	m_pauseBtn->Render();
-	
+	//SPMR::Render();
 
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		m_pPickUpList[i]->Render();
@@ -326,6 +264,10 @@ void GameState::Exit()
 	}
 	m_pPickUpList.clear();
 	m_pPickUpList.shrink_to_fit();
+
+	CleanVector(SPMR::GetSprites());
+	SPMR::RemoveLevel();
+	
 }
 
 void GameState::Resume() { }

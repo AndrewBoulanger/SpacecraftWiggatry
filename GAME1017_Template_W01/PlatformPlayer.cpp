@@ -11,6 +11,8 @@
 #include "HookShot.h"
 #include "EventManager.h"
 #include "SoundManager.h"
+#include "SpriteManager.h"
+
 
 PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart, int smin, int smax, int nf)
 	:Character(s, d, r, t, sstart, smin, smax, nf)
@@ -30,6 +32,7 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Tex
 	m_hookShot = new Hookshot({ 0,0,36,36 }, { d.x, d.y, 32, 32 }, r, TEMA::GetTexture("hookshot"));
 
 	// SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t
+
 }
 
 PlatformPlayer::~PlatformPlayer()
@@ -43,19 +46,30 @@ void PlatformPlayer::Update(bool sX, bool sY)
 	m_velX += m_accelX;
 	m_velX *= (m_grounded ? m_drag : 1);
 	m_velX = std::min(std::max(m_velX, -(m_maxVelX)), (m_maxVelX));
-	if (!sX) {
-		if (!COMA::PlayerCollision(m_dst, m_velX, 0))
-			m_dst.x += (int)m_velX; // Had to cast it to int to get crisp collision with side of platform.
+	if (!COMA::PlayerCollision(&m_dst, m_velX, 0, SPMR::getOffset()) )
+	{
+		m_dst.x += (int)m_velX; // Had to cast it to int to get crisp collision with side of platform.
+		if ((m_dst.x > 600 && m_velX > 0) || (m_dst.x < 400 && m_velX < 0))
+		{
+			SPMR::ScrollAll(m_velX);
+		}
 	}
+	else
+		Stop();
 	// Now do Y axis.
 	m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
 	m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav * 5));
-	if (!sY) {
-		if (!COMA::PlayerCollision(m_dst, 0, m_velY))
+	if (!COMA::PlayerCollision(&m_dst, 0, m_velY, SPMR::getOffset()))
 			m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
-	}
 	else
+	{
 		m_grounded = true;
+		StopY();
+		
+	}
+
+	if (m_dst.y > 655)
+		m_dst.y = 655;
 
 	m_accelX = m_accelY = 0.0;
 
@@ -73,9 +87,15 @@ void PlatformPlayer::Update(bool sX, bool sY)
 
 	//inputs
 	if (EVMA::KeyHeld(SDL_SCANCODE_A))
+	{
 		m_accelX = -1.0;
+		m_flipped = true;
+	}
 	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+	{
 		m_accelX = 1.0;
+		m_flipped = false;
+	}
 
 	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !m_grounded)
 	{
@@ -94,16 +114,15 @@ void PlatformPlayer::Update(bool sX, bool sY)
 
 	if (EVMA::MousePressed(1))
 	{
-		if (m_hookShot->gethookFixed() == false)
+		m_grapplehook = !m_grapplehook;
+		if (m_hookShot->gethookFixed() == false)  
 		{
-			m_grapplehook = true;
 			setHookshot();
 			m_hookShot->calHookAngle(&m_dst);
 			m_movehook = true;
 		}
 		else
 		{
-			m_grapplehook = false;
 			m_hookShot->sethookFixed(false);
 			m_movehook = false;
 			m_hookShot->setlerpCo(0);
@@ -113,6 +132,10 @@ void PlatformPlayer::Update(bool sX, bool sY)
 	if (EVMA::MousePressed(3))
 	{
 		snatch();
+	}
+	if (m_hookShot->GetDstP()->x <= 0 || m_hookShot->GetDstP()->x >= 1000 || m_hookShot->GetDstP()->y <= 0 || m_hookShot->GetDstP()->y >= 740)
+	{
+		RemoveHookShot();
 	}
 }
 
@@ -140,7 +163,8 @@ double PlatformPlayer::GetX() { return m_dst.x; }
 
 void PlatformPlayer::Render()
 {
-	SDL_RenderCopyExF(m_pRend, m_pText, GetSrcP(), GetDstP(), m_angle, 0, SDL_FLIP_NONE);
+	if (iCooldown % 10 < 5)
+	SDL_RenderCopyExF(m_pRend, m_pText, GetSrcP(), GetDstP(), m_angle, 0, (SDL_RendererFlip)m_flipped);
 
 	if (m_grapplehook)
 	{
@@ -188,4 +212,13 @@ void PlatformPlayer::snatch()
 		Enemy->setHasWig(false);
 		m_vecwigCollection.push_back(Enemy->getenemysWig());
 	}
+}
+
+void PlatformPlayer::RemoveHookShot()
+{
+	m_grapplehook = false;
+	m_hookShot->sethookFixed(false);
+	m_movehook = false;
+	m_hookShot->setlerpCo(0);
+	m_grav = GRAV;
 }

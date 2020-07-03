@@ -1,12 +1,14 @@
 #pragma once
 #ifndef _PLATFORMPLAYER_H_
 #define _PLATFORMPLAYER_H_
+
 #define GRAV 3.0
 #define JUMPFORCE 40.0
 
 #include "Sprite.h"
 #include "Character.h"
 #include <vector>
+#include <array>
 
 class Hookshot;
 class Wig;
@@ -36,8 +38,8 @@ public:
 	double GetX();
 	virtual void Render();
 	void SetGrav(double grav) { m_grav = grav; }
+	void RemoveHookShot();
 	
-
 	void takeDamage(int dmg) override;
 	int getWigs()
 	{
@@ -89,6 +91,7 @@ private:
 	bool m_grounded;
 	bool m_grapplehook = false;
 	bool m_movehook = false;
+	bool m_flipped;
 	double m_accelX,
 		m_accelY,
 		m_velX,
@@ -105,6 +108,7 @@ private:
 
 	std::vector<Wig*> m_vecwigCollection;
 
+	
 };
 
 #endif

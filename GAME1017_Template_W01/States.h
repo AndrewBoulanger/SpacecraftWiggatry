@@ -34,9 +34,8 @@ private:
 
 	std::vector<Pickup*> m_pPickUpList;
 
-	std::map<char, Tile*> m_tiles;
 	std::array<std::array<Tile*, COLS>, ROWS> m_level;
-	std::vector<Tile*> m_platforms;
+	std::vector<Sprite*> m_platforms;
 	bool m_bgScrollX = false, m_bgScrollY = false;
 
 	Sprite* hpUI[5];
@@ -54,7 +53,7 @@ public:
 	void Enter();
 	void Exit();
 	void Resume();
-	std::array < std::array<Tile*, COLS>, ROWS>& GetLevel() { return m_level; }
+	
 	PlatformPlayer* GetPlayer() { return m_pPlayer; }
 };
 

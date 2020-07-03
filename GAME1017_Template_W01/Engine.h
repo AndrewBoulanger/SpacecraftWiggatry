@@ -9,6 +9,7 @@
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 #include <array>
+#include <map>
 #include "Label.h"
 #include "Tile.h"
 
@@ -26,6 +27,9 @@ private: // Private properties.
 	SDL_Renderer* m_pRenderer; // This represents the buffer to draw to.
 	// Example-specific properties.
 
+	static std::map<char, Tile*> m_tiles;
+	static std::array<std::array<Tile*, COLS>, ROWS> m_level;
+
 private: // Private methods.
 	Engine();
 	bool Init(const char* title, int xpos, int ypos, int width, int height, int flags);
@@ -40,6 +44,9 @@ public: // Public methods.
 	static Engine& Instance(); // This static method creates the static instance that can be accessed 'globally'
 	SDL_Renderer* GetRenderer();
 	bool& Running();
+
+	static std::array<std::array<Tile*, COLS>, ROWS> GetLevel();
+	static void LoadLevel(std::string path);
 };
 
 #endif
