@@ -51,7 +51,7 @@ void PlatformPlayer::Update(bool sX, bool sY)
 		m_dst.x += (int)m_velX; // Had to cast it to int to get crisp collision with side of platform.
 		if ((m_dst.x > 600 && m_velX > 0) || (m_dst.x < 400 && m_velX < 0))
 		{
-			SPMR::ScrollAll(m_velX);
+			SPMR::ScrollAll((int)m_velX);
 		}
 	}
 	else
