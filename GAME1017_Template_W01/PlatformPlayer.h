@@ -91,6 +91,7 @@ private:
 	bool m_grounded;
 	bool m_grapplehook = false;
 	bool m_movehook = false;
+	bool m_flipped;
 	double m_accelX,
 		m_accelY,
 		m_velX,

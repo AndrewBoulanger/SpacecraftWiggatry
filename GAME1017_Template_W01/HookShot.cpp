@@ -8,6 +8,7 @@
 #include <iostream>
 #include "CollisionManager.h"
 #include "EventManager.h"
+#include "SpriteManager.h"
 
 
 Hookshot::Hookshot(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t)
@@ -46,7 +47,7 @@ void Hookshot::move()
 void Hookshot::Collision()
 {
 
-	if (COMA::SmallTileCollision(m_dst, velX *.1, velY*.1))
+	if (COMA::SmallTileCollision(m_dst, velX *.1, velY*.1, SPMR::getOffset()))
 		{
 			hookFixed = true;
 		}

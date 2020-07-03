@@ -20,8 +20,8 @@ public:
 	static bool PlayerCollisionRight(const SDL_Rect player, const int dX, const int dY);
 	static bool PlayerCollisionBottom(const SDL_Rect player, const int dX, const int dY);
 	static bool PlayerCollisionTop(const SDL_Rect player, const int dX, const int dY);
-	static bool PlayerCollision(const SDL_FRect player, const int dX, const int dY);
-	static bool SmallTileCollision(const SDL_FRect player, const int dX, const int dY);
+	static bool PlayerCollision(const SDL_FRect* player, const int dX, const int dY, float offset);
+	static bool SmallTileCollision(const SDL_FRect player, const int dX, const int dY, float offset);
 private:
 	CollisionManager() {}
 };

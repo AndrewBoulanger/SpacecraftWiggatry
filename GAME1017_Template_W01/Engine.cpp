@@ -6,7 +6,10 @@
 #include "SoundManager.h"
 #include "StateManager.h"
 #include "TextureManager.h"
+#include "SpriteManager.h"
 #include <iostream>
+#include <fstream>
+
 #define FPS 60
 using namespace std;
 
@@ -59,6 +62,20 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	SOMA::Load("Aud/Wrecking Ball.mp3", "WreckingBall", SOUND_MUSIC);
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
 	SOMA::SetMusicVolume(15);
+
+	std::ifstream inFile("Dat/Tiledata.txt");
+	if (inFile.is_open())
+	{ // Create map of Tile prototypes.
+		char key;
+		int x, y;
+		bool o, h;
+		while (!inFile.eof())
+		{
+			inFile >> key >> x >> y >> o >> h;
+			m_tiles.emplace(key, new Tile({ x * 32, y * 32, 32, 32 }, { 0,0,32,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("tiles"), o, h));
+		}
+	}
+	inFile.close();
 	
 	m_running = true; // Everything is okay, start the engine.
 	cout << "Engine Init success!" << endl;
@@ -138,5 +155,35 @@ Engine& Engine::Instance()
 	return instance;
 }
 
+void Engine::LoadLevel(std::string path)
+{
+	std::ifstream inFile(path);
+	if (inFile.is_open())
+	{ // Build the level from Tile prototypes.
+		char key;
+		for (int row = 0; row < ROWS; row++)
+		{
+			for (int col = 0; col < COLS; col++)
+			{
+				inFile >> key;
+				m_level[row][col] = m_tiles[key]->Clone(); // Prototype design pattern used.
+				m_level[row][col]->GetDstP()->x = (float)(32 * col);
+				m_level[row][col]->GetDstP()->y = (float)(32 * row);
+				if (m_level[row][col]->IsObstacle())
+					SPMR::PushSprite(m_level[row][col], platform);
+				else
+					SPMR::PushSprite(m_level[row][col], background);
+			}
+		}
+	}
+	inFile.close();
+}
+
+
 SDL_Renderer* Engine::GetRenderer() { return m_pRenderer; }
 bool& Engine::Running() { return m_running; }
+
+std::array<std::array<Tile*, COLS>, ROWS> Engine::GetLevel() { return m_level; }
+
+std::array<std::array<Tile*, COLS>, ROWS> Engine::m_level;
+std::map<char, Tile*> Engine::m_tiles;

@@ -8,24 +8,44 @@
 #include <map>
 #include "Engine.h"
 
+enum SpriteType
+{
+	Regular, background, platform
+};
+
 class SpriteManager
 {
 public:
-	static std::vector<Sprite*> s_sprites;
+
 public:
 	static void LoadLevel();
 	static void Update();
 	static void Render();
-	static void PushSprite(Sprite* pSprite);
+
+	static void PushSprite(Sprite* pSprite, SpriteType type);
+
 	static void PopSprite();
 	static void RemoveLevel(); //i dont know if we'll need this but im putting it here anyway
 	static void Quit();
 	static std::vector<Sprite*>& GetSprites();
-	std::array < std::array<Tile*, COLS>, ROWS>& GetLevel() { return m_level; }
+	static std::vector<Sprite*>& GetPlatforms() { return s_platforms; }
+	/*static std::vector<Sprite*>& GetEnemies() { return s_enemies; }
+	static std::vector<Sprite*>& GetProjectiles() { return s_projectiles; }
+	static std::vector<Sprite*>& GetPickups() { return s_pickups; }*/
+	static void ScrollAll(float scroll);
+	static float getOffset() { return offset; }
 private:
+	static std::vector<Sprite*> s_background;
+	static std::vector<Sprite*> s_platforms;
+	static std::vector<Sprite*> s_sprites;
+	//static std::vector<Sprite*> s_enemies;
+	//static std::vector<Sprite*> s_projectiles;
+	//static std::vector<Sprite*> s_pickups;
+
+	static float offset;
 	SpriteManager() {};
-	std::array<std::array<Tile*, COLS>, ROWS> m_level;
-	std::map<char, Tile*> m_tiles;
+
+	bool cleanBG, cleanPltf, cleanEn, cleanPr, CleanPups;
 };
 
 
