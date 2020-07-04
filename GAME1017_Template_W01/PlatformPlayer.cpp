@@ -25,8 +25,8 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Tex
 	m_grav = GRAV;
 	m_drag = 0.88;
 
-	health = 50;
-	baseDamage = 10;
+	health = 5;
+	baseDamage = 1;
 	m_wigCount = 0;
 	m_ShipParts = 0;
 	m_hookShot = new Hookshot({ 0,0,36,36 }, { d.x, d.y, 32, 32 }, r, TEMA::GetTexture("hookshot"));
@@ -90,11 +90,13 @@ void PlatformPlayer::Update(bool sX, bool sY)
 	{
 		m_accelX = -1.0;
 		m_flipped = true;
+		m_grapplehook = false;
 	}
 	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
 	{
 		m_accelX = 1.0;
 		m_flipped = false;
+		m_grapplehook = false;
 	}
 
 	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !m_grounded)
@@ -111,6 +113,10 @@ void PlatformPlayer::Update(bool sX, bool sY)
 		m_accelY = -JUMPFORCE; // Sets the jump force.
 		m_grounded = false;
 	}
+
+	// hookshot
+	if (m_grapplehook == false)
+		RemoveHookShot();
 
 	if (EVMA::MousePressed(1))
 	{

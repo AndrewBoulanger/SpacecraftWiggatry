@@ -85,3 +85,9 @@ void PauseButton::Execute()
 	SOMA::PlaySound("laser", 0, 7);
 	STMA::PushState(new PauseState);
 }
+
+ControlsButton::ControlsButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
+void ControlsButton::Execute()
+{
+	SOMA::PlaySound("beep");
+}

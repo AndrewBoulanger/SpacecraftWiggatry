@@ -48,13 +48,13 @@ void GameState::Enter()
 	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 150.0f,500.0f,96.0f,96.0f }, 
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f}, 
-									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
+									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1);
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
 	for (int i = 0; i < (5); i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
 	wigUI = new Sprite({ 0,0, 100,100 }, { (float)(185),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig"));
 	sprintf_s(buff, "%d", m_pPlayer->getWigs()); // convertersion
-	words[0] = new Label("font", 225, 0, buff, { 188,7,208,0 });
+	words[0] = new Label("font", 225, 4, buff, { 255,255,255,0 });
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
 
 	Engine::LoadLevel("Dat/Level1.txt");
@@ -226,8 +226,8 @@ void GameState::Render()
 	}
 	//draw the enemy
 	m_pEnemy->Render();
-	// Draw the player.
 
+	// Draw the player.
 	m_pPlayer->Render();
 	
 	//// Draw the platforms.
@@ -240,7 +240,7 @@ void GameState::Render()
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		m_pPickUpList[i]->Render();
 
-	for (int i = 0; i < (m_pPlayer->getHealth() / 10); i++)
+	for (int i = 0; i < (m_pPlayer->getHealth()); i++)
 		hpUI[i]->Render();
 
 	wigUI->Render();
@@ -280,18 +280,33 @@ void TitleState::Enter()
 {
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
-	words[0] = new Label("font", 180, 110, "SPACECRAFT", { 188,7,208,0 });
-	words[1] = new Label("font", 260, 200, "Wiggatry", { 255,255,255,0 });
-	words[2] = new Label("font", 0, 670, "ETTG", { 255,0,180,0 });
+	m_controlsBtn = new ControlsButton({ 0,0,200,47 }, { 824.0f,721.0f,200.0f,47.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("control"));
+	instructions = new Sprite({ 0,0,525,350 }, { 260.5f,140.0f,525.0f,350.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("controls"));
+	words[0] = new Label("fontLarge", 180, 110, "SPACECRAFT", { 188,7,208,0 });
+	words[1] = new Label("fontLarge", 260, 200, "Wiggatry", { 255,255,255,0 });
+	words[2] = new Label("fontLarge", 0, 670, "ETTG", { 255,0,180,0 });
+	words[3] = new Label("font", 370, 600, "Press ENTER to return", { 255,255,255,0 });
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
 }
 
 void TitleState::Update()
 {
-	if (m_playBtn->ButtonUpdate() == 1)
-		return; 
-	if (m_quitBtn->ButtonUpdate() == 1)
-		return;
+	if (displayControls == false)
+	{
+		if (m_playBtn->ButtonUpdate() == 1)
+			return;
+		if (m_quitBtn->ButtonUpdate() == 1)
+			return;
+		if (m_controlsBtn->ButtonUpdate() == 1)
+		{
+			displayControls = true;
+			return;
+		}
+	}
+	if (EVMA::KeyPressed(SDL_SCANCODE_RETURN))
+	{
+		displayControls = false;
+	}
 }
 
 void TitleState::Render()
@@ -302,6 +317,17 @@ void TitleState::Render()
 		words[i]->Render();
 	m_playBtn->Render();
 	m_quitBtn->Render();
+	m_controlsBtn->Render();
+
+	if (displayControls == true)
+	{
+		SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 51, 225, 170);
+		SDL_Rect rect = { 173, 128, 700, 512 };
+		SDL_RenderFillRect(Engine::Instance().GetRenderer(), &rect);
+		instructions->Render();
+		words[3]->Render();
+	}
+
 	State::Render();
 }
 
@@ -309,6 +335,7 @@ void TitleState::Exit()
 {
 	std::cout << "Exiting TitleState..." << std::endl;
 }
+
 // End TitleState.
 
 // Pause StateStuff
@@ -317,7 +344,8 @@ PauseState::PauseState() {}
 void PauseState::Enter()
 {
 	std::cout << "Entering Pause...\n";
-	m_resumeBtn = new ResumeButton({ 0,0,200,80 }, { 415.0f,400.0f,200.0f,80.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("resume"));//1024
+	m_resumeBtn = new ResumeButton({ 0,0,200,80 }, { 415.0f,500.0f,200.0f,80.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("resume"));//1024
+	instructions = new Sprite({ 0,0,525,350 }, { 260.5f,140.0f,525.0f,350.0f },Engine::Instance().GetRenderer(), TEMA::GetTexture("controls"));
 }
 
 void PauseState::Update()
@@ -330,9 +358,10 @@ void PauseState::Render()
 {
 	STMA::GetStates().front()->Render();
 	SDL_SetRenderDrawBlendMode(Engine::Instance().GetRenderer(), SDL_BLENDMODE_BLEND); // below won't be taken into account unles we do this // blendmode create transparency
-	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 51, 225, 100);
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 51, 225, 170);
 	SDL_Rect rect = { 173, 128, 700, 512 };
 	SDL_RenderFillRect(Engine::Instance().GetRenderer(), &rect);
+	instructions->Render();
 	m_resumeBtn->Render();
 	State::Render();
 }
@@ -349,7 +378,7 @@ DeadState::DeadState() {}
 void DeadState::Enter()
 {
 	std::cout << "Entering DeadState...\n";
-	words = new Label("font", 220, 110, "GAME OVER", { 255,255,255,0 });
+	words = new Label("fontLarge", 220, 110, "GAME OVER", { 255,255,255,0 });
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("replay"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);

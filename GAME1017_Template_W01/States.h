@@ -66,9 +66,12 @@ public:
 	void Enter();
 	void Exit();
 private:
-	Label* words[3];
+	Label* words[4];
 	Button* m_playBtn;
 	Button* m_quitBtn;
+	Button* m_controlsBtn;
+	Sprite* instructions;
+	bool displayControls = false;
 };
 
 class PauseState : public State
@@ -82,6 +85,7 @@ public:
 private:
 	Button* m_resumeBtn;
 	Button* m_menuBtn;
+	Sprite* instructions;
 };
 
 class DeadState : public State
