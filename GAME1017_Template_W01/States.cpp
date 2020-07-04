@@ -48,7 +48,7 @@ void GameState::Enter()
 	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 150.0f,500.0f,96.0f,96.0f }, 
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f}, 
-									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 10, 10);
+									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1);
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
 	for (int i = 0; i < (5); i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
@@ -240,7 +240,7 @@ void GameState::Render()
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		m_pPickUpList[i]->Render();
 
-	for (int i = 0; i < (m_pPlayer->getHealth() / 10); i++)
+	for (int i = 0; i < (m_pPlayer->getHealth()); i++)
 		hpUI[i]->Render();
 
 	wigUI->Render();
