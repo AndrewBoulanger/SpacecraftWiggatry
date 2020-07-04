@@ -282,6 +282,7 @@ void TitleState::Enter()
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	m_controlsBtn = new ControlsButton({ 0,0,200,47 }, { 824.0f,721.0f,200.0f,47.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("control"));
 	instructions = new Sprite({ 0,0,525,350 }, { 260.5f,140.0f,525.0f,350.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("controls"));
+	background = new Sprite({ 0,0,1204,768 }, { 0.0f,0.0f,1204.0f,768.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("bg"));
 	words[0] = new Label("fontLarge", 180, 110, "SPACECRAFT", { 188,7,208,0 });
 	words[1] = new Label("fontLarge", 260, 200, "Wiggatry", { 255,255,255,0 });
 	words[2] = new Label("fontLarge", 0, 670, "ETTG", { 255,0,180,0 });
@@ -313,6 +314,7 @@ void TitleState::Render()
 {
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 51, 255, 0);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
+	background->Render();
 	for (int i = 0; i < 3; i++)
 		words[i]->Render();
 	m_playBtn->Render();

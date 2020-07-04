@@ -71,6 +71,7 @@ private:
 	Button* m_quitBtn;
 	Button* m_controlsBtn;
 	Sprite* instructions;
+	Sprite* background;
 	bool displayControls = false;
 };
 
