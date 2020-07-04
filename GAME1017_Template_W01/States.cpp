@@ -54,7 +54,7 @@ void GameState::Enter()
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
 	wigUI = new Sprite({ 0,0, 100,100 }, { (float)(185),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig"));
 	sprintf_s(buff, "%d", m_pPlayer->getWigs()); // convertersion
-	words[0] = new Label("font", 225, 0, buff, { 188,7,208,0 });
+	words[0] = new Label("font", 225, 4, buff, { 255,255,255,0 });
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
 
 	Engine::LoadLevel("Dat/Level1.txt");
@@ -280,9 +280,9 @@ void TitleState::Enter()
 {
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
-	words[0] = new Label("font", 180, 110, "SPACECRAFT", { 188,7,208,0 });
-	words[1] = new Label("font", 260, 200, "Wiggatry", { 255,255,255,0 });
-	words[2] = new Label("font", 0, 670, "ETTG", { 255,0,180,0 });
+	words[0] = new Label("fontLarge", 180, 110, "SPACECRAFT", { 188,7,208,0 });
+	words[1] = new Label("fontLarge", 260, 200, "Wiggatry", { 255,255,255,0 });
+	words[2] = new Label("fontLarge", 0, 670, "ETTG", { 255,0,180,0 });
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
 }
 
@@ -349,7 +349,7 @@ DeadState::DeadState() {}
 void DeadState::Enter()
 {
 	std::cout << "Entering DeadState...\n";
-	words = new Label("font", 220, 110, "GAME OVER", { 255,255,255,0 });
+	words = new Label("fontLarge", 220, 110, "GAME OVER", { 255,255,255,0 });
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("replay"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);

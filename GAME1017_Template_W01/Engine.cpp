@@ -55,7 +55,8 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/line.png", "line(temp)");
 
 
-	FOMA::RegisterFont("Img/font.ttf", "font", 150);
+	FOMA::RegisterFont("Img/font.ttf", "fontLarge", 150);
+	FOMA::RegisterFont("Img/font.ttf", "font", 35);
 	STMA::ChangeState(new TitleState);
 	SOMA::AllocateChannels(16);
 	SOMA::Load("Aud/Poker Face.mp3", "PokerFace", SOUND_MUSIC);
