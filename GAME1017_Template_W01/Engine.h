@@ -3,6 +3,9 @@
 #define _ENGINE_H_
 #define ROWS 24
 #define COLS 32
+#define WIDTH 1024
+#define HEIGHT 768
+#define FPS 60
 
 #include <SDL.h>
 #include <SDL_image.h>

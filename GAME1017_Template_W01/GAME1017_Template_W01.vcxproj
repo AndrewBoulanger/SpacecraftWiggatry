@@ -133,6 +133,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MathManager.cpp" />
     <ClCompile Include="States.cpp" />
+    <ClCompile Include="StunGun.cpp" />
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="MathManager.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="States.h" />
+    <ClInclude Include="StunGun.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Tile.h" />
   </ItemGroup>

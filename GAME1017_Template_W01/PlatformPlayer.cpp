@@ -1,8 +1,10 @@
 #include "PlatformPlayer.h"
+#include "Enemy.h"
 #include "Engine.h"
 #include "StateManager.h"
 #include "States.h"
 #include "EventManager.h"
+#include "StunGun.h"
 #include "CollisionManager.h"
 #include "SoundManager.h"
 #include "TextureManager.h"
@@ -11,6 +13,8 @@
 #include "HookShot.h"
 #include "EventManager.h"
 #include "SoundManager.h"
+#include <iostream>
+using namespace std;
 
 PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Texture * t, int sstart, int smin, int smax, int nf)
 	:Character(s, d, r, t, sstart, smin, smax, nf)
@@ -55,6 +59,16 @@ void PlatformPlayer::Update()
 
 	m_accelX = m_accelY = 0.0;
 
+	//Bullet update
+	for (int i = 0; i < m_vPBullets.size(); ++i)
+	{
+		m_vPBullets[i]->update();
+	}
+	//StunGun Collision update
+	StunGunCollision();
+	//StunGun Bound Check
+	BulletBoundCheck();
+
 	
 
 	if (iCooldown > 0) 
@@ -67,9 +81,23 @@ void PlatformPlayer::Update()
 
 	//inputs
 	if (EVMA::KeyHeld(SDL_SCANCODE_A))
+	{
 		m_accelX = -1.0;
+		m_facingRight = false;
+	}
 	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+	{
 		m_accelX = 1.0;
+		m_facingRight = true;
+	}
+	if (EVMA::KeyHeld(SDL_SCANCODE_W))
+	{
+		m_facingUp = true;
+	}
+	else
+	{
+		m_facingUp = false;
+	}
 
 	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !m_grounded)
 	{
@@ -108,6 +136,16 @@ void PlatformPlayer::Update()
 	{
 		snatch();
 	}
+	if (EVMA::KeyPressed(SDL_SCANCODE_Q))
+	{
+		//SOMA::PlaySound("jump"); //change jump into slap sound
+		slap();
+	}
+	if (EVMA::KeyPressed(SDL_SCANCODE_E))
+	{
+		//SOMA::PlaySound("jump"); //change jump into bullet sound
+		createStunGunBullet();
+	}
 }
 
 void PlatformPlayer::Stop() // If you want a dead stop both axes.
@@ -140,6 +178,11 @@ void PlatformPlayer::Render()
 	{
 		m_hookShot->Render();
 		SDL_RenderDrawLineF(m_pRend, getCenter().x, getCenter().y, m_hookShot->getCenter().x, m_hookShot->getCenter().y);
+	}
+
+	for (int i = 0; i < m_vPBullets.size(); ++i)
+	{
+		m_vPBullets[i]->Render();
 	}
 }
 
@@ -181,5 +224,108 @@ void PlatformPlayer::snatch()
 		Enemy* Enemy = ((GameState*)(STMA::GetStates().back()))->getEnemy();
 		Enemy->setHasWig(false);
 		m_vecwigCollection.push_back(Enemy->getenemysWig());
+	}
+}
+
+//Player - Enemy Slap Collision
+
+void PlatformPlayer::slap()
+{
+	SDL_FRect* EnemyDstP = ((GameState*)(STMA::GetStates().back()))->getEnemy()->GetDstP();
+	float PlayerX = m_dst.x + (m_dst.w * 0.5);
+	float PlayerY = m_dst.y + (m_dst.h * 0.5);
+	float EnemyX = EnemyDstP->x + (EnemyDstP->w * 0.5);
+	float EnemyY = EnemyDstP->y + (EnemyDstP->h * 0.5);
+
+	m_distance = sqrtf(((PlayerX - EnemyX) * (PlayerX - EnemyX)) + ((PlayerY - EnemyY) * (PlayerY - EnemyY)));
+
+	if (m_distance < 100)
+	{
+		Enemy* Enemy = ((GameState*)(STMA::GetStates().back()))->getEnemy();
+		cout << "Enemy loses 1 health point!" << endl;
+		Enemy->setEnemyHP(Enemy->getEnemyHP() - 1);
+		if (Enemy->getEnemyHP() == 0)
+		{
+			EnemyDstP->x = -100;
+			EnemyDstP->y = -100;
+		}
+	}
+
+}
+
+void PlatformPlayer::createStunGunBullet()
+{
+	StunGun* stungun = new StunGun({ 0,0,36,36 }, { m_dst.x, m_dst.y, 32, 32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("hookshot"));
+	
+	if (m_facingRight == true)
+	{
+		stungun->setVelX(20);
+	}
+	else
+	{
+		stungun->setVelX(-20);
+	}
+	
+	if (m_facingUp == true)
+	{
+		stungun->setVelX(0);
+		stungun->setVelY(-20);
+	}
+
+	m_vPBullets.push_back(stungun);
+}
+
+//Playre - Enemy StunGun Collision
+void PlatformPlayer::StunGunCollision()
+{
+	Enemy* Enemy = ((GameState*)(STMA::GetStates().back()))->getEnemy();
+	SDL_Rect EnemyDst;
+	EnemyDst.x = Enemy->GetDstP()->x;
+	EnemyDst.y = Enemy->GetDstP()->y;
+	EnemyDst.w = Enemy->GetDstP()->w;
+	EnemyDst.h = Enemy->GetDstP()->h;
+
+	SDL_Rect temp;
+	std::vector<StunGun*>::iterator iterBegin = m_vPBullets.begin();
+
+	for (int i = 0; i < (int)m_vPBullets.size(); ++i, ++iterBegin)
+	{
+		SDL_Rect gunshotDst;
+		gunshotDst.x = m_vPBullets[i]->GetDstP()->x;
+		gunshotDst.y = m_vPBullets[i]->GetDstP()->y;
+		gunshotDst.w = m_vPBullets[i]->GetDstP()->w;
+		gunshotDst.h = m_vPBullets[i]->GetDstP()->h;
+
+		if (SDL_IntersectRect(&EnemyDst, &gunshotDst, &temp))
+		{
+			Enemy->setEnemyHP(Enemy->getEnemyHP() - 1);
+			cout << "Enemy loses 1 health point!" << endl;
+			cout << "Enemy Health Point : " << Enemy->getEnemyHP();
+			delete m_vPBullets[i];
+			m_vPBullets.erase(iterBegin);
+
+			if (Enemy->getEnemyHP() == 0)
+			{
+				Enemy->GetDstP()->x = -100;
+				Enemy->GetDstP()->y = -100;
+			}
+			break;
+		}
+	}
+}
+
+void PlatformPlayer::BulletBoundCheck()
+{
+	
+	std::vector<StunGun*>::iterator iterBegin = m_vPBullets.begin();
+
+	for (int i = 0; i < (int)m_vPBullets.size(); ++i, ++iterBegin)
+	{
+		if (m_vPBullets[i]->GetDstP()->x > WIDTH)
+		{
+			delete m_vPBullets[i];
+			m_vPBullets.erase(iterBegin);
+			break;
+		}
 	}
 }

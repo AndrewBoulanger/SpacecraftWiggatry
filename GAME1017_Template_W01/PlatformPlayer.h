@@ -6,10 +6,12 @@
 
 #include "Sprite.h"
 #include "Character.h"
+#include "StunGun.h"
 #include <vector>
 
 class Hookshot;
 class Wig;
+class StunGun;
 
 class PlatformPlayer : public Character
 {
@@ -81,6 +83,10 @@ public:
 
 	void setHookshot();
 	void snatch();
+	void slap();
+	void createStunGunBullet();
+	void StunGunCollision();
+	void BulletBoundCheck();
 
 	Hookshot* getHookShot() { return m_hookShot; }
 
@@ -89,6 +95,8 @@ private:
 	bool m_grounded;
 	bool m_grapplehook = false;
 	bool m_movehook = false;
+	bool m_facingRight = true;
+	bool m_facingUp = false;
 	double m_accelX,
 		m_accelY,
 		m_velX,
@@ -104,6 +112,7 @@ private:
 	Hookshot* m_hookShot;
 
 	std::vector<Wig*> m_vecwigCollection;
+	std::vector<StunGun*> m_vPBullets;
 
 };
 
