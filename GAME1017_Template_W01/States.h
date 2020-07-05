@@ -40,9 +40,10 @@ private:
 	bool m_bgScrollX = false, m_bgScrollY = false;
 
 	Sprite* hpUI[5];
-	Sprite* stungunUI[3];
+	Sprite* stungunUI[5];
 	Sprite* wigUI;
-	Label* words[1]; // 0 = wig counter, may possibly add ship parts
+	Sprite* shipUI;
+	Label* words[2]; // 0 = wig counter, 1 = ship parts
 
 public:
 	GameState();

@@ -55,11 +55,12 @@ void GameState::Enter()
 	// ui stuff
 	for (int i = 0; i < (5); i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
-	for (int i = 0; i < (3); i++)
+	for (int i = 0; i < (5); i++)
 		stungunUI[i] = new Sprite({ 0,0, 29,35 }, { (float)(35 * i),36, 29,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning"));
 	wigUI = new Sprite({ 0,0, 100,100 }, { (float)(185),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig"));
-	sprintf_s(buff, "%d", m_pPlayer->getWigs()); // convertersion
-	words[0] = new Label("font", 225, 4, buff, { 255,255,255,0 });
+	shipUI = new Sprite({ 0,0, 29, 35 }, { (float)(250),0, 29,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning"));
+	words[0] = new Label("font", 225, 4, to_string((int)(m_pPlayer->getWigs())).c_str(), { 255,255,255,0 });
+	words[1] = new Label("font", 285, 4, to_string((int)(m_pPlayer->getWigs())).c_str(), { 255,255,255,0 });
 
 	// loading first level
 	Engine::LoadLevel("Dat/Level1.txt");
@@ -104,9 +105,10 @@ void GameState::Update()
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		if (m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
 	sprintf_s(buff, "%d", m_pPlayer->getWigs());
-	words[0]->SetText(buff);
+	words[0]->SetText(to_string((int)(m_pPlayer->getWigs())).c_str());
+	words[1]->SetText(to_string((int)(m_pPlayer->getWigs())).c_str()); // change to ship!!!!!!!!!!!!!!!1
 
-	//// Panning
+	//// Panning (old ver)
 	//m_bgScrollX = m_bgScrollY = false;
 	//if (m_pPlayer->GetVelX() > 0 && m_pPlayer->GetDstP()->x > WIDTH * 0.5f)
 	//{
@@ -258,10 +260,12 @@ void GameState::Render()
 	// ui stuff
 	for (int i = 0; i < (m_pPlayer->getHealth()); i++)
 		hpUI[i]->Render();
-	for (int i = 0; i < (3); i++) // TO: reference stun uses
+	for (int i = 0; i < (5); i++) // TO: reference stun uses
 		stungunUI[i]->Render();
 	wigUI->Render();
+	shipUI->Render();
 	words[0]->Render();
+	words[1]->Render();
 
 	// If GameState != current state.
 	if (dynamic_cast<GameState*>(STMA::GetStates().back()))
