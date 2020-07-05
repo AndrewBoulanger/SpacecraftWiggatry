@@ -58,9 +58,9 @@ void GameState::Enter()
 	for (int i = 0; i < (5); i++)
 		stungunUI[i] = new Sprite({ 0,0, 29,35 }, { (float)(35 * i),36, 29,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning"));
 	wigUI = new Sprite({ 0,0, 100,100 }, { (float)(185),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig"));
-	shipUI = new Sprite({ 0,0, 29, 35 }, { (float)(250),0, 29,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning"));
+	shipUI = new Sprite({ 0,0, 74, 75 }, { (float)(250),-3, 35,33 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart"));
 	words[0] = new Label("font", 225, 4, to_string((int)(m_pPlayer->getWigs())).c_str(), { 255,255,255,0 });
-	words[1] = new Label("font", 285, 4, to_string((int)(m_pPlayer->getWigs())).c_str(), { 255,255,255,0 });
+	words[1] = new Label("font", 289, 4, to_string((int)(m_pPlayer->getParts())).c_str(), { 255,255,255,0 });
 
 	// loading first level
 	Engine::LoadLevel("Dat/Level1.txt");
@@ -76,15 +76,12 @@ void GameState::Enter()
 	SPMR::PushSprite(m_pPlayer, Regular);
 	SPMR::PushSprite(m_pEnemy, Regular);
 	SPMR::PushSprite(m_flag, Regular);
+	for (unsigned i = 0; i < m_pPickUpList.size(); i++)
+		SPMR::PushSprite(m_pPickUpList[i], Regular);
 }
 
 void GameState::Update()
 {
-	if (EVMA::KeyPressed(SDL_SCANCODE_0))
-	{
-		;
-	}
-
 	m_pReticle->SetPos(EVMA::GetMousePos());
 	m_pEnemy->Update();
 
@@ -98,11 +95,12 @@ void GameState::Update()
 	if (m_pauseBtn->ButtonUpdate() == 1)
 		return;
 
-	// UI
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		if (m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
+
+	// UI
 	words[0]->SetText(to_string((int)(m_pPlayer->getWigs())).c_str());
-	words[1]->SetText(to_string((int)(m_pPlayer->getWigs())).c_str()); // change to ship!!!!!!!!!!!!!!!1
+	words[1]->SetText(to_string((int)(m_pPlayer->getParts())).c_str()); // change to ship!!!!!!!!!!!!!!!1
 
 	//// Panning (old ver)
 	//m_bgScrollX = m_bgScrollY = false;
@@ -225,7 +223,7 @@ void GameState::CheckCollision()
 		}
 	}
 
-	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy i knowwwww
+	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy
 	{
 		if (Engine::Instance().getLevel() == 1)
 			Engine::Instance().setLevel(2);
@@ -241,6 +239,14 @@ void GameState::CheckCollision()
 			m_platforms = SPMR::GetPlatforms();
 			m_pPlayer->SetX(100.0f);
 			m_pPlayer->SetY(600.0f);
+			for (int i = 0; i < m_pPickUpList.size(); i++) {
+				if (m_pPickUpList[i]->getType() == SHIP_PART) {
+					delete m_pPickUpList[i];
+					m_pPickUpList[i] = nullptr;
+					m_pPickUpList.erase(m_pPickUpList.begin() + i);
+					m_pPickUpList.shrink_to_fit();
+				}
+			}
 		}
 		if (Engine::Instance().getLevel() == 2)
 		{
@@ -251,6 +257,19 @@ void GameState::CheckCollision()
 			m_platforms = SPMR::GetPlatforms();
 			m_pPlayer->SetX(100.0f);
 			m_pPlayer->SetY(600.0f);
+			// ship parts of lvl 2
+			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 14.0f), (32.0f * 14.5f), 50.0f, 50.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 36.0f), (32.0f * 8.5f), 50.0f, 50.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 69.0f), (32.0f * 7.5f), 50.0f, 50.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 136.0f), (32.0f * 2.5f), 50.0f, 50.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 123.0f), (32.0f * 13.5f), 50.0f, 50.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+			for (unsigned i = 0; i < m_pPickUpList.size(); i++)
+				SPMR::PushSprite(m_pPickUpList[i], Regular);
 		}
 	}
 }
