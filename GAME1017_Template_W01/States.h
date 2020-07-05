@@ -39,6 +39,7 @@ private:
 	bool m_bgScrollX = false, m_bgScrollY = false;
 
 	Sprite* hpUI[5];
+	Sprite* stungunUI[3];
 	Sprite* wigUI;
 	Label* words[1]; // 0 = wig counter, may possibly add ship parts
 

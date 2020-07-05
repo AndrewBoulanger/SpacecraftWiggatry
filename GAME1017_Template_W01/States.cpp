@@ -44,19 +44,24 @@ Enemy* GameState::getEnemy()
 void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
-	// FOMA::SetSize("Img/font.ttf", "font", 35); not working DX
+	// player and enemy stuff
 	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 100.0f,600.0f,96.0f,96.0f }, 
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f}, 
 									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1);
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
+	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
+
+	// ui stuff
 	for (int i = 0; i < (5); i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
+	for (int i = 0; i < (3); i++)
+		stungunUI[i] = new Sprite({ 0,0, 29,35 }, { (float)(35 * i),36, 29,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning"));
 	wigUI = new Sprite({ 0,0, 100,100 }, { (float)(185),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig"));
 	sprintf_s(buff, "%d", m_pPlayer->getWigs()); // convertersion
 	words[0] = new Label("font", 225, 4, buff, { 255,255,255,0 });
-	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
 
+	// loading first level
 	Engine::LoadLevel("Dat/Level1.txt");
 	m_level = Engine::GetLevel();
 	m_platforms = SPMR::GetPlatforms();
@@ -250,9 +255,11 @@ void GameState::Render()
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		m_pPickUpList[i]->Render();
 
+	// ui stuff
 	for (int i = 0; i < (m_pPlayer->getHealth()); i++)
 		hpUI[i]->Render();
-
+	for (int i = 0; i < (3); i++) // TO: reference stun uses
+		stungunUI[i]->Render();
 	wigUI->Render();
 	words[0]->Render();
 
