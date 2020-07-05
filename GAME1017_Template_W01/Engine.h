@@ -32,6 +32,8 @@ private: // Private properties.
 	static std::map<char, Tile*> m_tiles;
 	static std::array<std::array<Tile*, COLS>, ROWS> m_level;
 
+	int currentLevel = 1;
+
 private: // Private methods.
 	Engine();
 	bool Init(const char* title, int xpos, int ypos, int width, int height, int flags);
@@ -49,6 +51,8 @@ public: // Public methods.
 
 	static std::array<std::array<Tile*, COLS>, ROWS> GetLevel();
 	static void LoadLevel(std::string path);
+	int getLevel() { return currentLevel; };
+	void setLevel(int l) { currentLevel = l; };
 };
 
 #endif

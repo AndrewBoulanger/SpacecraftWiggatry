@@ -31,13 +31,14 @@ private:
 	Enemy* m_pEnemy;
 	Sprite* m_pReticle;
 	Button* m_pauseBtn;
-	char buff[10]; // convert from int
 
 	std::vector<Pickup*> m_pPickUpList;
 
 	std::array<std::array<Tile*, COLS>, ROWS> m_level;
 	std::vector<Sprite*> m_platforms;
 	bool m_bgScrollX = false, m_bgScrollY = false;
+
+	Sprite* m_flag;
 
 	Sprite* hpUI[5];
 	Sprite* stungunUI[5];

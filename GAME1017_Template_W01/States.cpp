@@ -69,23 +69,20 @@ void GameState::Enter()
 
 	m_pPickUpList.push_back(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
 					Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
+	m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
 
 	SOMA::PlayMusic("PokerFace");
 	std::cout << m_platforms.size() << "\n";
 	SPMR::PushSprite(m_pPlayer, Regular);
 	SPMR::PushSprite(m_pEnemy, Regular);
+	SPMR::PushSprite(m_flag, Regular);
 }
 
 void GameState::Update()
 {
 	if (EVMA::KeyPressed(SDL_SCANCODE_0))
 	{
-		SPMR::RemoveLevel();
-		Engine::LoadLevel("Dat/Level2.txt");
-		m_level = Engine::GetLevel();
-		m_platforms = SPMR::GetPlatforms();
-		m_pPlayer->SetX(100.0f);
-		m_pPlayer->SetY(600.0f);
+		;
 	}
 
 	m_pReticle->SetPos(EVMA::GetMousePos());
@@ -104,7 +101,6 @@ void GameState::Update()
 	// UI
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		if (m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
-	sprintf_s(buff, "%d", m_pPlayer->getWigs());
 	words[0]->SetText(to_string((int)(m_pPlayer->getWigs())).c_str());
 	words[1]->SetText(to_string((int)(m_pPlayer->getWigs())).c_str()); // change to ship!!!!!!!!!!!!!!!1
 
@@ -197,12 +193,12 @@ void GameState::CheckCollision()
 		if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
 		{ // Colliding right side of platform.
 			m_pPlayer->StopX();
-			m_pPlayer->KnockLeft(-10); //knock the player to the right
+			m_pPlayer->KnockLeft(-5); //knock the player to the right
 		}
 		else
 		{
 			m_pPlayer->Stop();
-			m_pPlayer->KnockLeft(10);
+			m_pPlayer->KnockLeft(5);
 		}
 		m_pPlayer->takeDamage(m_pEnemy->getBaseDamage());
 	}
@@ -228,6 +224,35 @@ void GameState::CheckCollision()
 			m_pPickUpList.shrink_to_fit();
 		}
 	}
+
+	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy i knowwwww
+	{
+		if (Engine::Instance().getLevel() == 1)
+			Engine::Instance().setLevel(2);
+		else
+			Engine::Instance().setLevel(1);
+
+		if (Engine::Instance().getLevel() == 1)
+		{
+			m_flag->SetX(32 * 137);
+			SPMR::RemoveLevel();
+			Engine::LoadLevel("Dat/Level1.txt");
+			m_level = Engine::GetLevel();
+			m_platforms = SPMR::GetPlatforms();
+			m_pPlayer->SetX(100.0f);
+			m_pPlayer->SetY(600.0f);
+		}
+		if (Engine::Instance().getLevel() == 2)
+		{
+			m_flag->SetX(32 * 137);
+			SPMR::RemoveLevel();
+			Engine::LoadLevel("Dat/Level2.txt");
+			m_level = Engine::GetLevel();
+			m_platforms = SPMR::GetPlatforms();
+			m_pPlayer->SetX(100.0f);
+			m_pPlayer->SetY(600.0f);
+		}
+	}
 }
 
 void GameState::Render()
@@ -241,6 +266,10 @@ void GameState::Render()
 			m_level[row][col]->Render();
 		}
 	}
+	// flag goes behind player
+	if (m_flag != nullptr)
+		m_flag->Render();
+
 	//draw the enemy
 	m_pEnemy->Render();
 
@@ -256,6 +285,7 @@ void GameState::Render()
 
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		m_pPickUpList[i]->Render();
+
 
 	// ui stuff
 	for (int i = 0; i < (m_pPlayer->getHealth()); i++)
