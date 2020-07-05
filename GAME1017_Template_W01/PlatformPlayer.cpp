@@ -108,6 +108,7 @@ void PlatformPlayer::Update(bool sX, bool sY)
 	{
 		m_accelX = 1.0;
 		m_facingRight = true;
+		m_grapplehook = false;
 	}
 	if (EVMA::KeyHeld(SDL_SCANCODE_W))
 	{
@@ -116,7 +117,6 @@ void PlatformPlayer::Update(bool sX, bool sY)
 	else
 	{
 		m_facingUp = false;
-		//m_grapplehook = false;
 	}
 
 	// jump
