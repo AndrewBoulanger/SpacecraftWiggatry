@@ -45,7 +45,7 @@ void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
 	// FOMA::SetSize("Img/font.ttf", "font", 35); not working DX
-	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 150.0f,500.0f,96.0f,96.0f }, 
+	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 100.0f,600.0f,96.0f,96.0f }, 
 								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f}, 
 									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1);
@@ -72,6 +72,15 @@ void GameState::Enter()
 
 void GameState::Update()
 {
+	if (EVMA::KeyPressed(SDL_SCANCODE_0))
+	{
+		SPMR::RemoveLevel();
+		Engine::LoadLevel("Dat/Level2.txt");
+		m_level = Engine::GetLevel();
+		m_platforms = SPMR::GetPlatforms();
+		m_pPlayer->SetX(100.0f);
+		m_pPlayer->SetY(600.0f);
+	}
 
 	m_pReticle->SetPos(EVMA::GetMousePos());
 	m_pEnemy->Update();
@@ -126,6 +135,7 @@ void GameState::Update()
 	//		UpdateTiles((float)m_pPlayer->GetVelY());
 	//	}
 	//}
+
 	m_pPlayer->Update(m_bgScrollX, m_bgScrollY); // Change to player Update here.
 	CheckCollision();
 }

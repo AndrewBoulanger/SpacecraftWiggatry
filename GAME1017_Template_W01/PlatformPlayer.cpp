@@ -73,8 +73,6 @@ void PlatformPlayer::Update(bool sX, bool sY)
 
 	m_accelX = m_accelY = 0.0;
 
-
-
 	if (iCooldown > 0)
 	{
 		--iCooldown;
@@ -85,7 +83,7 @@ void PlatformPlayer::Update(bool sX, bool sY)
 		m_hookShot->Update(m_grav);
 	}
 
-	//inputs
+	// l/r inputs
 	if (EVMA::KeyHeld(SDL_SCANCODE_A))
 	{
 		m_accelX = -1.0;
@@ -99,6 +97,7 @@ void PlatformPlayer::Update(bool sX, bool sY)
 		m_grapplehook = false;
 	}
 
+	// jump
 	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !m_grounded)
 	{
 		if (m_velY >= 0)
