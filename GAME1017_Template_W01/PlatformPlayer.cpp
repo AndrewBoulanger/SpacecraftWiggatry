@@ -53,7 +53,7 @@ void PlatformPlayer::Update(bool sX, bool sY)
 	if (!COMA::PlayerCollision(&m_dst, m_velX, 0, SPMR::getOffset()) )
 	{
 		m_dst.x += (int)m_velX; // Had to cast it to int to get crisp collision with side of platform.
-		if ((m_dst.x > 600 && m_velX > 0) || (m_dst.x < 400 && m_velX < 0))
+		if ((m_dst.x > 600 && m_velX > 0) || (m_dst.x < 400 && m_velX < 0 && SPMR::getOffset() > 0))
 		{
 			SPMR::ScrollAll((int)m_velX);
 		}

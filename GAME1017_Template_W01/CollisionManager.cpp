@@ -53,7 +53,7 @@ bool CollisionManager::PlayerCollision(const SDL_FRect* player, const int dX, co
 {
 	int playerX = (player->x + offset) / 32;
 	int playerY = player->y / 32;
-	SDL_Rect p = { player->x + dX + 36, player->y + dY + 36, player->w - 48, player->h - 48 }; // Adjusted bounding box.
+	SDL_Rect p = { player->x + dX + 16, player->y + dY + 24, player->w - 48, player->h - 48 }; // Adjusted bounding box.
 	Tile* tiles[16] = { Engine::GetLevel()[playerY][playerX ],	// Bottom		players tile											// Left
 					   Engine::GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],										// MiddleLeft
 					   Engine::GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 2) ],										// MiddleRight
