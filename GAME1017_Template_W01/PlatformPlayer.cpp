@@ -116,7 +116,6 @@ void PlatformPlayer::Update(bool sX, bool sY)
 	else
 	{
 		m_facingUp = false;
-		m_grapplehook = false;
 	}
 
 	// jump
@@ -170,6 +169,8 @@ void PlatformPlayer::Update(bool sX, bool sY)
 	{
 		//SOMA::PlaySound("jump"); //change jump into bullet sound
 		createStunGunBullet();
+	}
+
 
 	if (m_hookShot->GetDstP()->x <= 0 || m_hookShot->GetDstP()->x >= 1000 || m_hookShot->GetDstP()->y <= 0 || m_hookShot->GetDstP()->y >= 740)
 	{
