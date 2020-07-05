@@ -9,6 +9,8 @@ class Enemy :
 private:
     bool hasWig;
     Wig* enemysWig;
+    int EnemyHP = 10;
+
 protected:
 
 public:
@@ -18,7 +20,8 @@ public:
     {return hasWig; }
     Wig* getenemysWig()
     { return enemysWig; }
-
+    int getEnemyHP() { return EnemyHP; }
+    void setEnemyHP(int h) { EnemyHP = h; }
     void setHasWig(bool b);
     void removeWig()
     {
