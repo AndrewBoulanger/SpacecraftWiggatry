@@ -4,6 +4,8 @@
 #define ROWS 24
 #define COLS 140
 
+#define FPS 60
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>

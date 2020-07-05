@@ -8,6 +8,7 @@
 #include "Enemy.h"
 #include "Sprite.h"
 #include "Pickup.h"
+#include "StunGun.h"
 #include <vector>
 #include <map>
 
