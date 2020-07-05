@@ -54,5 +54,6 @@
   <ItemGroup>
     <Text Include="Dat\Level1.txt" />
     <Text Include="Dat\Tiledata.txt" />
+    <Text Include="Dat\Level2.txt" />
   </ItemGroup>
 </Project>

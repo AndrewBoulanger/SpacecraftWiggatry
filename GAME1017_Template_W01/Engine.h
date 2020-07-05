@@ -1,7 +1,7 @@
 #pragma once
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
-#define ROWS 40
+#define ROWS 24
 #define COLS 140
 
 #include <SDL.h>
