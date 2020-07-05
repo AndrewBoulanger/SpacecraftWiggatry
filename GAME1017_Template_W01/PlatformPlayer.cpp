@@ -14,9 +14,11 @@
 #include "EventManager.h"
 #include "SoundManager.h"
 #include <iostream>
+#include "SpriteManager.h"
+
 using namespace std;
 
-PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Texture * t, int sstart, int smin, int smax, int nf)
+PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart, int smin, int smax, int nf)
 	:Character(s, d, r, t, sstart, smin, smax, nf)
 {
 	m_grounded = true;
@@ -27,13 +29,14 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Te
 	m_grav = GRAV;
 	m_drag = 0.88;
 
-	health = 50;
-	baseDamage = 10;
+	health = 5;
+	baseDamage = 1;
 	m_wigCount = 0;
 	m_ShipParts = 0;
 	m_hookShot = new Hookshot({ 0,0,36,36 }, { d.x, d.y, 32, 32 }, r, TEMA::GetTexture("hookshot"));
 
 	// SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t
+
 }
 
 PlatformPlayer::~PlatformPlayer()
@@ -41,24 +44,39 @@ PlatformPlayer::~PlatformPlayer()
 	delete m_hookShot;
 }
 
-void PlatformPlayer::Update()
+void PlatformPlayer::Update(bool sX, bool sY)
 {
-	 //Do X axis first.
+	//Do X axis first.
 	m_velX += m_accelX;
-	m_velX *= (m_grounded?m_drag:1); 
+	m_velX *= (m_grounded ? m_drag : 1);
 	m_velX = std::min(std::max(m_velX, -(m_maxVelX)), (m_maxVelX));
-	if(!COMA::PlayerCollision(m_dst, m_velX, 0))
+	if (!COMA::PlayerCollision(&m_dst, m_velX, 0, SPMR::getOffset()) )
+	{
 		m_dst.x += (int)m_velX; // Had to cast it to int to get crisp collision with side of platform.
+		if ((m_dst.x > 600 && m_velX > 0) || (m_dst.x < 400 && m_velX < 0))
+		{
+			SPMR::ScrollAll((int)m_velX);
+		}
+	}
+	else
+		Stop();
 	// Now do Y axis.
 	m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
-	m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav*5));
-	if (!COMA::PlayerCollision(m_dst, 0, m_velY))
-		m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
+	m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav * 5));
+	if (!COMA::PlayerCollision(&m_dst, 0, m_velY, SPMR::getOffset()))
+			m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
 	else
+	{
 		m_grounded = true;
+		StopY();
+		
+	}
+
+	if (m_dst.y > 655)
+		m_dst.y = 655;
 
 	m_accelX = m_accelY = 0.0;
-
+  
 	//Bullet update
 	for (int i = 0; i < m_vPBullets.size(); ++i)
 	{
@@ -69,21 +87,22 @@ void PlatformPlayer::Update()
 	//StunGun Bound Check
 	BulletBoundCheck();
 
-	
-
-	if (iCooldown > 0) 
-		{ --iCooldown; }
+	if (iCooldown > 0)
+	{
+		--iCooldown;
+	}
 
 	if (m_movehook)
 	{
 		m_hookShot->Update(m_grav);
 	}
 
-	//inputs
+	// l/r inputs
 	if (EVMA::KeyHeld(SDL_SCANCODE_A))
 	{
 		m_accelX = -1.0;
 		m_facingRight = false;
+		m_grapplehook = false;
 	}
 	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
 	{
@@ -97,8 +116,10 @@ void PlatformPlayer::Update()
 	else
 	{
 		m_facingUp = false;
+		m_grapplehook = false;
 	}
 
+	// jump
 	if (EVMA::KeyHeld(SDL_SCANCODE_SPACE) && !m_grounded)
 	{
 		if (m_velY >= 0)
@@ -110,25 +131,28 @@ void PlatformPlayer::Update()
 	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_grounded)
 	{
 		SOMA::PlaySound("jump");
-		m_accelY = -JUMPFORCE ; // Sets the jump force.
+		m_accelY = -JUMPFORCE; // Sets the jump force.
 		m_grounded = false;
 	}
 
+	// hookshot
+	if (m_grapplehook == false)
+		RemoveHookShot();
+
 	if (EVMA::MousePressed(1))
 	{
+		m_grapplehook = !m_grapplehook;
 		if (m_hookShot->gethookFixed() == false)  
 		{
-			m_grapplehook = true; 
 			setHookshot();
-			m_hookShot->calHookAngle(&m_dst); 
+			m_hookShot->calHookAngle(&m_dst);
 			m_movehook = true;
 		}
 		else
 		{
-			m_grapplehook = false; 
 			m_hookShot->sethookFixed(false);
 			m_movehook = false;
-			m_hookShot->setlerpCo(0); 
+			m_hookShot->setlerpCo(0);
 			m_grav = GRAV;
 		}
 	}
@@ -136,6 +160,7 @@ void PlatformPlayer::Update()
 	{
 		snatch();
 	}
+
 	if (EVMA::KeyPressed(SDL_SCANCODE_Q))
 	{
 		//SOMA::PlaySound("jump"); //change jump into slap sound
@@ -145,6 +170,10 @@ void PlatformPlayer::Update()
 	{
 		//SOMA::PlaySound("jump"); //change jump into bullet sound
 		createStunGunBullet();
+
+	if (m_hookShot->GetDstP()->x <= 0 || m_hookShot->GetDstP()->x >= 1000 || m_hookShot->GetDstP()->y <= 0 || m_hookShot->GetDstP()->y >= 740)
+	{
+		RemoveHookShot();
 	}
 }
 
@@ -171,9 +200,10 @@ void PlatformPlayer::SetY(float y) { m_dst.y = y; }
 double PlatformPlayer::GetX() { return m_dst.x; }
 
 void PlatformPlayer::Render()
-{ 
-	SDL_RenderCopyExF(m_pRend, m_pText, GetSrcP(), GetDstP(), m_angle, 0, SDL_FLIP_NONE);
-	
+{
+	if (iCooldown % 10 < 5)
+	SDL_RenderCopyExF(m_pRend, m_pText, GetSrcP(), GetDstP(), m_angle, 0, (SDL_RendererFlip)!m_facingRight);
+
 	if (m_grapplehook)
 	{
 		m_hookShot->Render();
@@ -329,3 +359,13 @@ void PlatformPlayer::BulletBoundCheck()
 		}
 	}
 }
+
+void PlatformPlayer::RemoveHookShot()
+{
+	m_grapplehook = false;
+	m_hookShot->sethookFixed(false);
+	m_movehook = false;
+	m_hookShot->setlerpCo(0);
+	m_grav = GRAV;
+}
+

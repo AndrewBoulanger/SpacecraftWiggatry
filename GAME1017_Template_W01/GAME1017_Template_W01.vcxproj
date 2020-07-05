@@ -158,6 +158,7 @@
     <ClInclude Include="StunGun.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="img\circle.png" />
@@ -169,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Dat\Level1.txt" />
+    <Text Include="Dat\Level2.txt" />
     <Text Include="Dat\Tiledata.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

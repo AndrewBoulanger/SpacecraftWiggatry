@@ -1,23 +1,29 @@
 #include "FontManager.h"
 #include <iostream>
 
-void FontManager::RegisterFont(const char * path, const std::string key, const int size)
+void FontManager::RegisterFont(const char* path, const std::string key, const int size)
 {
-	if (!TTF_WasInit() && TTF_Init() == 0)
-		std::cout << "Font init success!" << std::endl;
-	else 
+	if (!TTF_WasInit())
 	{
-		std::cout << "Font init failed: Error - " << TTF_GetError() << std::endl;
-		return;
+		if (TTF_Init() == 0)
+			std::cout << "Font init success!" << std::endl;
+		else
+		{
+			std::cout << "Font init failed: Error - " << TTF_GetError() << std::endl;
+			return;
+		}
 	}
 	TTF_Font* temp = TTF_OpenFont(path, size);
 	if (temp == nullptr)
 		std::cout << "Could not load font: Error - " << TTF_GetError() << std::endl;
 	else
+	{
+		std::cout << "Font with key '" << key << "' registered successfully!" << std::endl;
 		s_fonts.emplace(key, temp);
+	}
 }
 
-void FontManager::SetSize(const char * path, const std::string key, const int size)
+void FontManager::SetSize(const char* path, const std::string key, const int size)
 {
 	if (s_fonts[key] != nullptr)
 	{
@@ -27,7 +33,7 @@ void FontManager::SetSize(const char * path, const std::string key, const int si
 	RegisterFont(path, key, size);
 }
 
-TTF_Font * FontManager::GetFont(const std::string key)
+TTF_Font* FontManager::GetFont(const std::string key)
 {
 	return s_fonts[key];
 }

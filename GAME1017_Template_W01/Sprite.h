@@ -18,6 +18,7 @@ public: // Inherited and public.
 	double& GetAngle() { return m_angle; }
 	void SetAngle(double a) { m_angle = a; }
 	SDL_FPoint GetWorldPivot() { return { (m_dst.x + m_pivot.x), (m_dst.y + m_pivot.y) }; }
+	bool readyToDelete;
 	void SetPos(SDL_Point point) { 
 		m_dst.x = point.x - m_dst.w*.5;
 		m_dst.y = point.y - m_dst.h*.5;

@@ -44,4 +44,20 @@ public:
 	ResumeButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t);
 };
 
+class PauseButton : public Button
+{
+private:
+	void Execute();
+public:
+	PauseButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t);
+};
+
+class ControlsButton : public Button
+{
+private:
+	void Execute();
+public:
+	ControlsButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t);
+};
+
 #endif

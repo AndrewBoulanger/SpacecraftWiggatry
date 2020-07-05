@@ -7,7 +7,7 @@ class Character : public AnimatedSprite
 protected:
 
 	int health;
-	int baseDamage;
+	int baseDamage = 1;
 	int iFrames = 60;
 	int iCooldown;
 
