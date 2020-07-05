@@ -172,6 +172,7 @@ void PlatformPlayer::Update(bool sX, bool sY)
 		createStunGunBullet();
 	}
 
+
 	if (m_hookShot->GetDstP()->x <= 0 || m_hookShot->GetDstP()->x >= 1000 || m_hookShot->GetDstP()->y <= 0 || m_hookShot->GetDstP()->y >= 740)
 	{
 		RemoveHookShot();
