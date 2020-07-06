@@ -122,6 +122,16 @@ Wig* Enemy::removeWig()
 	return enemysWig;
 }
 
+void Enemy::takeDamage(int dmg)
+{
+	if (iCooldown <= 0)
+	{
+		health -= dmg;
+		iCooldown = iFrames;
+		std::cout << "Health: " << health << std::endl;
+	}
+}
+
 void Enemy::groundedMove2(const int dir)
 {
 	if (dir < 0)

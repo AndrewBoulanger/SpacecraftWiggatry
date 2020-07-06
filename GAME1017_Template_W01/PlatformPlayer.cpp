@@ -217,7 +217,7 @@ void PlatformPlayer::takeDamage(int dmg)
 
 void PlatformPlayer::slap()
 {		
-	for (int i = 0; i = SPMR::GetEnemies().size(); i++)
+	for (int i = 0; i < SPMR::GetEnemies().size(); i++)
 	{
 		if (SPMR::GetEnemies()[i] != nullptr)
 		{
@@ -231,8 +231,7 @@ void PlatformPlayer::slap()
 
 			if (m_distance < 100) 
 			{
-				cout << "Enemy loses 1 health point!" << endl;
-				Enemy->setHealth(Enemy->getHealth() - 1);
+				Enemy->takeDamage(1);
 
 			}
 		}
@@ -288,9 +287,7 @@ void PlatformPlayer::StunGunCollision()
 
 				if (SDL_IntersectRect(&EnemyDst, &gunshotDst, &temp))
 				{
-					Enemy->setHealth(Enemy->getHealth() - 1);
-					cout << "Enemy loses 1 health point!" << endl;
-					cout << "Enemy Health Point : " << Enemy->getHealth();
+					Enemy->takeDamage(1);
 					delete m_vPBullets[i];
 					m_vPBullets.erase(iterBegin);
 
