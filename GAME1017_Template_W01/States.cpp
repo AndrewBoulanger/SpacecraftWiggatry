@@ -64,7 +64,7 @@ void GameState::Enter()
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
 		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, {2700.0f, 100.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 3300.0f, 500.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 3900.0f, 500.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
 
 			SPMR::PushSprite(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
