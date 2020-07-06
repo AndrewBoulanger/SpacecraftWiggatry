@@ -44,6 +44,8 @@ void SpriteManager::PushSprite(Sprite* pSprite, SpriteType type)
 	if(type == platform)
 		s_platforms.push_back(pSprite);
 	
+	if (type == enemy)
+		s_enemies.push_back(pSprite);
 }
 
 void SpriteManager::PopSprite()
@@ -60,7 +62,7 @@ void SpriteManager::RemoveLevel()
 {
 	while(!s_background.empty())
 	{
-		delete s_background.back();
+		delete [] s_background.back();
 		s_background.back() = nullptr;
 		s_background.pop_back();
 	}
@@ -100,6 +102,10 @@ void SpriteManager::ScrollAll(float scroll)
 	{
 		s_platforms[i]->GetDstP()->x -= scroll;
 	}
+	for (int i = 0; i < s_enemies.size(); i++)
+	{
+		s_enemies[i]->GetDstP()->x -= scroll;
+	}
 
 	
 	offset += scroll;
@@ -108,4 +114,5 @@ void SpriteManager::ScrollAll(float scroll)
 std::vector<Sprite*> SpriteManager::s_sprites;
 std::vector<Sprite*> SpriteManager::s_platforms;
 std::vector<Sprite*> SpriteManager::s_background;
+std::vector<Sprite*> SpriteManager::s_enemies;
 float SpriteManager::offset;

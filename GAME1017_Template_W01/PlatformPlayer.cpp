@@ -92,7 +92,7 @@ void PlatformPlayer::Update(bool sX, bool sY)
 		--iCooldown;
 	}
 
-	if (m_movehook)
+	if (m_hookShot->isActive())
 	{
 		m_hookShot->Update(m_grav);
 	}
@@ -102,13 +102,13 @@ void PlatformPlayer::Update(bool sX, bool sY)
 	{
 		m_accelX = -1.0;
 		m_facingRight = false;
-		m_grapplehook = false;
+	//	m_grapplehook = false;
 	}
 	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
 	{
 		m_accelX = 1.0;
 		m_facingRight = true;
-		m_grapplehook = false;
+	//	m_grapplehook = false;
 	}
 	if (EVMA::KeyHeld(SDL_SCANCODE_W))
 	{
@@ -135,31 +135,25 @@ void PlatformPlayer::Update(bool sX, bool sY)
 		m_grounded = false;
 	}
 
-	// hookshot
-	if (m_grapplehook == false)
-		RemoveHookShot();
+	//// hookshot
+	//if (m_grapplehook == false)
+	//	RemoveHookShot();
 
 	if (EVMA::MousePressed(1))
 	{
-		m_grapplehook = !m_grapplehook;
+		m_hookShot->setActive(!m_hookShot->isActive());
 		if (m_hookShot->gethookFixed() == false)  
 		{
-			setHookshot();
+			m_hookShot->SetPos({ (int)(m_dst.x + m_dst.w * 0.5), (int)(m_dst.y + m_dst.h * 0.5) });
 			m_hookShot->calHookAngle(&m_dst);
-			m_movehook = true;
 		}
 		else
 		{
-			m_hookShot->sethookFixed(false);
-			m_movehook = false;
-			m_hookShot->setlerpCo(0);
+			m_hookShot->deactivateHookshot();
 			m_grav = GRAV;
 		}
 	}
-	if (EVMA::MousePressed(3))
-	{
-		snatch();
-	}
+
 
 	if (EVMA::KeyPressed(SDL_SCANCODE_Q))
 	{
@@ -172,11 +166,6 @@ void PlatformPlayer::Update(bool sX, bool sY)
 		createStunGunBullet();
 	}
 
-
-	if (m_hookShot->GetDstP()->x <= 0 || m_hookShot->GetDstP()->x >= 1000 || m_hookShot->GetDstP()->y <= 0 || m_hookShot->GetDstP()->y >= 740)
-	{
-		RemoveHookShot();
-	}
 }
 
 void PlatformPlayer::Stop() // If you want a dead stop both axes.
@@ -206,7 +195,7 @@ void PlatformPlayer::Render()
 	if (iCooldown % 10 < 5)
 	SDL_RenderCopyExF(m_pRend, m_pText, GetSrcP(), GetDstP(), m_angle, 0, (SDL_RendererFlip)!m_facingRight);
 
-	if (m_grapplehook)
+	if (m_hookShot->isActive())
 	{
 		m_hookShot->Render();
 		SDL_RenderDrawLineF(m_pRend, getCenter().x, getCenter().y, m_hookShot->getCenter().x, m_hookShot->getCenter().y);
@@ -232,32 +221,6 @@ void PlatformPlayer::takeDamage(int dmg)
 		STMA::ChangeState(new DeadState);
 }
 
-void PlatformPlayer::setHookshot()
-{
-	SDL_Point point;
-	point.x = m_dst.x + m_dst.w * 0.5;
-	point.y = m_dst.y + m_dst.h * 0.5;
-	m_hookShot->SetPos(point);
-	m_hookShot->sethookFixed(false);
-}
-
-void PlatformPlayer::snatch()
-{
-	SDL_FRect* EnemyDstP = ((GameState*)(STMA::GetStates().back()))->getEnemy()->GetDstP();
-	float PlayerX = m_dst.x + (m_dst.w * 0.5);
-	float PlayerY = m_dst.y + (m_dst.h * 0.5);
-	float EnemyX = EnemyDstP->x + (EnemyDstP->w * 0.5);
-	float EnemyY = EnemyDstP->y + (EnemyDstP->h * 0.5);
-
-	m_distance = sqrtf(((PlayerX - EnemyX) * (PlayerX - EnemyX)) + ((PlayerY - EnemyY) * (PlayerY - EnemyY)));
-
-	if (m_distance < 100)
-	{
-		Enemy* Enemy = ((GameState*)(STMA::GetStates().back()))->getEnemy();
-		Enemy->setHasWig(false);
-		m_vecwigCollection.push_back(Enemy->getenemysWig());
-	}
-}
 
 //Player - Enemy Slap Collision
 
@@ -360,14 +323,5 @@ void PlatformPlayer::BulletBoundCheck()
 			break;
 		}
 	}
-}
-
-void PlatformPlayer::RemoveHookShot()
-{
-	m_grapplehook = false;
-	m_hookShot->sethookFixed(false);
-	m_movehook = false;
-	m_hookShot->setlerpCo(0);
-	m_grav = GRAV;
 }
 

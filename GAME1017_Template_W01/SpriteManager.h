@@ -10,7 +10,7 @@
 
 enum SpriteType
 {
-	Regular, background, platform
+	Regular, background, platform, enemy
 };
 
 class SpriteManager
@@ -29,8 +29,8 @@ public:
 	static void Quit();
 	static std::vector<Sprite*>& GetSprites();
 	static std::vector<Sprite*>& GetPlatforms() { return s_platforms; }
-	/*static std::vector<Sprite*>& GetEnemies() { return s_enemies; }
-	static std::vector<Sprite*>& GetProjectiles() { return s_projectiles; }
+	static std::vector<Sprite*>& GetEnemies() { return s_enemies; }
+	/*static std::vector<Sprite*>& GetProjectiles() { return s_projectiles; }
 	static std::vector<Sprite*>& GetPickups() { return s_pickups; }*/
 	static void ScrollAll(float scroll);
 	static float getOffset() { return offset; }
@@ -38,7 +38,7 @@ private:
 	static std::vector<Sprite*> s_background;
 	static std::vector<Sprite*> s_platforms;
 	static std::vector<Sprite*> s_sprites;
-	//static std::vector<Sprite*> s_enemies;
+	static std::vector<Sprite*> s_enemies;
 	//static std::vector<Sprite*> s_projectiles;
 	//static std::vector<Sprite*> s_pickups;
 

@@ -67,7 +67,7 @@ void GameState::Enter()
 	SOMA::PlayMusic("PokerFace");
 	std::cout << m_platforms.size() << "\n";
 	SPMR::PushSprite(m_pPlayer, Regular);
-	SPMR::PushSprite(m_pEnemy, Regular);
+	SPMR::PushSprite(m_pEnemy, enemy);
 }
 
 void GameState::Update()

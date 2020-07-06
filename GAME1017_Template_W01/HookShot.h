@@ -10,7 +10,9 @@ private:
 	float speed = 50.0f;
 	float shotAngle = 0;
 	float lerpCo = 0;
+	bool active;
 	bool hookFixed = false;
+	bool enemyHit;
 	SDL_FRect line;
 	SDL_FRect* playerdst;
 	SDL_FPoint targetPos;
@@ -31,5 +33,8 @@ public:
 	bool gethookFixed() { return hookFixed; }
 	void sethookFixed(bool b);
 	void setlerpCo(float lc);
+	bool isActive() {return active;}
+	void setActive(bool a) { active = a; }
+	void deactivateHookshot();
 
 };
