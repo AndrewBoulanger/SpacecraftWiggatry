@@ -52,7 +52,7 @@ private:
 	static float offset;
 	SpriteManager() {};
 
-	bool cleanBG, cleanPltf, cleanEn, cleanPr, CleanPups;
+	static bool cleanBG, cleanSpr, cleanEn, cleanPr, CleanPups;
 };
 
 
