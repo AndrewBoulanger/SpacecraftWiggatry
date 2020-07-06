@@ -25,6 +25,7 @@ void SpriteManager::Update()
 			}
 		}
 	}
+	s_sprites.shrink_to_fit();
 }
 
 void SpriteManager::Render()
