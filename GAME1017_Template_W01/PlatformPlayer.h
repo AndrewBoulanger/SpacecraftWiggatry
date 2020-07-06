@@ -40,7 +40,6 @@ public:
 	double GetX();
 	virtual void Render();
 	void SetGrav(double grav) { m_grav = grav; }
-	void RemoveHookShot();
 	
 	void takeDamage(int dmg) override;
 	int getWigs()
@@ -68,23 +67,6 @@ public:
 		++m_ShipParts;
 	}
 
-	bool getGrapplehook()
-	{
-		return m_grapplehook;
-	}
-
-	void setGrapplehook(bool g)
-	{
-		m_grapplehook = g;
-	}
-
-	void setMoveHook(bool h)
-	{
-		m_movehook = h;
-	}
-
-	void setHookshot();
-	void snatch();
 	void slap();
 	void createStunGunBullet();
 	void StunGunCollision();
@@ -95,13 +77,9 @@ public:
 
 private:
 	bool m_grounded;
-	bool m_grapplehook = false;
-	bool m_movehook = false;
 
 	bool m_facingRight = true;
 	bool m_facingUp = false;
-
-	bool m_flipped;
 
 	double m_accelX,
 		m_accelY,

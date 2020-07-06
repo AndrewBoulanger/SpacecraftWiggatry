@@ -19,13 +19,14 @@ public:
     bool getHasWig()
     {return hasWig; }
     Wig* getenemysWig()
-    { return enemysWig; }
+    { if(hasWig)
+        return enemysWig; }
     int getEnemyHP() { return EnemyHP; }
     void setEnemyHP(int h) { EnemyHP = h; }
-    void setHasWig(bool b);
-    void removeWig()
+    Wig* removeWig()
     {
         hasWig = false;
+        return enemysWig;
     }
 
     void Update();

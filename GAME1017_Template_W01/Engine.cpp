@@ -7,6 +7,7 @@
 #include "StateManager.h"
 #include "TextureManager.h"
 #include "SpriteManager.h"
+#include "PlatformPlayer.h"
 #include <iostream>
 #include <fstream>
 
@@ -62,6 +63,8 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/Tiles2.png", "tiles");
 	TEMA::RegisterTexture("Img/flag.png", "flag");
 
+	SPMR::setPlayer( new PlatformPlayer({ 0,0,400,152 }, { 100.0f,600.0f,96.0f,96.0f },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("player")));
 
 	FOMA::RegisterFont("Img/font.ttf", "fontLarge", 150);
 	FOMA::RegisterFont("Img/font.ttf", "font", 35);
@@ -178,10 +181,7 @@ void Engine::LoadLevel(std::string path)
 				m_level[row][col] = m_tiles[key]->Clone(); // Prototype design pattern used.
 				m_level[row][col]->GetDstP()->x = (float)(32 * col);
 				m_level[row][col]->GetDstP()->y = (float)(32 * row);
-				if (m_level[row][col]->IsObstacle())
-					SPMR::PushSprite(m_level[row][col], platform);
-				else
-					SPMR::PushSprite(m_level[row][col], background);
+				SPMR::PushSprite(m_level[row][col], background);
 			}
 		}
 	}

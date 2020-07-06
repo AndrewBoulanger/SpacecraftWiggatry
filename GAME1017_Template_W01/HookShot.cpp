@@ -51,6 +51,18 @@ void Hookshot::Collision()
 		{
 			hookFixed = true;
 		}
+	for (int i = 0; i < SPMR::GetEnemies().size(); i++)
+	{
+		if (enemyHit == false && COMA::CircleAABBCheck(getCenter(), m_dst.w * .5, *SPMR::GetEnemies()[i]->GetDstP()))
+		{
+			enemyHit = true;
+			if (SPMR::GetEnemies()[i]->getHealth() <= 0 && SPMR::GetEnemies()[i]->getHasWig())
+			{
+				stolenWig = SPMR::GetEnemies()[i]->removeWig();
+				SPMR::PushSprite(stolenWig);
+			}
+		}
+	}
 	
 }
 
@@ -68,9 +80,9 @@ void Hookshot::Update(double& grav)
 		Collision();
 	}
 
-	if (hookFixed == true)
+	if (hookFixed == true && !enemyHit )
 	{
-		if (lerpCo <= 1.0f)
+		if (lerpCo <= .6f)
 		{
 			playerdst->x = MyLerp(playerdst->x, m_dst.x  + (m_dst.w * 0.5) - (playerdst->w * 0.5), lerpCo);
 			playerdst->y = MyLerp(playerdst->y, m_dst.y, lerpCo);
@@ -79,19 +91,42 @@ void Hookshot::Update(double& grav)
 		}
 		else
 		{
-			playerdst->x = m_dst.x + (m_dst.w * 0.5) - (playerdst->w * 0.5);
-			playerdst->y = m_dst.y;
+			deactivateHookshot();
+			grav = GRAV;
 		}
 	}
+
+	if (enemyHit)
+	{
+		if (lerpCo <= .3f)
+		{
+			m_dst.x = MyLerp(m_dst.x, playerdst->x + (playerdst->w*.5) , lerpCo);
+			m_dst.y = MyLerp(m_dst.y, playerdst->y + (playerdst->h*.5), lerpCo);
+			lerpCo += 0.01f;
+			if (stolenWig != nullptr)
+			{
+				stolenWig->SetPos({(int) m_dst.x,(int) m_dst.y });
+			}
+		}
+		else
+		{
+			deactivateHookshot();
+			stolenWig = nullptr;
+		}
+	}
+
+	if (m_dst.x <= 0 || m_dst.x >= 1000 || m_dst.y <= 0 || m_dst.y >= 740)
+	{
+		deactivateHookshot();
+	}
+
+	//if (active)
+		this->Render();
 }
 
 void Hookshot::Render()
 {
-	SDL_Rect m_srcline = { 0, 0, 18, 17 };
-	SDL_FRect m_dstline = { line.x, line.y, line.w, line.h };
-	//SDL_RenderCopyExF(m_pRend, TEMA::GetTexture("line(temp)"), &m_srcline, &m_dstline, -shotAngle, nullptr, SDL_FLIP_NONE);
-	//SDL_RenderCopyF(m_pRend, TEMA::GetTexture("line(temp)"), &m_srcline, &m_dstline);
-	SDL_RenderCopyF(m_pRend, m_pText, &m_src, &m_dst);
+		SDL_RenderCopyF(m_pRend, m_pText, &m_src, &m_dst);
 }
 
 void Hookshot::sethookFixed(bool b)
@@ -102,4 +137,14 @@ void Hookshot::sethookFixed(bool b)
 void Hookshot::setlerpCo(float lc)
 {
 	lerpCo = lc;
+}
+
+void Hookshot::deactivateHookshot()
+{
+	m_dst.x = playerdst->x + (m_dst.w * 0.5) - (playerdst->w * 0.5);
+	m_dst.y = playerdst->y;
+	active = false;
+	lerpCo = 0;
+	hookFixed = false;
+	enemyHit = false;
 }
