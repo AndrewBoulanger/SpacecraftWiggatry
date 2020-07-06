@@ -38,6 +38,7 @@ protected: // Private BUT inherited.
 	SDL_Renderer* m_pRend;
 	
 	SDL_Texture* m_pText;
+	int m_dir;
 private: // Private NOT inherited.
 };
 
@@ -55,7 +56,7 @@ public:
 			if (m_sprite++ == m_spriteMax)
 				m_sprite = m_spriteMin;
 		}
-		m_src.x = m_src.w * m_sprite;
+		m_src.y = m_src.h * m_sprite; //switched this to src.y since it looks like most of our sprites sheets are vertical
 	}
 protected:
 	int m_sprite,		// The current sprite index in row.
