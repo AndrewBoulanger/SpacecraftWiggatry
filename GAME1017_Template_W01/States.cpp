@@ -35,8 +35,6 @@ void GameState::Enter()
 	// FOMA::SetSize("Img/font.ttf", "font", 35); not working DX
 	m_pPlayer = SPMR::getPlayer();
 
-	SPMR::PushSprite(new Enemy({ 0,0,400,140 }, {850.0f, 500.0f, 50.0f, 106.0f},
-									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
 
@@ -50,28 +48,55 @@ void GameState::Enter()
 	words[0] = new Label("font", 225, 4, to_string((int)(m_pPlayer->getWigs())).c_str(), { 255,255,255,0 });
 	words[1] = new Label("font", 289, 4, to_string((int)(m_pPlayer->getParts())).c_str(), { 255,255,255,0 });
 
-	// loading first level
-	Engine::LoadLevel("Dat/Level1.txt");
-	m_level = Engine::GetLevel();
+	gameOver = timeToSwitchLevels = false;
 
-	SPMR::PushSprite(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
-		Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
+	m_pPlayer->SetPos({ (int)100.0f,(int)600.0f });
 
+	if (Engine::Instance().getLevel() == 1)
+	{
+		// loading first level
+		Engine::LoadLevel("Dat/Level1.txt");
+	
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 850.0f, 500.0f, 50.0f, 106.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
+
+			SPMR::PushSprite(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
+
+
+		m_pEnemy = SPMR::GetEnemies()[0];
+		m_pEnemy->setHealth(0);  //this is just here to test snatching
+
+		m_pPlayer->setHealth(5);
 	m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
+	}
+	if (Engine::Instance().getLevel() == 2)
+	{
+		Engine::LoadLevel("Dat/Level2.txt");
 
-	SOMA::PlayMusic("PokerFace");
-
-	m_pEnemy = SPMR::GetEnemies()[0];
-	m_pEnemy->setHealth(0);
+		// ship parts of lvl 2
+		SPMR::PushSprite(new ShipPart({ 0,0,74, 75 }, { (32.0f * 14.0f), (32.0f * 14.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+		SPMR::PushSprite(new ShipPart({ 0,0,74, 75 }, { (32.0f * 36.0f), (32.0f * 8.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+		SPMR::PushSprite(new ShipPart({ 0,0,74, 75 }, { (32.0f * 69.0f), (32.0f * 7.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+		SPMR::PushSprite(new ShipPart({ 0,0,74, 75 }, { (32.0f * 136.0f), (32.0f * 2.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+		SPMR::PushSprite(new ShipPart({ 0,0,74, 75 }, { (32.0f * 123.0f), (32.0f * 13.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+	
+	m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
+	}
 
 	SPMR::PushSprite(m_flag, Regular);
+		SOMA::PlayMusic("PokerFace");
 
 }
 
 void GameState::Update()
 {
 	m_pReticle->SetPos(EVMA::GetMousePos());
-	m_pEnemy->Update();
 
 	// Pause button/key
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
@@ -91,116 +116,56 @@ void GameState::Update()
 	CheckCollision();
 }
 
-void GameState::UpdateTiles(float scroll, bool x)
-{
-	for (int row = 0; row < ROWS; row++)
-	{
-		for (int col = 0; col < COLS; col++)
-		{
-			if (x)
-				m_level[row][col]->GetDstP()->x -= scroll;
-			else
-				m_level[row][col]->GetDstP()->y -= scroll;
-		}
-	}
-}
 
 void GameState::CheckCollision()
 {	
-	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pEnemy->GetDstP()))
+	if (SPMR::GetEnemies().size()!= 0)
 	{
-		if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
-		{ // Colliding right side of platform.
-			m_pPlayer->StopX();
-			m_pPlayer->KnockLeft(-5); //knock the player to the right
-		}
-		else
+		if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pEnemy->GetDstP()))
 		{
-			m_pPlayer->Stop();
-			m_pPlayer->KnockLeft(5);
-		}
-		m_pPlayer->takeDamage(m_pEnemy->getBaseDamage());
-		if (m_pPlayer->getHealth() <= 0)
-		{
-			gameOver = true;
-			m_pPlayer->setHealth(5);// reset health for the next game, we can move this to enter if we want it to reset every level instead
+			if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
+			{ // Colliding right side of platform.
+				m_pPlayer->StopX();
+				m_pPlayer->KnockLeft(-5); //knock the player to the right
+			}
+			else
+			{
+				m_pPlayer->Stop();
+				m_pPlayer->KnockLeft(5);
+			}
+			m_pPlayer->takeDamage(m_pEnemy->getBaseDamage());
+			if (m_pPlayer->getHealth() <= 0)
+			{
+				gameOver = true;
+				m_pPlayer->setHealth(5);// reset health for the next game, we can move this to enter if we want it to reset every level instead
+			}
 		}
 	}
-
 
 	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy   
 	{                       //we could use the change state function to make a new game state, then we can move some of this stuff to the exit state and the stuff that's 
 						//	different between levels could be put in an if statement in the enter function
+		timeToSwitchLevels = true;
 		if (Engine::Instance().getLevel() == 1)
 			Engine::Instance().setLevel(2);
 		else
 			Engine::Instance().setLevel(1);
 
-		if (Engine::Instance().getLevel() == 1)
-		{
-			m_flag->SetX(32 * 137);
-			SPMR::RemoveLevel();
-			Engine::LoadLevel("Dat/Level1.txt");
-			m_level = Engine::GetLevel();
-			m_pPlayer->SetX(100.0f);
-			m_pPlayer->SetY(600.0f);
-			for (int i = 0; i < m_pPickUpList.size(); i++) {
-				if (m_pPickUpList[i]->getType() == SHIP_PART) {
-					delete m_pPickUpList[i];
-					m_pPickUpList[i] = nullptr;
-					m_pPickUpList.erase(m_pPickUpList.begin() + i);
-					m_pPickUpList.shrink_to_fit();
-				}
-			}
-		}
-		if (Engine::Instance().getLevel() == 2)
-		{
-			m_flag->SetX(32 * 137);
-			SPMR::RemoveLevel();
-			Engine::LoadLevel("Dat/Level2.txt");
-			m_level = Engine::GetLevel();
-			m_pPlayer->SetX(100.0f);
-			m_pPlayer->SetY(600.0f);
-			// ship parts of lvl 2
-			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 14.0f), (32.0f * 14.5f), 50.0f, 50.0f },
-				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
-			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 36.0f), (32.0f * 8.5f), 50.0f, 50.0f },
-				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
-			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 69.0f), (32.0f * 7.5f), 50.0f, 50.0f },
-				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
-			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 136.0f), (32.0f * 2.5f), 50.0f, 50.0f },
-				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
-			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 123.0f), (32.0f * 13.5f), 50.0f, 50.0f },
-				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
-			for (unsigned i = 0; i < m_pPickUpList.size(); i++)
-				SPMR::PushSprite(m_pPickUpList[i]);
-		}
 	}
 	if (gameOver)
 		STMA::ChangeState(new DeadState);
+	if (timeToSwitchLevels)
+		STMA::ChangeState(new GameState);
 }
 
 void GameState::Render()
 {
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
-	for (int row = 0; row < ROWS; row++)
-	{
-		for (int col = 0; col < COLS; col++)
-		{
-			m_level[row][col]->Render();
-		}
-	}
+
 	// flag goes behind player
 	if (m_flag != nullptr)
 		m_flag->Render();
-
-	//draw the enemy
-	m_pEnemy->Render();
-
-	// Draw the player.
-	m_pPlayer->Render();
-	
 
 	m_pReticle->Render();
 	m_pauseBtn->Render();
@@ -225,16 +190,13 @@ void GameState::Render()
 void GameState::Exit()
 {
 	delete m_pReticle;
-	for (int i = 0; i < m_pPickUpList.size(); i++)
-	{
-		delete m_pPickUpList[i];
-		m_pPickUpList[i] = nullptr;
-	}
-	m_pPickUpList.clear();
-	m_pPickUpList.shrink_to_fit();
+	m_pReticle = nullptr;
 
-	CleanVector(SPMR::GetSprites());
 	SPMR::RemoveLevel();
+
+	
+	m_flag->readyToDelete = true;
+	m_flag = nullptr;
 	
 }
 

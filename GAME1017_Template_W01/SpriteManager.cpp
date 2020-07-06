@@ -13,6 +13,21 @@ void SpriteManager::LoadLevel()
 
 void SpriteManager::Update()
 {
+	for (int i = 0; i < s_sprites.size(); i++)
+	{
+		if (s_sprites[i]->readyToDelete)
+		{
+			delete s_sprites[i];
+			s_sprites[i] = nullptr;
+			cleanSpr = true;
+		}
+	}
+	CleanVector(s_sprites, cleanSpr);
+	for (int i = 0; i < s_enemies.size(); i++)
+	{
+		if(s_enemies[i] != nullptr)
+			s_enemies[i]->Update();
+	}
 	for (int i = 0; i < s_pickups.size(); i++)
 	{
 		if (s_pickups[i] != nullptr)
@@ -50,6 +65,9 @@ void SpriteManager::Collision()
 
 void SpriteManager::Render()
 {
+	for (int i = 0; i < s_background.size(); i++)
+		s_background[i]->Render();
+	s_player->Render();
 	for (int i = 0; i < s_sprites.size(); i++)
 		s_sprites[i]->Render();
 	for (int i = 0; i < s_enemies.size(); i++)
@@ -93,6 +111,18 @@ void SpriteManager::RemoveLevel()
 		delete [] s_background.back();
 		s_background.back() = nullptr;
 		s_background.pop_back();
+	}
+	while (!s_pickups.empty())
+	{
+		delete[] s_pickups.back();
+		s_pickups.back() = nullptr;
+		s_pickups.pop_back();
+	}
+	while (!s_enemies.empty())
+	{
+		delete[] s_enemies.back();
+		s_enemies.back() = nullptr;
+		s_enemies.pop_back();
 	}
 
 	offset = 0;
@@ -142,3 +172,4 @@ std::vector<Pickup*> SpriteManager::s_pickups;
 std::vector<Sprite*> SpriteManager::s_projectiles;
 PlatformPlayer* SpriteManager::s_player;
 float SpriteManager::offset;
+bool SpriteManager::cleanSpr;

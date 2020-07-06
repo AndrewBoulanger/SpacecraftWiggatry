@@ -217,25 +217,27 @@ void PlatformPlayer::takeDamage(int dmg)
 
 void PlatformPlayer::slap()
 {		
-	Enemy* Enemy = SPMR::GetEnemies()[0];
-	float PlayerX = m_dst.x + (m_dst.w * 0.5);
-	float PlayerY = m_dst.y + (m_dst.h * 0.5);
-	float EnemyX = Enemy->GetDstP()->x + (Enemy->GetDstP()->w * 0.5);
-	float EnemyY = Enemy->GetDstP()->y + (Enemy->GetDstP()->h * 0.5);
-
-	m_distance = sqrtf(((PlayerX - EnemyX) * (PlayerX - EnemyX)) + ((PlayerY - EnemyY) * (PlayerY - EnemyY)));
-
-	if (m_distance < 100)
+	if (SPMR::GetEnemies().size() != 0)
 	{
-		cout << "Enemy loses 1 health point!" << endl;
-		Enemy->setEnemyHP(Enemy->getEnemyHP() - 1);
-		if (Enemy->getEnemyHP() == 0)
+		Enemy* Enemy = SPMR::GetEnemies()[0];
+		float PlayerX = m_dst.x + (m_dst.w * 0.5);
+		float PlayerY = m_dst.y + (m_dst.h * 0.5);
+		float EnemyX = Enemy->GetDstP()->x + (Enemy->GetDstP()->w * 0.5);
+		float EnemyY = Enemy->GetDstP()->y + (Enemy->GetDstP()->h * 0.5);
+
+		m_distance = sqrtf(((PlayerX - EnemyX) * (PlayerX - EnemyX)) + ((PlayerY - EnemyY) * (PlayerY - EnemyY)));
+
+		if (m_distance < 100)
 		{
-			Enemy->GetDstP()->x = -100;
-			Enemy->GetDstP()->y = -100;
+			cout << "Enemy loses 1 health point!" << endl;
+			Enemy->setEnemyHP(Enemy->getEnemyHP() - 1);
+			if (Enemy->getEnemyHP() == 0)
+			{
+				Enemy->GetDstP()->x = -100;
+				Enemy->GetDstP()->y = -100;
+			}
 		}
 	}
-
 }
 
 void PlatformPlayer::createStunGunBullet()
@@ -263,38 +265,41 @@ void PlatformPlayer::createStunGunBullet()
 //Playre - Enemy StunGun Collision
 void PlatformPlayer::StunGunCollision()
 {
-	Enemy* Enemy = SPMR::GetEnemies()[0];
-	SDL_Rect EnemyDst;
-	EnemyDst.x = Enemy->GetDstP()->x;
-	EnemyDst.y = Enemy->GetDstP()->y;
-	EnemyDst.w = Enemy->GetDstP()->w;
-	EnemyDst.h = Enemy->GetDstP()->h;
-
-	SDL_Rect temp;
-	std::vector<StunGun*>::iterator iterBegin = m_vPBullets.begin();
-
-	for (int i = 0; i < (int)m_vPBullets.size(); ++i, ++iterBegin)
+	if (SPMR::GetEnemies().size() != 0)
 	{
-		SDL_Rect gunshotDst;
-		gunshotDst.x = m_vPBullets[i]->GetDstP()->x;
-		gunshotDst.y = m_vPBullets[i]->GetDstP()->y;
-		gunshotDst.w = m_vPBullets[i]->GetDstP()->w;
-		gunshotDst.h = m_vPBullets[i]->GetDstP()->h;
+		Enemy* Enemy = SPMR::GetEnemies()[0];
+		SDL_Rect EnemyDst;
+		EnemyDst.x = Enemy->GetDstP()->x;
+		EnemyDst.y = Enemy->GetDstP()->y;
+		EnemyDst.w = Enemy->GetDstP()->w;
+		EnemyDst.h = Enemy->GetDstP()->h;
 
-		if (SDL_IntersectRect(&EnemyDst, &gunshotDst, &temp))
+		SDL_Rect temp;
+		std::vector<StunGun*>::iterator iterBegin = m_vPBullets.begin();
+
+		for (int i = 0; i < (int)m_vPBullets.size(); ++i, ++iterBegin)
 		{
-			Enemy->setEnemyHP(Enemy->getEnemyHP() - 1);
-			cout << "Enemy loses 1 health point!" << endl;
-			cout << "Enemy Health Point : " << Enemy->getEnemyHP();
-			delete m_vPBullets[i];
-			m_vPBullets.erase(iterBegin);
+			SDL_Rect gunshotDst;
+			gunshotDst.x = m_vPBullets[i]->GetDstP()->x;
+			gunshotDst.y = m_vPBullets[i]->GetDstP()->y;
+			gunshotDst.w = m_vPBullets[i]->GetDstP()->w;
+			gunshotDst.h = m_vPBullets[i]->GetDstP()->h;
 
-			if (Enemy->getEnemyHP() == 0)
+			if (SDL_IntersectRect(&EnemyDst, &gunshotDst, &temp))
 			{
-				Enemy->GetDstP()->x = -100;
-				Enemy->GetDstP()->y = -100;
+				Enemy->setEnemyHP(Enemy->getEnemyHP() - 1);
+				cout << "Enemy loses 1 health point!" << endl;
+				cout << "Enemy Health Point : " << Enemy->getEnemyHP();
+				delete m_vPBullets[i];
+				m_vPBullets.erase(iterBegin);
+
+				if (Enemy->getEnemyHP() == 0)
+				{
+					Enemy->GetDstP()->x = -100;
+					Enemy->GetDstP()->y = -100;
+				}
+				break;
 			}
-			break;
 		}
 	}
 }
