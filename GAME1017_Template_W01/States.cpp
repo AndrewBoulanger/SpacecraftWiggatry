@@ -59,15 +59,15 @@ void GameState::Enter()
 
 	Engine::LoadLevel("Dat/Level1.txt");
 	m_level = Engine::GetLevel();
-	m_platforms = SPMR::GetPlatforms();
 
 	m_pPickUpList.push_back(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
 					Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
 
 	SOMA::PlayMusic("PokerFace");
-	std::cout << m_platforms.size() << "\n";
+
 	SPMR::PushSprite(m_pPlayer, Regular);
-	SPMR::PushSprite(m_pEnemy, enemy);
+	SPMR::PushSprite(m_pEnemy);
+	m_pEnemy->setHealth(0);
 }
 
 void GameState::Update()
@@ -77,7 +77,7 @@ void GameState::Update()
 		SPMR::RemoveLevel();
 		Engine::LoadLevel("Dat/Level2.txt");
 		m_level = Engine::GetLevel();
-		m_platforms = SPMR::GetPlatforms();
+		
 		m_pPlayer->SetX(100.0f);
 		m_pPlayer->SetY(600.0f);
 	}

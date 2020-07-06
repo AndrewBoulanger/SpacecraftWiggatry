@@ -29,8 +29,10 @@ void SpriteManager::Update()
 
 void SpriteManager::Render()
 {
-	if (!s_sprites.empty())
-		s_sprites.back()->Render();
+	for (int i = 0; i < s_sprites.size(); i++)
+		s_sprites[i]->Render();
+	for (int i = 0; i < s_pickups.size(); i++)
+		s_pickups[i]->Render();
 }
 
 void SpriteManager::PushSprite(Sprite* pSprite, SpriteType type)
@@ -41,11 +43,14 @@ void SpriteManager::PushSprite(Sprite* pSprite, SpriteType type)
 	if(type == background)
 		s_background.push_back(pSprite);
 	
-	if(type == platform)
-		s_platforms.push_back(pSprite);
-	
-	if (type == enemy)
-		s_enemies.push_back(pSprite);
+}
+void SpriteManager::PushSprite(Enemy* pSprite)
+{
+	s_enemies.push_back(pSprite);
+}
+void SpriteManager::PushSprite(Pickup* pSprite)
+{
+	s_pickups.push_back(pSprite);
 }
 
 void SpriteManager::PopSprite()
@@ -66,12 +71,7 @@ void SpriteManager::RemoveLevel()
 		s_background.back() = nullptr;
 		s_background.pop_back();
 	}
-	while (!s_platforms.empty())
-	{
-		delete s_platforms.back();
-		s_platforms.back() = nullptr;
-		s_platforms.pop_back();
-	}
+
 	offset = 0;
 }
 
@@ -98,13 +98,13 @@ void SpriteManager::ScrollAll(float scroll)
 	{
 		s_background[i]->GetDstP()->x -= scroll;
 	}
-	for (int i = 0; i < s_platforms.size(); i++)
-	{
-		s_platforms[i]->GetDstP()->x -= scroll;
-	}
 	for (int i = 0; i < s_enemies.size(); i++)
 	{
 		s_enemies[i]->GetDstP()->x -= scroll;
+	}
+	for (int i = 0; i < s_pickups.size(); i++)
+	{
+		s_background[i]->GetDstP()->x -= scroll;
 	}
 
 	
@@ -112,7 +112,8 @@ void SpriteManager::ScrollAll(float scroll)
 }
 
 std::vector<Sprite*> SpriteManager::s_sprites;
-std::vector<Sprite*> SpriteManager::s_platforms;
 std::vector<Sprite*> SpriteManager::s_background;
-std::vector<Sprite*> SpriteManager::s_enemies;
+std::vector<Enemy*> SpriteManager::s_enemies;
+std::vector<Pickup*> SpriteManager::s_pickups;
+std::vector<Sprite*> SpriteManager::s_projectiles;
 float SpriteManager::offset;

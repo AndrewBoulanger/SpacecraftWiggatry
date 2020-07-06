@@ -56,6 +56,11 @@ void Hookshot::Collision()
 		if (enemyHit == false && COMA::CircleAABBCheck(getCenter(), m_dst.w * .5, *SPMR::GetEnemies()[i]->GetDstP()))
 		{
 			enemyHit = true;
+			if (SPMR::GetEnemies()[i]->getHealth() <= 0 && SPMR::GetEnemies()[i]->getHasWig())
+			{
+				stolenWig = SPMR::GetEnemies()[i]->removeWig();
+				SPMR::PushSprite(stolenWig);
+			}
 		}
 	}
 	
@@ -98,10 +103,15 @@ void Hookshot::Update(double& grav)
 			m_dst.x = MyLerp(m_dst.x, playerdst->x + (playerdst->w*.5) , lerpCo);
 			m_dst.y = MyLerp(m_dst.y, playerdst->y + (playerdst->h*.5), lerpCo);
 			lerpCo += 0.01f;
+			if (stolenWig != nullptr)
+			{
+				stolenWig->SetPos({(int) m_dst.x,(int) m_dst.y });
+			}
 		}
 		else
 		{
 			deactivateHookshot();
+			stolenWig = nullptr;
 		}
 	}
 
@@ -117,6 +127,8 @@ void Hookshot::Update(double& grav)
 void Hookshot::Render()
 {
 		SDL_RenderCopyF(m_pRend, m_pText, &m_src, &m_dst);
+		if (stolenWig != nullptr)
+			stolenWig->Render();
 }
 
 void Hookshot::sethookFixed(bool b)

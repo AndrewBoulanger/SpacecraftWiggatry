@@ -174,10 +174,7 @@ void Engine::LoadLevel(std::string path)
 				m_level[row][col] = m_tiles[key]->Clone(); // Prototype design pattern used.
 				m_level[row][col]->GetDstP()->x = (float)(32 * col);
 				m_level[row][col]->GetDstP()->y = (float)(32 * row);
-				if (m_level[row][col]->IsObstacle())
-					SPMR::PushSprite(m_level[row][col], platform);
-				else
-					SPMR::PushSprite(m_level[row][col], background);
+				SPMR::PushSprite(m_level[row][col], background);
 			}
 		}
 	}
