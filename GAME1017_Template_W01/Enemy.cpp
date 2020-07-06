@@ -74,9 +74,9 @@ void Enemy::Update()
 	if (state == seeking)
 	{
 		int playerdir = m_dst.x - SPMR::getPlayer()->GetX();
-		if (playerdir > 0)
+		if (playerdir > 200)
 			m_dir = -1;
-		else 
+		else if (playerdir < -200)
 			m_dir = 1;
 		groundedMove2(m_dir);
 
