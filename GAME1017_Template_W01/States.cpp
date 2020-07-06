@@ -73,8 +73,6 @@ void GameState::Enter()
 
 	SOMA::PlayMusic("PokerFace");
 
-	SPMR::PushSprite(m_pPlayer, Regular);
-
 	SPMR::PushSprite(m_pEnemy);
 	m_pEnemy->setHealth(0);
 

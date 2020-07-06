@@ -129,7 +129,7 @@ void SpriteManager::ScrollAll(float scroll)
 	{
 		s_pickups[i]->GetDstP()->x -= scroll;
 	}
-
+	s_player->GetDstP()->x -= scroll;
 	
 	offset += scroll;
 }
