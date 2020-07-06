@@ -20,7 +20,10 @@ void Enemy::setState(enemyState nState)
 {
 	state = nState;
 	if (nState == idle)
+	{
+		StopX();
 		m_frameMax = 1; //only show one frame
+	}
 	else if (nState == seeking)
 		m_frameMax = 3;
 	//else if(nState == fleeing) need to make sure fleeing sprite is in the same texture file as the normal sprite
@@ -44,7 +47,13 @@ void Enemy::Update()
 		m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
 	else
 		StopY();
+	m_accelX = m_accelY = 0.0;
 
+
+	if (iCooldown > 0)
+	{
+		--iCooldown;
+	}
 	if (hasWig)
 	{
 		enemysWig->SetPos({ (int)(m_dst.x + m_dst.w/2) , (int)(m_dst.y +20)});
@@ -52,11 +61,23 @@ void Enemy::Update()
 
 	if (state == idle)
 	{
-		if (COMA::CircleCircleCheck(getCenter(), SPMR::getPlayer()->getCenter(), 400))
+		if (COMA::CircleCircleCheck(getCenter(), SPMR::getPlayer()->getCenter(), 400) && ((m_dir == -1 && SPMR::getPlayer()->GetX() <= m_dst.x) || (m_dir == 1 && SPMR::getPlayer()->GetX() >= m_dst.x)))
 		{
 			std::cout << "player in enemy range\n";
 			setState(seeking);
 		}
+	}
+	if (state == seeking)
+	{
+		int playerdir = m_dst.x - SPMR::getPlayer()->GetX();
+		if (playerdir > 0)
+			m_dir = -1;
+		else 
+			m_dir = 1;
+		groundedMove2(m_dir);
+
+		if (playerdir > 600 || playerdir < -600)
+			setState(idle);
 	}
 
 }
@@ -77,4 +98,12 @@ void Enemy::Render()
 				enemysWig->Render();
 		}
 	}
+}
+
+void Enemy::groundedMove2(const int dir)
+{
+	if (dir < 0)
+		m_accelX = -1;
+	else if (dir > 0)
+		m_accelX = 1;
 }
