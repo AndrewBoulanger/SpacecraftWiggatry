@@ -14,7 +14,10 @@ Enemy::Enemy(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstar
 	m_maxVelX = 10.0;
 	m_grav = GRAV;
 	m_drag = 0.88;
+	wallWisker = { d.x, d.y, 30, 16 };
+	gapWisker = { d.x, d.y, 16, 16};
 }
+
 
 void Enemy::setState(enemyState nState)
 {
@@ -32,15 +35,17 @@ void Enemy::setState(enemyState nState)
 
 void Enemy::Update()
 {
+	wallWisker = { getCenter().x + (m_dst.w * m_dir*.3f), m_dst.y, 32,32 };
+	gapWisker = { getCenter().x + (m_dst.w * m_dir),m_dst.y + m_dst.h, 32,32 };
 	//X
 	m_velX += m_accelX;
 	m_velX *= m_drag;
 	m_velX = std::min(std::max(m_velX, -(m_maxVelX)), (m_maxVelX));
-	if (!COMA::PlayerCollision(&m_dst, m_velX, 0, SPMR::getOffset()))
+	if (!COMA::SmallTileCollision(wallWisker, m_velX, 0, SPMR::getOffset()) && COMA::SmallTileCollision(gapWisker, m_velX, 0, SPMR::getOffset()))
 		m_dst.x += (int)m_velX;
 	else
 		StopX();
-	//Y
+	//Y 
 	m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
 	m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav * 5));
 	if (!COMA::PlayerCollision(&m_dst, 0, m_velY, SPMR::getOffset()))
@@ -48,7 +53,6 @@ void Enemy::Update()
 	else
 		StopY();
 	m_accelX = m_accelY = 0.0;
-
 
 	if (iCooldown > 0)
 	{
@@ -79,7 +83,6 @@ void Enemy::Update()
 		if (playerdir > 600 || playerdir < -600)
 			setState(idle);
 	}
-
 }
 
 void Enemy::Render()
@@ -106,4 +109,13 @@ void Enemy::groundedMove2(const int dir)
 		m_accelX = -1;
 	else if (dir > 0)
 		m_accelX = 1;
+}
+
+Enemy::~Enemy()
+{
+	if (hasWig)
+	{
+		delete enemysWig;
+		enemysWig = nullptr;
+	}
 }
