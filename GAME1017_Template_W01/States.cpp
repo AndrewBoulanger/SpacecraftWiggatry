@@ -48,7 +48,8 @@ void GameState::Enter()
 	words[0] = new Label("font", 225, 4, to_string((int)(m_pPlayer->getWigs())).c_str(), { 255,255,255,0 });
 	words[1] = new Label("font", 289, 4, to_string((int)(m_pPlayer->getParts())).c_str(), { 255,255,255,0 });
 
-	gameOver = timeToSwitchLevels = false;
+	gameOver = false; 
+	timeToSwitchLevels = false;
 
 	m_pPlayer->SetPos({ (int)100.0f,(int)600.0f });
 
@@ -154,7 +155,7 @@ void GameState::CheckCollision()
 	}
 	if (gameOver)
 		STMA::ChangeState(new DeadState);
-	if (timeToSwitchLevels)
+	else if (timeToSwitchLevels)
 		STMA::ChangeState(new GameState);
 }
 
