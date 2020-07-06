@@ -14,7 +14,7 @@ class Enemy :
 private:
     bool hasWig;
     Wig* enemysWig;
-    int EnemyHP = 10;
+    int EnemyHP = 3;
     enemyState state;
 
 protected:
