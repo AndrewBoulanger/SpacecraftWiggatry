@@ -36,6 +36,7 @@ public:
     }
 
     Wig* removeWig();
+    void takeDamage(int dmg);
 
     void Update();
     void Render() override;
