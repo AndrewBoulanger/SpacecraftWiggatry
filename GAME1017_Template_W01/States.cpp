@@ -60,6 +60,12 @@ void GameState::Enter()
 	
 		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 850.0f, 500.0f, 50.0f, 106.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1730.0f, 200.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, {2700.0f, 100.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 3300.0f, 500.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
 
 			SPMR::PushSprite(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
@@ -122,7 +128,7 @@ void GameState::CheckCollision()
 {	
 	if (SPMR::GetEnemies().size()!= 0)
 	{
-		if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pEnemy->GetDstP()))
+		if (COMA::CircleCircleCheck(m_pPlayer->getCenter(), m_pEnemy->getCenter(), 40))
 		{
 			if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
 			{ // Colliding right side of platform.
