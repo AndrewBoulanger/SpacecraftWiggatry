@@ -27,6 +27,7 @@ public: // Inherited and public.
 		m_dst.x = point.x;
 		m_dst.y = point.y;
 	};
+	void SetX(int x) { m_dst.x = x; }
 	SDL_FPoint getCenter() { return { (m_dst.x + m_dst.w * 0.5f),(m_dst.y + m_dst.h * 0.5f) }; }
 	virtual void Update() {};
 protected: // Private BUT inherited.

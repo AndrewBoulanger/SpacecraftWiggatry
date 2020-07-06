@@ -48,16 +48,20 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/Controls_Button.png", "control");
 	TEMA::RegisterTexture("Img/controls.png", "controls");
 	TEMA::RegisterTexture("Img/background.png", "bg");
+
 	TEMA::RegisterTexture("Img/KikiSprite.png", "player");
 	TEMA::RegisterTexture("Img/alienWhisker.png", "enemy");
 	TEMA::RegisterTexture("Img/reticle.png", "reticle");
 	TEMA::RegisterTexture("IMG/wig1.png", "wig");
-	TEMA::RegisterTexture("Img/hp.png", "heart");
-
-	TEMA::RegisterTexture("Img/Tiles2.png", "tiles");
-
+	TEMA::RegisterTexture("IMG/shippart.png", "shippart");
 	TEMA::RegisterTexture("Img/reticle.png", "hookshot");
 	TEMA::RegisterTexture("Img/line.png", "line(temp)");
+
+	TEMA::RegisterTexture("Img/hp.png", "heart");
+	TEMA::RegisterTexture("Img/lightning.png", "lightning");
+
+	TEMA::RegisterTexture("Img/Tiles2.png", "tiles");
+	TEMA::RegisterTexture("Img/flag.png", "flag");
 
 	SPMR::setPlayer( new PlatformPlayer({ 0,0,400,152 }, { 100.0f,600.0f,96.0f,96.0f },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("player")));

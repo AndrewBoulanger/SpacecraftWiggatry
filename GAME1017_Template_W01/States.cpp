@@ -44,42 +44,47 @@ Enemy* GameState::getEnemy()
 void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
+
 	// FOMA::SetSize("Img/font.ttf", "font", 35); not working DX
 	m_pPlayer = SPMR::getPlayer();
+
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f}, 
 									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1);
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
-	for (int i = 0; i < (5); i++)
-		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
-	wigUI = new Sprite({ 0,0, 100,100 }, { (float)(185),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig"));
-	sprintf_s(buff, "%d", m_pPlayer->getWigs()); // convertersion
-	words[0] = new Label("font", 225, 4, buff, { 255,255,255,0 });
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
 
+	// ui stuff
+	for (int i = 0; i < (5); i++)
+		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
+	for (int i = 0; i < (5); i++)
+		stungunUI[i] = new Sprite({ 0,0, 29,35 }, { (float)(35 * i),36, 29,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning"));
+	wigUI = new Sprite({ 0,0, 100,100 }, { (float)(185),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig"));
+	shipUI = new Sprite({ 0,0, 74, 75 }, { (float)(250),-3, 35,33 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart"));
+	words[0] = new Label("font", 225, 4, to_string((int)(m_pPlayer->getWigs())).c_str(), { 255,255,255,0 });
+	words[1] = new Label("font", 289, 4, to_string((int)(m_pPlayer->getParts())).c_str(), { 255,255,255,0 });
+
+	// loading first level
 	Engine::LoadLevel("Dat/Level1.txt");
 	m_level = Engine::GetLevel();
 
 	SPMR::PushSprite(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
 
+	m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
+
 	SOMA::PlayMusic("PokerFace");
 
 	SPMR::PushSprite(m_pPlayer, Regular);
+
 	SPMR::PushSprite(m_pEnemy);
 	m_pEnemy->setHealth(0);
+
+	SPMR::PushSprite(m_pEnemy, Regular);
+	SPMR::PushSprite(m_flag, Regular);
 }
 
 void GameState::Update()
 {
-	if (EVMA::KeyPressed(SDL_SCANCODE_0))
-	{
-		SPMR::RemoveLevel();
-		Engine::LoadLevel("Dat/Level2.txt");
-		m_level = Engine::GetLevel();
-		
-		m_pPlayer->SetX(100.0f);
-		m_pPlayer->SetY(600.0f);
-	}
 
 	m_pReticle->SetPos(EVMA::GetMousePos());
 	m_pEnemy->Update();
@@ -94,12 +99,11 @@ void GameState::Update()
 	if (m_pauseBtn->ButtonUpdate() == 1)
 		return;
 
-	//for (int i = 0; i < m_pPickUpList.size(); i++)
-	//	if (m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
 	SPMR::Update();
+
 	// UI
-	sprintf_s(buff, "%d", m_pPlayer->getWigs());
-	words[0]->SetText(buff);
+	words[0]->SetText(to_string((int)(m_pPlayer->getWigs())).c_str());
+	words[1]->SetText(to_string((int)(m_pPlayer->getParts())).c_str()); // change to ship!!!!!!!!!!!!!!!1
 
 	m_pPlayer->Update(m_bgScrollX, m_bgScrollY); // Change to player Update here.
 	CheckCollision();
@@ -127,37 +131,65 @@ void GameState::CheckCollision()
 		if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
 		{ // Colliding right side of platform.
 			m_pPlayer->StopX();
-			m_pPlayer->KnockLeft(-10); //knock the player to the right
+			m_pPlayer->KnockLeft(-5); //knock the player to the right
 		}
 		else
 		{
 			m_pPlayer->Stop();
-			m_pPlayer->KnockLeft(10);
+			m_pPlayer->KnockLeft(5);
 		}
 		m_pPlayer->takeDamage(m_pEnemy->getBaseDamage());
 	}
-	//for (int i = 0; i < SPMR::GetPickups().size(); i++)
-	//{
-	//	if (COMA::CircleCircleCheck(m_pPlayer->getCenter(), m_pPickUpList[i]->getCenter(), 40, 50))
-	//	{
-	//		switch (m_pPickUpList[i]->getType())
-	//		{
-	//		case WIG:
-	//			m_pPlayer->add1Wig();
-	//			break;
-	//		case SHIP_PART:
-	//			m_pPlayer->add1ShipPart();
-	//			break;
-	//		default:
-	//			break;
-	//		}
-	//		delete m_pPickUpList[i];
-	//		m_pPickUpList[i] = nullptr;
-	//		std::cout << "collected\n";
-	//		m_pPickUpList.erase(m_pPickUpList.begin()+i);
-	//		m_pPickUpList.shrink_to_fit();
-	//	}
-	//}
+
+	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy
+	{
+		if (Engine::Instance().getLevel() == 1)
+			Engine::Instance().setLevel(2);
+		else
+			Engine::Instance().setLevel(1);
+
+		if (Engine::Instance().getLevel() == 1)
+		{
+			m_flag->SetX(32 * 137);
+			SPMR::RemoveLevel();
+			Engine::LoadLevel("Dat/Level1.txt");
+			m_level = Engine::GetLevel();
+			m_platforms = SPMR::GetPlatforms();
+			m_pPlayer->SetX(100.0f);
+			m_pPlayer->SetY(600.0f);
+			for (int i = 0; i < m_pPickUpList.size(); i++) {
+				if (m_pPickUpList[i]->getType() == SHIP_PART) {
+					delete m_pPickUpList[i];
+					m_pPickUpList[i] = nullptr;
+					m_pPickUpList.erase(m_pPickUpList.begin() + i);
+					m_pPickUpList.shrink_to_fit();
+				}
+			}
+		}
+		if (Engine::Instance().getLevel() == 2)
+		{
+			m_flag->SetX(32 * 137);
+			SPMR::RemoveLevel();
+			Engine::LoadLevel("Dat/Level2.txt");
+			m_level = Engine::GetLevel();
+			m_platforms = SPMR::GetPlatforms();
+			m_pPlayer->SetX(100.0f);
+			m_pPlayer->SetY(600.0f);
+			// ship parts of lvl 2
+			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 14.0f), (32.0f * 14.5f), 50.0f, 50.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 36.0f), (32.0f * 8.5f), 50.0f, 50.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 69.0f), (32.0f * 7.5f), 50.0f, 50.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 136.0f), (32.0f * 2.5f), 50.0f, 50.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 123.0f), (32.0f * 13.5f), 50.0f, 50.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
+			for (unsigned i = 0; i < m_pPickUpList.size(); i++)
+				SPMR::PushSprite(m_pPickUpList[i], Regular);
+		}
+	}
 }
 
 void GameState::Render()
@@ -171,6 +203,10 @@ void GameState::Render()
 			m_level[row][col]->Render();
 		}
 	}
+	// flag goes behind player
+	if (m_flag != nullptr)
+		m_flag->Render();
+
 	//draw the enemy
 	m_pEnemy->Render();
 
@@ -185,11 +221,16 @@ void GameState::Render()
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		m_pPickUpList[i]->Render();
 
+
+	// ui stuff
 	for (int i = 0; i < (m_pPlayer->getHealth()); i++)
 		hpUI[i]->Render();
-
+	for (int i = 0; i < (5); i++) // TO: reference stun uses
+		stungunUI[i]->Render();
 	wigUI->Render();
+	shipUI->Render();
 	words[0]->Render();
+	words[1]->Render();
 
 	// If GameState != current state.
 	if (dynamic_cast<GameState*>(STMA::GetStates().back()))

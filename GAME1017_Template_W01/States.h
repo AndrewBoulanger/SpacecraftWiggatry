@@ -31,7 +31,6 @@ private:
 	Enemy* m_pEnemy;
 	Sprite* m_pReticle;
 	Button* m_pauseBtn;
-	char buff[10]; // convert from int
 
 	std::vector<Pickup*> m_pPickUpList;
 
@@ -39,9 +38,13 @@ private:
 	std::vector<Sprite*> m_platforms;
 	bool m_bgScrollX = false, m_bgScrollY = false;
 
+	Sprite* m_flag;
+
 	Sprite* hpUI[5];
+	Sprite* stungunUI[5];
 	Sprite* wigUI;
-	Label* words[1]; // 0 = wig counter, may possibly add ship parts
+	Sprite* shipUI;
+	Label* words[2]; // 0 = wig counter, 1 = ship parts
 
 public:
 	GameState();
