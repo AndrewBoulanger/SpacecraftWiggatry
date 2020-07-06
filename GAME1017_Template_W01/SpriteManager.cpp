@@ -45,6 +45,7 @@ void SpriteManager::Collision()
 			CleanVector(s_pickups);
 		}
 	}
+	s_sprites.shrink_to_fit();
 }
 
 void SpriteManager::Render()
