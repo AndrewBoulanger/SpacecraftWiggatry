@@ -66,7 +66,7 @@ void GameState::Enter()
 
 
 		m_pEnemy = SPMR::GetEnemies()[0];
-		m_pEnemy->setHealth(0);  //this is just here to test snatching
+		m_pEnemy->setHealth(3);  //this is just here to test snatching
 
 		m_pPlayer->setHealth(5);
 	m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
