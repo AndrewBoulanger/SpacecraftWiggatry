@@ -78,6 +78,7 @@ void GameState::Enter()
 	SPMR::PushSprite(m_pEnemy);
 	m_pEnemy->setHealth(0);
 
+	SPMR::PushSprite(m_pEnemy, Regular);
 	SPMR::PushSprite(m_flag, Regular);
 
 }
