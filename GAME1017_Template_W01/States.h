@@ -32,7 +32,7 @@ private:
 	Sprite* m_pReticle;
 	Button* m_pauseBtn;
 
-	std::vector<Pickup*> m_pPickUpList;
+	//std::vector<Pickup*> m_pPickUpList;
 
 	bool gameOver;
 	bool timeToSwitchLevels;
