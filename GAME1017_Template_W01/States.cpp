@@ -136,19 +136,18 @@ void GameState::CheckCollision()
 		else
 			Engine::Instance().setLevel(1);
 
-		for (int i = 0; i < m_pPickUpList.size(); i++) {
-			if (m_pPickUpList[i]->getType() == SHIP_PART) {
-				delete m_pPickUpList[i];
-				m_pPickUpList[i] = nullptr;
-				m_pPickUpList.erase(m_pPickUpList.begin() + i);
-				m_pPickUpList.shrink_to_fit();
-			}
-		}
-
+		//for (int i = 0; i < m_pPickUpList.size(); i++) {
+		//	if (m_pPickUpList[i]->getType() == SHIP_PART) {
+		//		delete m_pPickUpList[i];
+		//		m_pPickUpList[i] = nullptr;
+		//		m_pPickUpList.erase(m_pPickUpList.begin() + i);
+		//		m_pPickUpList.shrink_to_fit();
+		//	}
+		//}
+		SPMR::RemoveLevel();
 		if (Engine::Instance().getLevel() == 1)
 		{
 			m_flag->SetX(32 * 137);
-			SPMR::RemoveLevel();
 			Engine::LoadLevel("Dat/Level1.txt");
 			m_level = Engine::GetLevel();
 			m_pPlayer->SetX(100.0f);
@@ -157,24 +156,22 @@ void GameState::CheckCollision()
 		if (Engine::Instance().getLevel() == 2)
 		{
 			m_flag->SetX(32 * 137);
-			SPMR::RemoveLevel();
 			Engine::LoadLevel("Dat/Level2.txt");
 			m_level = Engine::GetLevel();
 			m_pPlayer->SetX(100.0f);
 			m_pPlayer->SetY(600.0f);
+
 			// ship parts of lvl 2
-			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 14.0f), (32.0f * 14.5f), 50.0f, 50.0f },
+			SPMR::PushSprite(new ShipPart({ 0,0,74, 75 }, { (32.0f * 14.0f), (32.0f * 14.5f), 50.0f, 50.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
-			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 36.0f), (32.0f * 8.5f), 50.0f, 50.0f },
+			SPMR::PushSprite(new ShipPart({ 0,0,74, 75 }, { (32.0f * 36.0f), (32.0f * 8.5f), 50.0f, 50.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
-			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 69.0f), (32.0f * 7.5f), 50.0f, 50.0f },
+			SPMR::PushSprite(new ShipPart({ 0,0,74, 75 }, { (32.0f * 69.0f), (32.0f * 7.5f), 50.0f, 50.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
-			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 136.0f), (32.0f * 2.5f), 50.0f, 50.0f },
+			SPMR::PushSprite(new ShipPart({ 0,0,74, 75 }, { (32.0f * 136.0f), (32.0f * 2.5f), 50.0f, 50.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
-			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 123.0f), (32.0f * 13.5f), 50.0f, 50.0f },
+			SPMR::PushSprite(new ShipPart({ 0,0,74, 75 }, { (32.0f * 123.0f), (32.0f * 13.5f), 50.0f, 50.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
-			for (unsigned i = 0; i < m_pPickUpList.size(); i++)
-				SPMR::PushSprite(m_pPickUpList[i]);
 		}
 	}
 	if (gameOver)
@@ -226,13 +223,13 @@ void GameState::Render()
 void GameState::Exit()
 {
 	delete m_pReticle;
-	for (int i = 0; i < m_pPickUpList.size(); i++)
-	{
-		delete m_pPickUpList[i];
-		m_pPickUpList[i] = nullptr;
-	}
-	m_pPickUpList.clear();
-	m_pPickUpList.shrink_to_fit();
+	//for (int i = 0; i < m_pPickUpList.size(); i++)
+	//{
+	//	delete m_pPickUpList[i];
+	//	m_pPickUpList[i] = nullptr;
+	//}
+	//m_pPickUpList.clear();
+	//m_pPickUpList.shrink_to_fit();
 
 	CleanVector(SPMR::GetSprites());
 	SPMR::RemoveLevel();

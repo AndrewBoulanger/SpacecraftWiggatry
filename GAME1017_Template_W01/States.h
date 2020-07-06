@@ -32,7 +32,7 @@ private:
 	Sprite* m_pReticle;
 	Button* m_pauseBtn;
 
-	std::vector<Pickup*> m_pPickUpList;
+	//std::vector<Pickup*> m_pPickUpList;
 
 	std::array<std::array<Tile*, COLS>, ROWS> m_level;
 	std::vector<Sprite*> m_platforms;
