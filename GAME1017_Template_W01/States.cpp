@@ -29,27 +29,14 @@ void State::Resume() {}
 // Begin GameState.
 GameState::GameState() {}
 
-PlatformPlayer* GameState::getPlayer()
-{
-	return 	m_pPlayer;
-
-}
-
-Enemy* GameState::getEnemy()
-{
-	return 	m_pEnemy;
-
-}
-
 void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
-
 	// FOMA::SetSize("Img/font.ttf", "font", 35); not working DX
 	m_pPlayer = SPMR::getPlayer();
 
-	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f}, 
-									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1);
+	SPMR::PushSprite(new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f},
+									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
 
@@ -74,22 +61,17 @@ void GameState::Enter()
 
 	SOMA::PlayMusic("PokerFace");
 
-	SPMR::PushSprite(m_pPlayer, Regular);
-
-	SPMR::PushSprite(m_pEnemy);
+	m_pEnemy = SPMR::GetEnemies()[0];
 	m_pEnemy->setHealth(0);
 
-	SPMR::PushSprite(m_pEnemy, Regular);
 	SPMR::PushSprite(m_flag, Regular);
+
 }
 
 void GameState::Update()
 {
-
 	m_pReticle->SetPos(EVMA::GetMousePos());
 	m_pEnemy->Update();
-
-	CheckCollision();
 
 	// Pause button/key
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
@@ -125,7 +107,6 @@ void GameState::UpdateTiles(float scroll, bool x)
 
 void GameState::CheckCollision()
 {	
-
 	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pEnemy->GetDstP()))
 	{
 		if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
@@ -139,10 +120,17 @@ void GameState::CheckCollision()
 			m_pPlayer->KnockLeft(5);
 		}
 		m_pPlayer->takeDamage(m_pEnemy->getBaseDamage());
+		if (m_pPlayer->getHealth() <= 0)
+		{
+			gameOver = true;
+			m_pPlayer->setHealth(5);// reset health for the next game, we can move this to enter if we want it to reset every level instead
+		}
 	}
 
-	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy
-	{
+
+	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy   
+	{                       //we could use the change state function to make a new game state, then we can move some of this stuff to the exit state and the stuff that's 
+						//	different between levels could be put in an if statement in the enter function
 		if (Engine::Instance().getLevel() == 1)
 			Engine::Instance().setLevel(2);
 		else
@@ -154,7 +142,6 @@ void GameState::CheckCollision()
 			SPMR::RemoveLevel();
 			Engine::LoadLevel("Dat/Level1.txt");
 			m_level = Engine::GetLevel();
-			m_platforms = SPMR::GetPlatforms();
 			m_pPlayer->SetX(100.0f);
 			m_pPlayer->SetY(600.0f);
 			for (int i = 0; i < m_pPickUpList.size(); i++) {
@@ -172,7 +159,6 @@ void GameState::CheckCollision()
 			SPMR::RemoveLevel();
 			Engine::LoadLevel("Dat/Level2.txt");
 			m_level = Engine::GetLevel();
-			m_platforms = SPMR::GetPlatforms();
 			m_pPlayer->SetX(100.0f);
 			m_pPlayer->SetY(600.0f);
 			// ship parts of lvl 2
@@ -187,9 +173,11 @@ void GameState::CheckCollision()
 			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 123.0f), (32.0f * 13.5f), 50.0f, 50.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
 			for (unsigned i = 0; i < m_pPickUpList.size(); i++)
-				SPMR::PushSprite(m_pPickUpList[i], Regular);
+				SPMR::PushSprite(m_pPickUpList[i]);
 		}
 	}
+	if (gameOver)
+		STMA::ChangeState(new DeadState);
 }
 
 void GameState::Render()
@@ -218,10 +206,6 @@ void GameState::Render()
 	m_pauseBtn->Render();
 	SPMR::Render();
 
-	for (int i = 0; i < m_pPickUpList.size(); i++)
-		m_pPickUpList[i]->Render();
-
-
 	// ui stuff
 	for (int i = 0; i < (m_pPlayer->getHealth()); i++)
 		hpUI[i]->Render();
@@ -240,8 +224,6 @@ void GameState::Render()
 
 void GameState::Exit()
 {
-	delete m_pPlayer;
-	delete m_pEnemy;
 	delete m_pReticle;
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 	{

@@ -102,7 +102,6 @@ void SpriteManager::Quit()
 {
 	while (!s_sprites.empty())	
 	{							
-
 		delete s_sprites.back();
 		s_sprites.back() = nullptr;
 		s_sprites.pop_back();
@@ -129,12 +128,13 @@ void SpriteManager::ScrollAll(float scroll)
 	{
 		s_pickups[i]->GetDstP()->x -= scroll;
 	}
-
+	s_player->GetDstP()->x -= scroll;
 	
 	offset += scroll;
 }
 
 //the more I add to this class, which is meant to hold all sprites, the more I realize I probably could have just made it a singleton
+	//at least i dont have to call SPMR::Instance() before every function call
 std::vector<Sprite*> SpriteManager::s_sprites;
 std::vector<Sprite*> SpriteManager::s_background;
 std::vector<Enemy*> SpriteManager::s_enemies;

@@ -217,32 +217,29 @@ void PlatformPlayer::takeDamage(int dmg)
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
 	}
-	if (health <= 0)
-		STMA::ChangeState(new DeadState);
 }
 
 
 //Player - Enemy Slap Collision
 
 void PlatformPlayer::slap()
-{
-	SDL_FRect* EnemyDstP = ((GameState*)(STMA::GetStates().back()))->getEnemy()->GetDstP();
+{		
+	Enemy* Enemy = SPMR::GetEnemies()[0];
 	float PlayerX = m_dst.x + (m_dst.w * 0.5);
 	float PlayerY = m_dst.y + (m_dst.h * 0.5);
-	float EnemyX = EnemyDstP->x + (EnemyDstP->w * 0.5);
-	float EnemyY = EnemyDstP->y + (EnemyDstP->h * 0.5);
+	float EnemyX = Enemy->GetDstP()->x + (Enemy->GetDstP()->w * 0.5);
+	float EnemyY = Enemy->GetDstP()->y + (Enemy->GetDstP()->h * 0.5);
 
 	m_distance = sqrtf(((PlayerX - EnemyX) * (PlayerX - EnemyX)) + ((PlayerY - EnemyY) * (PlayerY - EnemyY)));
 
 	if (m_distance < 100)
 	{
-		Enemy* Enemy = ((GameState*)(STMA::GetStates().back()))->getEnemy();
 		cout << "Enemy loses 1 health point!" << endl;
 		Enemy->setEnemyHP(Enemy->getEnemyHP() - 1);
 		if (Enemy->getEnemyHP() == 0)
 		{
-			EnemyDstP->x = -100;
-			EnemyDstP->y = -100;
+			Enemy->GetDstP()->x = -100;
+			Enemy->GetDstP()->y = -100;
 		}
 	}
 
@@ -273,7 +270,7 @@ void PlatformPlayer::createStunGunBullet()
 //Playre - Enemy StunGun Collision
 void PlatformPlayer::StunGunCollision()
 {
-	Enemy* Enemy = ((GameState*)(STMA::GetStates().back()))->getEnemy();
+	Enemy* Enemy = SPMR::GetEnemies()[0];
 	SDL_Rect EnemyDst;
 	EnemyDst.x = Enemy->GetDstP()->x;
 	EnemyDst.y = Enemy->GetDstP()->y;
