@@ -85,7 +85,7 @@ void GameState::Update()
 
 	// UI
 	words[0]->SetText(to_string((int)(m_pPlayer->getWigs())).c_str());
-	words[1]->SetText(to_string((int)(m_pPlayer->getParts())).c_str()); // change to ship!!!!!!!!!!!!!!!1
+	words[1]->SetText(to_string((int)(m_pPlayer->getParts())).c_str()); 
 
 	m_pPlayer->Update(); // Change to player Update here.
 	CheckCollision();
@@ -136,6 +136,15 @@ void GameState::CheckCollision()
 		else
 			Engine::Instance().setLevel(1);
 
+		for (int i = 0; i < m_pPickUpList.size(); i++) {
+			if (m_pPickUpList[i]->getType() == SHIP_PART) {
+				delete m_pPickUpList[i];
+				m_pPickUpList[i] = nullptr;
+				m_pPickUpList.erase(m_pPickUpList.begin() + i);
+				m_pPickUpList.shrink_to_fit();
+			}
+		}
+
 		if (Engine::Instance().getLevel() == 1)
 		{
 			m_flag->SetX(32 * 137);
@@ -144,14 +153,6 @@ void GameState::CheckCollision()
 			m_level = Engine::GetLevel();
 			m_pPlayer->SetX(100.0f);
 			m_pPlayer->SetY(600.0f);
-			for (int i = 0; i < m_pPickUpList.size(); i++) {
-				if (m_pPickUpList[i]->getType() == SHIP_PART) {
-					delete m_pPickUpList[i];
-					m_pPickUpList[i] = nullptr;
-					m_pPickUpList.erase(m_pPickUpList.begin() + i);
-					m_pPickUpList.shrink_to_fit();
-				}
-			}
 		}
 		if (Engine::Instance().getLevel() == 2)
 		{
