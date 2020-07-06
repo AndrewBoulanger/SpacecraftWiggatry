@@ -233,8 +233,8 @@ void PlatformPlayer::slap()
 			Enemy->setEnemyHP(Enemy->getEnemyHP() - 1);
 			if (Enemy->getEnemyHP() == 0)
 			{
-				Enemy->GetDstP()->x = -100;
-				Enemy->GetDstP()->y = -100;
+				//Enemy->GetDstP()->x = -100;
+				//Enemy->GetDstP()->y = -100;
 			}
 		}
 	}
@@ -295,8 +295,8 @@ void PlatformPlayer::StunGunCollision()
 
 				if (Enemy->getEnemyHP() == 0)
 				{
-					Enemy->GetDstP()->x = -100;
-					Enemy->GetDstP()->y = -100;
+	/*				Enemy->GetDstP()->x = -100;
+					Enemy->GetDstP()->y = -100;*/
 				}
 				break;
 			}
