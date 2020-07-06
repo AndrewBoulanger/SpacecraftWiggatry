@@ -78,7 +78,6 @@ void GameState::Enter()
 	SPMR::PushSprite(m_pEnemy);
 	m_pEnemy->setHealth(0);
 
-	SPMR::PushSprite(m_pEnemy, Regular);
 	SPMR::PushSprite(m_flag, Regular);
 
 }
@@ -140,8 +139,9 @@ void GameState::CheckCollision()
 		m_pPlayer->takeDamage(m_pEnemy->getBaseDamage());
 	}
 
-	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy
-	{
+	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy   
+	{                       //we could use the change state function to make a new game state, then we can move some of this stuff to the exit state and the stuff that's 
+						//	different between levels could be put in an if statement in the enter function
 		if (Engine::Instance().getLevel() == 1)
 			Engine::Instance().setLevel(2);
 		else
@@ -184,7 +184,7 @@ void GameState::CheckCollision()
 			m_pPickUpList.push_back(new ShipPart({ 0,0,74, 75 }, { (32.0f * 123.0f), (32.0f * 13.5f), 50.0f, 50.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
 			for (unsigned i = 0; i < m_pPickUpList.size(); i++)
-				SPMR::PushSprite(m_pPickUpList[i], Regular);
+				SPMR::PushSprite(m_pPickUpList[i]);
 		}
 	}
 }
@@ -214,10 +214,6 @@ void GameState::Render()
 	m_pReticle->Render();
 	m_pauseBtn->Render();
 	SPMR::Render();
-
-	for (int i = 0; i < m_pPickUpList.size(); i++)
-		m_pPickUpList[i]->Render();
-
 
 	// ui stuff
 	for (int i = 0; i < (m_pPlayer->getHealth()); i++)
