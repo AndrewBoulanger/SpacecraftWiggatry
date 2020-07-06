@@ -34,9 +34,8 @@ private:
 
 	//std::vector<Pickup*> m_pPickUpList;
 
-	std::array<std::array<Tile*, COLS>, ROWS> m_level;
-	std::vector<Sprite*> m_platforms;
 	bool gameOver;
+	bool timeToSwitchLevels;
 
 	Sprite* m_flag;
 
@@ -49,7 +48,6 @@ private:
 public:
 	GameState();
 	void Update();
-	void UpdateTiles(float scroll, bool x = false);
 	void CheckCollision();
 	void Render();
 	void Enter();

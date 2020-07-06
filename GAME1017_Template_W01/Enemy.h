@@ -24,7 +24,6 @@ protected:
 
 public:
     Enemy(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart = 0, int smin = 0, int smax = 0, int nf = 0, int hp = 2, int dmg = 1);
-    ~Enemy();
 
     void setState(enemyState nState);
 

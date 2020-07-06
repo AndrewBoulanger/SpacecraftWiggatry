@@ -110,12 +110,3 @@ void Enemy::groundedMove2(const int dir)
 	else if (dir > 0)
 		m_accelX = 1;
 }
-
-Enemy::~Enemy()
-{
-	if (hasWig)
-	{
-		delete enemysWig;
-		enemysWig = nullptr;
-	}
-}
