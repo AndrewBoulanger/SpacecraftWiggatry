@@ -71,7 +71,7 @@ void Enemy::Update()
 			setState(seeking);
 		}
 	}
-	if (state == seeking)
+	else if (state == seeking)
 	{
 		int playerdir = m_dst.x - SPMR::getPlayer()->GetX();
 		if (playerdir > 200)
@@ -83,6 +83,18 @@ void Enemy::Update()
 		if (playerdir > 600 || playerdir < -600)
 			setState(idle);
 	}
+	else if (state == fleeing)
+	{
+		int playerdir = m_dst.x - SPMR::getPlayer()->GetX();
+		if (playerdir > 0)
+			m_dir = 1;
+		else
+			m_dir = -1;
+		groundedMove2(m_dir);
+		if (playerdir > 700 || playerdir < -700)
+			readyToDelete = true;
+	}
+
 }
 
 void Enemy::Render()
@@ -101,6 +113,13 @@ void Enemy::Render()
 				enemysWig->Render();
 		}
 	}
+}
+
+Wig* Enemy::removeWig()
+{
+	hasWig = false;
+	setState(fleeing);
+	return enemysWig;
 }
 
 void Enemy::groundedMove2(const int dir)

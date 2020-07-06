@@ -230,12 +230,8 @@ void PlatformPlayer::slap()
 		if (m_distance < 100)
 		{
 			cout << "Enemy loses 1 health point!" << endl;
-			Enemy->setEnemyHP(Enemy->getEnemyHP() - 1);
-			if (Enemy->getEnemyHP() == 0)
-			{
-				//Enemy->GetDstP()->x = -100;
-				//Enemy->GetDstP()->y = -100;
-			}
+			Enemy->setHealth(Enemy->getHealth() - 1);
+
 		}
 	}
 }
@@ -287,17 +283,12 @@ void PlatformPlayer::StunGunCollision()
 
 			if (SDL_IntersectRect(&EnemyDst, &gunshotDst, &temp))
 			{
-				Enemy->setEnemyHP(Enemy->getEnemyHP() - 1);
+				Enemy->setHealth(Enemy->getHealth() - 1);
 				cout << "Enemy loses 1 health point!" << endl;
-				cout << "Enemy Health Point : " << Enemy->getEnemyHP();
+				cout << "Enemy Health Point : " << Enemy->getHealth();
 				delete m_vPBullets[i];
 				m_vPBullets.erase(iterBegin);
 
-				if (Enemy->getEnemyHP() == 0)
-				{
-	/*				Enemy->GetDstP()->x = -100;
-					Enemy->GetDstP()->y = -100;*/
-				}
 				break;
 			}
 		}

@@ -34,14 +34,8 @@ public:
         if(hasWig)
         return enemysWig; 
     }
-    int getEnemyHP() { return EnemyHP; }
-    void setEnemyHP(int h) { EnemyHP = h; }
-    Wig* removeWig()
-    {
-        hasWig = false;
-        return enemysWig;
-    }
 
+    Wig* removeWig();
 
     void Update();
     void Render() override;
