@@ -9,16 +9,19 @@ class Enemy :
 private:
     bool hasWig;
     Wig* enemysWig;
+    int EnemyHP = 10;
+
 protected:
 
 public:
-    Enemy(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart = 0, int smin = 0, int smax = 0, int nf = 0, int hp = 20, int dmg = 10);
+    Enemy(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart = 0, int smin = 0, int smax = 0, int nf = 0, int hp = 2, int dmg = 1);
 
     bool getHasWig()
     {return hasWig; }
     Wig* getenemysWig()
     { return enemysWig; }
-
+    int getEnemyHP() { return EnemyHP; }
+    void setEnemyHP(int h) { EnemyHP = h; }
     void setHasWig(bool b);
     void removeWig()
     {

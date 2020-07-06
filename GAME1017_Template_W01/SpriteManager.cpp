@@ -4,39 +4,11 @@
 #include "TextureManager.h"
 #include "Engine.h"
 #include "CollisionManager.h"
+#include "Utilities.h"
 
 
 void SpriteManager::LoadLevel()
 {
-	//std::ifstream inFile("Dat/Tiledata.txt");
-	//if (inFile.is_open())
-	//{ // Create map of Tile prototypes.
-	//	char key;
-	//	int x, y;
-	//	bool o, h;
-	//	while (!inFile.eof())
-	//	{
-	//		inFile >> key >> x >> y >> o >> h;
-	//		m_tiles.emplace(key, new Tile({ x * 32, y * 32, 32, 32 }, { 0,0,32,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("tiles"), o, h));
-	//	}
-	//}
-	//inFile.close();
-	//inFile.open("Dat/Level1.txt");
-	//if (inFile.is_open())
-	//{ // Build the level from Tile prototypes.
-	//	char key;
-	//	for (int row = 0; row < ROWS; row++)
-	//	{
-	//		for (int col = 0; col < COLS; col++)
-	//		{
-	//			inFile >> key;
-	//			m_level[row][col] = m_tiles[key]->Clone(); // Prototype design pattern used.
-	//			m_level[row][col]->GetDstP()->x = (float)(32 * col);
-	//			m_level[row][col]->GetDstP()->y = (float)(32 * row);
-	//		}
-	//	}
-	//}
-	//inFile.close();
 }
 
 void SpriteManager::Update()
@@ -45,7 +17,12 @@ void SpriteManager::Update()
 	{
 		for(int i = 0; i < s_sprites.size(); i++)
 		{
-			s_sprites[i]->Update();
+			if (s_sprites[i]->readyToDelete)
+			{
+				delete s_sprites[i];
+				s_sprites[i] = nullptr;
+			//	s_sprites.erase(s_sprites[i]);
+			}
 		}
 	}
 }
@@ -56,9 +33,16 @@ void SpriteManager::Render()
 		s_sprites.back()->Render();
 }
 
-void SpriteManager::PushSprite(Sprite* pSprite)
+void SpriteManager::PushSprite(Sprite* pSprite, SpriteType type)
 {
-	s_sprites.push_back(pSprite); // push_back() is a method of the vector type.
+	if(type == Regular)
+		s_sprites.push_back(pSprite); // push_back() is a method of the vector type.
+		
+	if(type == background)
+		s_background.push_back(pSprite);
+	
+	if(type == platform)
+		s_platforms.push_back(pSprite);
 	
 }
 
@@ -70,6 +54,23 @@ void SpriteManager::PopSprite()
 		s_sprites.back() = nullptr;
 		s_sprites.pop_back();
 	}
+}
+
+void SpriteManager::RemoveLevel()
+{
+	while(!s_background.empty())
+	{
+		delete s_background.back();
+		s_background.back() = nullptr;
+		s_background.pop_back();
+	}
+	while (!s_platforms.empty())
+	{
+		delete s_platforms.back();
+		s_platforms.back() = nullptr;
+		s_platforms.pop_back();
+	}
+	offset = 0;
 }
 
 void SpriteManager::Quit()
@@ -85,4 +86,26 @@ void SpriteManager::Quit()
 
 std::vector<Sprite*>& SpriteManager::GetSprites() { return s_sprites; }
 
+void SpriteManager::ScrollAll(float scroll)
+{
+	for (int i = 0; i < s_sprites.size(); i++)
+	{
+		s_sprites[i]->GetDstP()->x -= scroll;
+	}
+	for (int i = 0; i < s_background.size(); i++)
+	{
+		s_background[i]->GetDstP()->x -= scroll;
+	}
+	for (int i = 0; i < s_platforms.size(); i++)
+	{
+		s_platforms[i]->GetDstP()->x -= scroll;
+	}
+
+	
+	offset += scroll;
+}
+
 std::vector<Sprite*> SpriteManager::s_sprites;
+std::vector<Sprite*> SpriteManager::s_platforms;
+std::vector<Sprite*> SpriteManager::s_background;
+float SpriteManager::offset;

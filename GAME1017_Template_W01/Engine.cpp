@@ -6,10 +6,12 @@
 #include "SoundManager.h"
 #include "StateManager.h"
 #include "TextureManager.h"
+#include "SpriteManager.h"
 #include <iostream>
-#define WIDTH 1024
-#define HEIGHT 768
+#include <fstream>
+
 #define FPS 60
+
 using namespace std;
 
 Engine::Engine():m_running(false){ cout << "Engine class constructed!" << endl; }
@@ -37,24 +39,28 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	}
 	else return false; // SDL init fail.
 	m_fps = (Uint32)round((1 / (double)FPS) * 1000); // Sets FPS in milliseconds and rounds.
-	TEMA::RegisterTexture("Img/background.jpg", "bg");
 	TEMA::RegisterTexture("Img/play.png", "play");
 	TEMA::RegisterTexture("Img/exit.png", "exit");
 	TEMA::RegisterTexture("Img/replay.png", "replay");
 	TEMA::RegisterTexture("Img/resume.png", "resume");
+	TEMA::RegisterTexture("Img/pause.png", "pause");
+	TEMA::RegisterTexture("Img/Controls_Button.png", "control");
+	TEMA::RegisterTexture("Img/controls.png", "controls");
+	TEMA::RegisterTexture("Img/background.png", "bg");
 	TEMA::RegisterTexture("Img/KikiSprite.png", "player");
 	TEMA::RegisterTexture("Img/alienWhisker.png", "enemy");
 	TEMA::RegisterTexture("Img/reticle.png", "reticle");
 	TEMA::RegisterTexture("IMG/wig1.png", "wig");
 	TEMA::RegisterTexture("Img/hp.png", "heart");
 
-	TEMA::RegisterTexture("Img/Tiles.png", "tiles");
+	TEMA::RegisterTexture("Img/Tiles2.png", "tiles");
 
 	TEMA::RegisterTexture("Img/reticle.png", "hookshot");
 	TEMA::RegisterTexture("Img/line.png", "line(temp)");
 
 
-	FOMA::RegisterFont("Img/font.ttf", "font", 150);
+	FOMA::RegisterFont("Img/font.ttf", "fontLarge", 150);
+	FOMA::RegisterFont("Img/font.ttf", "font", 35);
 	STMA::ChangeState(new TitleState);
 	SOMA::AllocateChannels(16);
 	SOMA::Load("Aud/Poker Face.mp3", "PokerFace", SOUND_MUSIC);
@@ -62,6 +68,20 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
 	SOMA::SetMusicVolume(15);
 
+	std::ifstream inFile("Dat/Tiledata.txt");
+	if (inFile.is_open())
+	{ // Create map of Tile prototypes.
+		char key;
+		int x, y;
+		bool o, h;
+		while (!inFile.eof())
+		{
+			inFile >> key >> x >> y >> o >> h;
+			m_tiles.emplace(key, new Tile({ x * 32, y * 32, 32, 32 }, { 0,0,32,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("tiles"), o, h));
+		}
+	}
+	inFile.close();
+	
 	m_running = true; // Everything is okay, start the engine.
 	cout << "Engine Init success!" << endl;
 	return true;
@@ -97,6 +117,7 @@ void Engine::Render()
 	// Draw anew.
 	STMA::Render();
 	SDL_RenderPresent(m_pRenderer);
+
 }
 
 void Engine::Clean()
@@ -139,5 +160,35 @@ Engine& Engine::Instance()
 	return instance;
 }
 
+void Engine::LoadLevel(std::string path)
+{
+	std::ifstream inFile(path);
+	if (inFile.is_open())
+	{ // Build the level from Tile prototypes.
+		char key;
+		for (int row = 0; row < ROWS; row++)
+		{
+			for (int col = 0; col < COLS; col++)
+			{
+				inFile >> key;
+				m_level[row][col] = m_tiles[key]->Clone(); // Prototype design pattern used.
+				m_level[row][col]->GetDstP()->x = (float)(32 * col);
+				m_level[row][col]->GetDstP()->y = (float)(32 * row);
+				if (m_level[row][col]->IsObstacle())
+					SPMR::PushSprite(m_level[row][col], platform);
+				else
+					SPMR::PushSprite(m_level[row][col], background);
+			}
+		}
+	}
+	inFile.close();
+}
+
+
 SDL_Renderer* Engine::GetRenderer() { return m_pRenderer; }
 bool& Engine::Running() { return m_running; }
+
+std::array<std::array<Tile*, COLS>, ROWS> Engine::GetLevel() { return m_level; }
+
+std::array<std::array<Tile*, COLS>, ROWS> Engine::m_level;
+std::map<char, Tile*> Engine::m_tiles;

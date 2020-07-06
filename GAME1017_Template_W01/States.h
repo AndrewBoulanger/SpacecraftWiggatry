@@ -8,6 +8,7 @@
 #include "Enemy.h"
 #include "Sprite.h"
 #include "Pickup.h"
+#include "StunGun.h"
 #include <vector>
 #include <map>
 
@@ -29,25 +30,32 @@ private:
 	PlatformPlayer* m_pPlayer;
 	Enemy* m_pEnemy;
 	Sprite* m_pReticle;
+	Button* m_pauseBtn;
+	char buff[10]; // convert from int
 
 	std::vector<Pickup*> m_pPickUpList;
+
 	std::array<std::array<Tile*, COLS>, ROWS> m_level;
-	std::map<char, Tile*> m_tiles;
+	std::vector<Sprite*> m_platforms;
+	bool m_bgScrollX = false, m_bgScrollY = false;
 
 	Sprite* hpUI[5];
+	Sprite* wigUI;
+	Label* words[1]; // 0 = wig counter, may possibly add ship parts
 
 public:
 	GameState();
-	SDL_FRect** getPlatform();
 	PlatformPlayer* getPlayer();
 	Enemy* getEnemy();
 	void Update();
+	void UpdateTiles(float scroll, bool x = false);
 	void CheckCollision();
 	void Render();
 	void Enter();
 	void Exit();
 	void Resume();
-	std::array < std::array<Tile*, COLS>, ROWS>& GetLevel() { return m_level; }
+	
+	PlatformPlayer* GetPlayer() { return m_pPlayer; }
 };
 
 class TitleState : public State
@@ -59,9 +67,13 @@ public:
 	void Enter();
 	void Exit();
 private:
-	Label* words[3];
+	Label* words[4];
 	Button* m_playBtn;
 	Button* m_quitBtn;
+	Button* m_controlsBtn;
+	Sprite* instructions;
+	Sprite* background;
+	bool displayControls = false;
 };
 
 class PauseState : public State
@@ -75,6 +87,7 @@ public:
 private:
 	Button* m_resumeBtn;
 	Button* m_menuBtn;
+	Sprite* instructions;
 };
 
 class DeadState : public State
