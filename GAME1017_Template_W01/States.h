@@ -36,7 +36,6 @@ private:
 
 	std::array<std::array<Tile*, COLS>, ROWS> m_level;
 	std::vector<Sprite*> m_platforms;
-	bool m_bgScrollX = false, m_bgScrollY = false;
 	bool gameOver;
 
 	Sprite* m_flag;

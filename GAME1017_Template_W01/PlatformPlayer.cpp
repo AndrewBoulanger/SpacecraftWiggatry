@@ -44,7 +44,7 @@ PlatformPlayer::~PlatformPlayer()
 	delete m_hookShot;
 }
 
-void PlatformPlayer::Update(bool sX, bool sY)
+void PlatformPlayer::Update()
 {
 	//Do X axis first.
 	m_velX += m_accelX;
@@ -173,22 +173,15 @@ void PlatformPlayer::Stop() // If you want a dead stop both axes.
 	StopX();
 	StopY();
 }
-void PlatformPlayer::StopX() { m_velX = 0.0; }
-void PlatformPlayer::StopY() { m_velY = 0.0; }
-void PlatformPlayer::KnockLeft(double vel) { m_velX -= vel; }
 
-void PlatformPlayer::SetAccelX(double a) { m_accelX = a; }
-void PlatformPlayer::SetAccelY(double a) { m_accelY = a; }
-double PlatformPlayer::GetAccelX() { return m_accelX; }
-double PlatformPlayer::GetAccelY() { return m_accelY; }
+
 bool PlatformPlayer::IsGrounded() { return m_grounded; }
 void PlatformPlayer::SetGrounded(bool g) { m_grounded = g; }
-double PlatformPlayer::GetVelX() { return m_velX; }
-double PlatformPlayer::GetVelY() { return m_velY; }
-void PlatformPlayer::SetVelY(double a) { m_velY = a; }
+
 void PlatformPlayer::SetX(float y) { m_dst.x = y; }
 void PlatformPlayer::SetY(float y) { m_dst.y = y; }
 double PlatformPlayer::GetX() { return m_dst.x; }
+void PlatformPlayer::KnockLeft(double vel) { m_velX -= vel; }
 
 void PlatformPlayer::Render()
 {

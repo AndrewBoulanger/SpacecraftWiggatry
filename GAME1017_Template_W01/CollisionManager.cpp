@@ -83,7 +83,7 @@ bool CollisionManager::PlayerCollision(const SDL_FRect* player, const int dX, co
 		SDL_Rect t = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
 		if (tiles[i]->IsObstacle() && SDL_HasIntersection(&p, &t))
 		{
-			std::cout << "Collision!\n";
+			//std::cout << "Collision!\n";
 			return true;
 		}
 	}
@@ -106,7 +106,7 @@ bool CollisionManager::SmallTileCollision(const SDL_FRect target, const int dX, 
 		SDL_Rect tile = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
 		if (tiles[i]->IsObstacle() && SDL_HasIntersection(&sprite, &tile))
 		{ // Collision!
-			std::cout << "cool\n";
+			//std::cout << "cool\n";
 			return true;
 		}
 	}

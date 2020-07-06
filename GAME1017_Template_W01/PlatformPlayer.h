@@ -2,7 +2,7 @@
 #ifndef _PLATFORMPLAYER_H_
 #define _PLATFORMPLAYER_H_
 
-#define GRAV 3.0
+//gravity was moved to character class so the enemies can use it too
 #define JUMPFORCE 35.0
 
 #include "Sprite.h"
@@ -20,27 +20,20 @@ class PlatformPlayer : public Character
 public:
 	PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart = 0, int smin = 0, int smax = 0, int nf = 0);
 	~PlatformPlayer();
-	void Update(bool sX, bool sY);
+	void Update();
 	void Stop();
-	void StopX();
-	void StopY();
-	void KnockLeft(double vel);
-	void SetAccelX(double a);
-	void SetAccelY(double a);
-	double GetAccelX();
-	double GetAccelY();
+
 	double GetThurst();
 	bool IsGrounded();
 	void SetGrounded(bool g);
-	double GetVelX();
-	double GetVelY();
-	void SetVelY(double a);
+
+	void SetGrav(double grav) { m_grav = grav; }
+	
 	void SetX(float y);
 	void SetY(float y);
 	double GetX();
 	virtual void Render();
-	void SetGrav(double grav) { m_grav = grav; }
-	
+	void KnockLeft(double vel);
 	void takeDamage(int dmg) override;
 	int getWigs()
 	{
@@ -81,21 +74,11 @@ private:
 	bool m_facingRight = true;
 	bool m_facingUp = false;
 
-	double m_accelX,
-		m_accelY,
-		m_velX,
-		m_maxVelX,
-		m_velY,
-		m_maxVelY,
-		m_drag,
-		m_thrust,
-		m_grav;
 	int m_wigCount = 0;
 	int m_ShipParts = 0;
 	float m_distance = 0;
 	Hookshot* m_hookShot;
 
-	std::vector<Wig*> m_vecwigCollection;
 	std::vector<StunGun*> m_vPBullets;
 
 	
