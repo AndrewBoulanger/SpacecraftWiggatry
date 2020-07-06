@@ -32,6 +32,7 @@ GameState::GameState() {}
 void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
+	SDL_ShowCursor(SDL_DISABLE);
 	// FOMA::SetSize("Img/font.ttf", "font", 35); not working DX
 	m_pPlayer = SPMR::getPlayer();
 
@@ -223,6 +224,7 @@ void GameState::Render()
 void GameState::Exit()
 {
 	delete m_pReticle;
+	SDL_ShowCursor(SDL_ENABLE);
 	//for (int i = 0; i < m_pPickUpList.size(); i++)
 	//{
 	//	delete m_pPickUpList[i];
@@ -312,6 +314,7 @@ PauseState::PauseState() {}
 void PauseState::Enter()
 {
 	std::cout << "Entering Pause...\n";
+	SDL_ShowCursor(SDL_ENABLE);
 	m_resumeBtn = new ResumeButton({ 0,0,200,80 }, { 415.0f,500.0f,200.0f,80.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("resume"));//1024
 	instructions = new Sprite({ 0,0,525,350 }, { 260.5f,140.0f,525.0f,350.0f },Engine::Instance().GetRenderer(), TEMA::GetTexture("controls"));
 }
@@ -337,6 +340,7 @@ void PauseState::Render()
 void PauseState::Exit()
 {
 	std::cout << "Exiting PauseState...\n";
+	SDL_ShowCursor(SDL_DISABLE);
 }
 // End of PauseState
 
