@@ -39,8 +39,10 @@ public:
         return enemysWig;
     }
 
+
     void Update();
     void Render() override;
 
+    void groundedMove2(const int dir);
 };
 
