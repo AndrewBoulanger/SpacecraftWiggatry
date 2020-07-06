@@ -45,8 +45,7 @@ void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
 	// FOMA::SetSize("Img/font.ttf", "font", 35); not working DX
-	m_pPlayer = new PlatformPlayer({ 0,0,400,152 }, { 100.0f,600.0f,96.0f,96.0f }, 
-								   Engine::Instance().GetRenderer(), TEMA::GetTexture("player"));
+	m_pPlayer = SPMR::getPlayer();
 	m_pEnemy = new Enemy({ 0,0,400,140 }, {850.0f, 200.0f, 50.0f, 120.0f}, 
 									Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1);
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
@@ -60,8 +59,8 @@ void GameState::Enter()
 	Engine::LoadLevel("Dat/Level1.txt");
 	m_level = Engine::GetLevel();
 
-	m_pPickUpList.push_back(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
-					Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
+	SPMR::PushSprite(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
 
 	SOMA::PlayMusic("PokerFace");
 
@@ -95,46 +94,12 @@ void GameState::Update()
 	if (m_pauseBtn->ButtonUpdate() == 1)
 		return;
 
+	//for (int i = 0; i < m_pPickUpList.size(); i++)
+	//	if (m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
+	SPMR::Update();
 	// UI
-	for (int i = 0; i < m_pPickUpList.size(); i++)
-		if (m_pPickUpList[i] != nullptr)m_pPickUpList[i]->Update();
 	sprintf_s(buff, "%d", m_pPlayer->getWigs());
 	words[0]->SetText(buff);
-
-	//// Panning
-	//m_bgScrollX = m_bgScrollY = false;
-	//if (m_pPlayer->GetVelX() > 0 && m_pPlayer->GetDstP()->x > WIDTH * 0.5f)
-	//{
-	//	if (m_level[0][COLS - 1]->GetDstP()->x > WIDTH - 32)
-	//	{
-	//		m_bgScrollX = true;
-	//		UpdateTiles((float)m_pPlayer->GetVelX(), true);
-	//	}
-	//}
-	//else if (m_pPlayer->GetVelX() < 0 && m_pPlayer->GetDstP()->x < WIDTH * 0.4f)
-	//{
-	//	if (m_level[0][0]->GetDstP()->x < 0)
-	//	{
-	//		m_bgScrollX = true;
-	//		UpdateTiles((float)m_pPlayer->GetVelX(), true);
-	//	}
-	//}
-	/*if (m_pPlayer->GetVelY() > 0 && m_pPlayer->GetDstP()->y > HEIGHT * 0.7f)
-	{
-		if (m_level[ROWS - 1][0]->GetDstP()->y > HEIGHT - 32)
-		{
-			m_bgScrollY = true;
-			UpdateTiles((float)m_pPlayer->GetVelY());
-		}
-	}*/
-	//else if (m_pPlayer->GetVelY() < 0 && m_pPlayer->GetDstP()->y < HEIGHT * 0.3f)
-	//{
-	//	if (m_level[0][0]->GetDstP()->y < 0)
-	//	{
-	//		m_bgScrollY = true;
-	//		UpdateTiles((float)m_pPlayer->GetVelY());
-	//	}
-	//}
 
 	m_pPlayer->Update(m_bgScrollX, m_bgScrollY); // Change to player Update here.
 	CheckCollision();
@@ -157,34 +122,6 @@ void GameState::UpdateTiles(float scroll, bool x)
 void GameState::CheckCollision()
 {	
 
-	//for (unsigned i = 0; i < m_platforms.size(); i++) // For each platform.
-	//{
-	//	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_platforms[i]->GetDstP()))
-	//	{
-	//		if (m_pPlayer->GetDstP()->y + m_pPlayer->GetDstP()->h - (float)m_pPlayer->GetVelY() <= m_platforms[i]->GetDstP()->y)
-	//		{ // Colliding top side of platform.
-	//			m_pPlayer->SetGrounded(true);
-	//			m_pPlayer->StopY();
-	//			m_pPlayer->SetY(m_platforms[i]->GetDstP()->y - m_pPlayer->GetDstP()->h);
-	//		}
-	//		else if (m_pPlayer->GetDstP()->y - (float)m_pPlayer->GetVelY() >= m_platforms[i]->GetDstP()->y + m_platforms[i]->GetDstP()->h)
-	//		{ // Colliding bottom side of platform.
-	//			m_pPlayer->StopY();
-	//			m_pPlayer->SetY(m_platforms[i]->GetDstP()->y + m_platforms[i]->GetDstP()->h);
-	//		}
-	//		else if (m_pPlayer->GetDstP()->x + m_pPlayer->GetDstP()->w - m_pPlayer->GetVelX() <= m_platforms[i]->GetDstP()->x)
-	//		{ // Collision from left.
-	//			m_pPlayer->StopX(); // Stop the player from moving horizontally.
-	//			m_pPlayer->SetX(m_platforms[i]->GetDstP()->x - m_pPlayer->GetDstP()->w);
-	//		}
-	//		else if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_platforms[i]->GetDstP()->x + m_platforms[i]->GetDstP()->w)
-	//		{ // Colliding right side of platform.
-	//			m_pPlayer->StopX();
-	//			m_pPlayer->SetX(m_platforms[i]->GetDstP()->x + m_platforms[i]->GetDstP()->w);
-	//		}
-	//	}
-	//}
-
 	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pEnemy->GetDstP()))
 	{
 		if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
@@ -199,28 +136,28 @@ void GameState::CheckCollision()
 		}
 		m_pPlayer->takeDamage(m_pEnemy->getBaseDamage());
 	}
-	for (int i = 0; i < m_pPickUpList.size(); i++)
-	{
-		if (COMA::CircleCircleCheck(m_pPlayer->getCenter(), m_pPickUpList[i]->getCenter(), 40, 50))
-		{
-			switch (m_pPickUpList[i]->getType())
-			{
-			case WIG:
-				m_pPlayer->add1Wig();
-				break;
-			case SHIP_PART:
-				m_pPlayer->add1ShipPart();
-				break;
-			default:
-				break;
-			}
-			delete m_pPickUpList[i];
-			m_pPickUpList[i] = nullptr;
-			std::cout << "collected\n";
-			m_pPickUpList.erase(m_pPickUpList.begin()+i);
-			m_pPickUpList.shrink_to_fit();
-		}
-	}
+	//for (int i = 0; i < SPMR::GetPickups().size(); i++)
+	//{
+	//	if (COMA::CircleCircleCheck(m_pPlayer->getCenter(), m_pPickUpList[i]->getCenter(), 40, 50))
+	//	{
+	//		switch (m_pPickUpList[i]->getType())
+	//		{
+	//		case WIG:
+	//			m_pPlayer->add1Wig();
+	//			break;
+	//		case SHIP_PART:
+	//			m_pPlayer->add1ShipPart();
+	//			break;
+	//		default:
+	//			break;
+	//		}
+	//		delete m_pPickUpList[i];
+	//		m_pPickUpList[i] = nullptr;
+	//		std::cout << "collected\n";
+	//		m_pPickUpList.erase(m_pPickUpList.begin()+i);
+	//		m_pPickUpList.shrink_to_fit();
+	//	}
+	//}
 }
 
 void GameState::Render()
@@ -240,12 +177,10 @@ void GameState::Render()
 	// Draw the player.
 	m_pPlayer->Render();
 	
-	//// Draw the platforms.
-	//SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 70, 192, 0, 255);
 
 	m_pReticle->Render();
 	m_pauseBtn->Render();
-	//SPMR::Render();
+	SPMR::Render();
 
 	for (int i = 0; i < m_pPickUpList.size(); i++)
 		m_pPickUpList[i]->Render();

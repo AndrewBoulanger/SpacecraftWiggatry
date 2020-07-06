@@ -13,16 +13,36 @@ void SpriteManager::LoadLevel()
 
 void SpriteManager::Update()
 {
-	if (!s_sprites.empty()) // empty() and back() are methods of the vector type.
+	for (int i = 0; i < s_pickups.size(); i++)
 	{
-		for(int i = 0; i < s_sprites.size(); i++)
+		if (s_pickups[i] != nullptr)
+			s_pickups[i]->Update();
+	}
+
+	Collision();
+}
+
+void SpriteManager::Collision()
+{
+	for (int i = 0; i < SPMR::GetPickups().size(); i++)
+	{
+		if (COMA::CircleCircleCheck(s_player->getCenter(), s_pickups[i]->getCenter(), 40, 50))
 		{
-			if (s_sprites[i]->readyToDelete)
+			switch (s_pickups[i]->getType())
 			{
-				delete s_sprites[i];
-				s_sprites[i] = nullptr;
-			//	s_sprites.erase(s_sprites[i]);
+			case WIG:
+				s_player->add1Wig();
+				break;
+			case SHIP_PART:
+				s_player->add1ShipPart();
+				break;
+			default:
+				break;
 			}
+			delete s_pickups[i];
+			s_pickups[i] = nullptr;
+			std::cout << "collected\n";
+			CleanVector(s_pickups);
 		}
 	}
 }
@@ -31,6 +51,8 @@ void SpriteManager::Render()
 {
 	for (int i = 0; i < s_sprites.size(); i++)
 		s_sprites[i]->Render();
+	for (int i = 0; i < s_enemies.size(); i++)
+		s_enemies[i]->Render();
 	for (int i = 0; i < s_pickups.size(); i++)
 		s_pickups[i]->Render();
 }
@@ -104,16 +126,18 @@ void SpriteManager::ScrollAll(float scroll)
 	}
 	for (int i = 0; i < s_pickups.size(); i++)
 	{
-		s_background[i]->GetDstP()->x -= scroll;
+		s_pickups[i]->GetDstP()->x -= scroll;
 	}
 
 	
 	offset += scroll;
 }
 
+//the more I add to this class, which is meant to hold all sprites, the more I realize I probably could have just made it a singleton
 std::vector<Sprite*> SpriteManager::s_sprites;
 std::vector<Sprite*> SpriteManager::s_background;
 std::vector<Enemy*> SpriteManager::s_enemies;
 std::vector<Pickup*> SpriteManager::s_pickups;
 std::vector<Sprite*> SpriteManager::s_projectiles;
+PlatformPlayer* SpriteManager::s_player;
 float SpriteManager::offset;

@@ -127,8 +127,6 @@ void Hookshot::Update(double& grav)
 void Hookshot::Render()
 {
 		SDL_RenderCopyF(m_pRend, m_pText, &m_src, &m_dst);
-		if (stolenWig != nullptr)
-			stolenWig->Render();
 }
 
 void Hookshot::sethookFixed(bool b)
