@@ -33,6 +33,7 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Tex
 	baseDamage = 1;
 	m_wigCount = 0;
 	m_ShipParts = 0;
+	energy = 5;
 	m_hookShot = new Hookshot({ 0,0,36,36 }, { d.x, d.y, 32, 32 }, r, TEMA::GetTexture("hookshot"));
 
 	// SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t
@@ -162,6 +163,7 @@ void PlatformPlayer::Update()
 	}
 	if (EVMA::KeyPressed(SDL_SCANCODE_E))
 	{
+		if(energy > 0)
 		//SOMA::PlaySound("jump"); //change jump into bullet sound
 		createStunGunBullet();
 	}
@@ -240,8 +242,9 @@ void PlatformPlayer::slap()
 
 void PlatformPlayer::createStunGunBullet()
 {
-	StunGun* stungun = new StunGun({ 0,0,36,36 }, { m_dst.x, m_dst.y, 32, 32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("hookshot"));
-	
+	StunGun* stungun = new StunGun({ 0,0,36,36 }, { m_dst.x, m_dst.y, 32, 32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning"));
+	reduceEnergy();
+
 	if (m_facingRight == true)
 	{
 		stungun->setVelX(20);

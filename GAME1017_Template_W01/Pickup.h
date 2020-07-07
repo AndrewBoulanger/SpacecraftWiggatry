@@ -5,7 +5,9 @@
 enum pickupType
 {
     WIG,
-    SHIP_PART
+    SHIP_PART,
+    ENERGY,
+    HEALTH
 };
 
 class Pickup :
@@ -59,3 +61,30 @@ public:
     };
 };
 
+
+class Energy : public Pickup
+{
+private:
+
+public:
+    Energy() {};
+    Energy(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t)
+        : Pickup(s, d, r, t)
+    {
+        type = ENERGY;
+    };
+};
+
+class Health : public Pickup
+{
+private:
+
+
+public:
+    Health() {};
+    Health(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t)
+        : Pickup(s, d, r, t)
+    {
+        type = HEALTH;
+    };
+};

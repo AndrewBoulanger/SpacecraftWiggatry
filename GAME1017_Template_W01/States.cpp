@@ -70,6 +70,11 @@ void GameState::Enter()
 			SPMR::PushSprite(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
 
+			SPMR::PushSprite(new Energy({ 0,0,100,100 }, { 3700.0f, 100.0f,45.0f,45.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
+
+			SPMR::PushSprite(new Energy({ 0,0,256,256 }, { 4100.0f, 400.0f,50.0f,50.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
 
 		m_pEnemy = SPMR::GetEnemies()[0];
 		m_pEnemy->setHealth(3);  //this is just here to test snatching
@@ -181,7 +186,7 @@ void GameState::Render()
 	// ui stuff
 	for (int i = 0; i < (m_pPlayer->getHealth()); i++)
 		hpUI[i]->Render();
-	for (int i = 0; i < (5); i++) // TO: reference stun uses
+	for (int i = 0; i < (m_pPlayer->getEnergy()); i++) // TO: reference stun uses
 		stungunUI[i]->Render();
 	wigUI->Render();
 	shipUI->Render();
