@@ -86,9 +86,56 @@ bool CollisionManager::PlayerCollision(const SDL_FRect* player, const int dX, co
 			//std::cout << "Collision!\n";
 			return true;
 		}
+		//if (tiles[i]->IsHazard() && SDL_HasIntersection(&p, &t))
+		//{
+		//	//std::cout << "Hazard!\n";
+		//	return true;
+		//}
 	}
 	return false;
 }
+
+bool CollisionManager::PlayerHazardCollision(const SDL_FRect* player, const int dX, const int dY, float offset)
+{
+	int playerX = (player->x + offset) / 32;
+	int playerY = player->y / 32;
+	SDL_Rect p = { player->x + dX + 16, player->y + dY + 24, player->w - 48, player->h - 48 }; // Adjusted bounding box.
+	Tile* tiles[16] = { Engine::GetLevel()[playerY][playerX],	// Bottom		players tile											// Left
+					   Engine::GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],										// MiddleLeft
+					   Engine::GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 2)],										// MiddleRight
+					   Engine::GetLevel()[playerY][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],										// Right tile.
+					// Second row
+					   Engine::GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][playerX],
+					   Engine::GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
+					   Engine::GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 2 == COLS ? COLS - 1 : playerX + 2)],
+					   Engine::GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 3 == COLS ? COLS - 1 : playerX + 3)],
+		// Third row
+		   Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][playerX],
+		   Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
+		   Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 2 == COLS ? COLS - 1 : playerX + 2)],
+		   Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 3 == COLS ? COLS - 1 : playerX + 3)],
+		// Fourth row hahahahahahahaha
+		   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][playerX],
+		   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
+		   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 2 == COLS ? COLS - 1 : playerX + 2)],
+		   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 3 == COLS ? COLS - 1 : playerX + 3)] };
+
+	for (int i = 0; i < 16; i++)
+	{
+		SDL_RenderClear(Engine::Instance().GetRenderer());
+
+		DEMA::DrawLine({ (int)tiles[i]->GetDstP()->x,(int)tiles[i]->GetDstP()->y }, { (int)tiles[i]->GetDstP()->x + (int)tiles[i]->GetDstP()->w,(int)tiles[i]->GetDstP()->y }, { 255,0,0,0 });
+		DEMA::DrawLine({ (int)tiles[i]->GetDstP()->x,(int)tiles[i]->GetDstP()->y }, { (int)tiles[i]->GetDstP()->x ,(int)tiles[i]->GetDstP()->y + (int)tiles[i]->GetDstP()->h }, { 255,0,0,0 });
+		SDL_Rect t = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
+		if (tiles[i]->IsHazard() && SDL_HasIntersection(&p, &t))
+		{
+			//std::cout << "Hazard!\n";
+			return true;
+		}
+	}
+	return false;
+}
+
 
 bool CollisionManager::SmallTileCollision(const SDL_FRect target, const int dX, const int dY, float offset)
 {

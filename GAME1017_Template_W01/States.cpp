@@ -146,11 +146,6 @@ void GameState::CheckCollision()
 				m_pPlayer->KnockLeft(5);
 			}
 			m_pPlayer->takeDamage(m_pEnemy->getBaseDamage());
-			if (m_pPlayer->getHealth() <= 0)
-			{
-				gameOver = true;
-				m_pPlayer->setHealth(5);// reset health for the next game, we can move this to enter if we want it to reset every level instead
-			}
 		}
 	}
 
@@ -163,6 +158,11 @@ void GameState::CheckCollision()
 		else
 			Engine::Instance().setLevel(1);
 
+	}
+	if (m_pPlayer->getHealth() <= 0)
+	{
+		gameOver = true;
+		m_pPlayer->setHealth(5);// reset health for the next game, we can move this to enter if we want it to reset every level instead
 	}
 	if (gameOver)
 		STMA::ChangeState(new DeadState);
