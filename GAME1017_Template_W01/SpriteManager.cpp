@@ -22,12 +22,21 @@ void SpriteManager::Update()
 			cleanSpr = true;
 		}
 	}
-	CleanVector(s_sprites, cleanSpr);
+	if(cleanSpr)
+		CleanVector(s_sprites, cleanSpr);
 	for (int i = 0; i < s_enemies.size(); i++)
 	{
+		if (s_enemies[i]->readyToDelete)
+		{
+			delete s_enemies[i];
+			s_enemies[i] = nullptr;
+			cleanEn = true;
+		}
 		if(s_enemies[i] != nullptr)
 			s_enemies[i]->Update();
 	}
+	if(cleanEn)
+		CleanVector(s_enemies, cleanEn);
 	for (int i = 0; i < s_pickups.size(); i++)
 	{
 		if (s_pickups[i] != nullptr)
@@ -173,3 +182,4 @@ std::vector<Sprite*> SpriteManager::s_projectiles;
 PlatformPlayer* SpriteManager::s_player;
 float SpriteManager::offset;
 bool SpriteManager::cleanSpr;
+bool SpriteManager::cleanEn;

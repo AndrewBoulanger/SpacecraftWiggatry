@@ -146,7 +146,7 @@ bool CollisionManager::SmallTileCollision(const SDL_FRect target, const int dX, 
 		Engine::GetLevel()[targetY][targetX ],	// Bottom		players tile											// Left
 		Engine::GetLevel()[targetY][(targetX + 1 >= COLS ? COLS - 1 : targetX + 1)],										// MiddleLeft
 		Engine::GetLevel()[(targetY + 1 >= ROWS ? ROWS - 1 : targetY + 1)][targetX ],
-		Engine::GetLevel()[(targetY + 1 == ROWS ? ROWS - 1 : targetY + 1)][(targetX + 1 >= COLS ? COLS - 1 : targetX + 1)],									// Right tile.
+		Engine::GetLevel()[(targetY + 1 >= ROWS ? ROWS - 1 : targetY + 1)][(targetX + 1 >= COLS ? COLS - 1 : targetX + 1)],									// Right tile.
 	};
 	for (int i = 0; i < 4; i++)
 	{

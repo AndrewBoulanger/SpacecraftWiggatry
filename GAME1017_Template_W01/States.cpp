@@ -48,7 +48,8 @@ void GameState::Enter()
 	words[0] = new Label("font", 225, 4, to_string((int)(m_pPlayer->getWigs())).c_str(), { 255,255,255,0 });
 	words[1] = new Label("font", 289, 4, to_string((int)(m_pPlayer->getParts())).c_str(), { 255,255,255,0 });
 
-	gameOver = timeToSwitchLevels = false;
+	gameOver = false; 
+	timeToSwitchLevels = false;
 
 	m_pPlayer->SetPos({ (int)100.0f,(int)600.0f });
 
@@ -59,13 +60,19 @@ void GameState::Enter()
 	
 		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 850.0f, 500.0f, 50.0f, 106.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1730.0f, 200.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, {2700.0f, 100.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 3900.0f, 500.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
 
 			SPMR::PushSprite(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
 
 
 		m_pEnemy = SPMR::GetEnemies()[0];
-		m_pEnemy->setHealth(0);  //this is just here to test snatching
+		m_pEnemy->setHealth(3);  //this is just here to test snatching
 
 		m_pPlayer->setHealth(5);
 	m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
@@ -121,7 +128,7 @@ void GameState::CheckCollision()
 {	
 	if (SPMR::GetEnemies().size()!= 0)
 	{
-		if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pEnemy->GetDstP()))
+		if (COMA::CircleCircleCheck(m_pPlayer->getCenter(), m_pEnemy->getCenter(), 40))
 		{
 			if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
 			{ // Colliding right side of platform.
@@ -154,7 +161,7 @@ void GameState::CheckCollision()
 	}
 	if (gameOver)
 		STMA::ChangeState(new DeadState);
-	if (timeToSwitchLevels)
+	else if (timeToSwitchLevels)
 		STMA::ChangeState(new GameState);
 }
 
