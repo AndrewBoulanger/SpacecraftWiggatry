@@ -86,6 +86,12 @@ void PlatformPlayer::Update()
 	StunGunCollision();
 	//StunGun Bound Check
 	BulletBoundCheck();
+	// Traps
+	if (COMA::PlayerHazardCollision(&m_dst, m_velX, 0, SPMR::getOffset()))
+	{
+		takeDamage(1);
+		KnockLeft(5);
+	}
 
 	if (iCooldown > 0)
 	{
