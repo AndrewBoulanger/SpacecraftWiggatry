@@ -46,7 +46,7 @@ private: // Private NOT inherited.
 class AnimatedSprite : public Sprite// Also inline.
 {
 public:
-	AnimatedSprite(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart = 0, int smin =0, int smax =0, int nf =0)
+	AnimatedSprite(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart, int smin, int smax, int nf)
 		:Sprite(s, d, r, t), m_sprite(sstart), m_spriteMin(smin), m_spriteMax(smax), m_frameMax(nf) {}
 	void Animate()
 	{

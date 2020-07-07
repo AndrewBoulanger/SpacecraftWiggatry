@@ -78,6 +78,8 @@ private:
 	int m_ShipParts = 0;
 	float m_distance = 0;
 	Hookshot* m_hookShot;
+	enum state { idle, running } m_state;
+	void SetState(int s);
 
 	std::vector<StunGun*> m_vPBullets;
 

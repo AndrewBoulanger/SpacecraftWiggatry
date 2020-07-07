@@ -63,8 +63,8 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/Tiles2.png", "tiles");
 	TEMA::RegisterTexture("Img/flag.png", "flag");
 
-	SPMR::setPlayer( new PlatformPlayer({ 0,0,400,152 }, { 100.0f,600.0f,96.0f,96.0f },
-		Engine::Instance().GetRenderer(), TEMA::GetTexture("player")));
+	SPMR::setPlayer( new PlatformPlayer({ 0,0,139,153 }, { 100.0f,600.0f,96.0f,96.0f },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("player"), 0, 0, 2, 6)); 
 
 	FOMA::RegisterFont("Img/font.ttf", "fontLarge", 150);
 	FOMA::RegisterFont("Img/font.ttf", "font", 35);
