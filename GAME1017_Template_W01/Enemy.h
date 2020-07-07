@@ -12,34 +12,34 @@ class Enemy :
     public Character
 {
 private:
-    bool hasWig;
-    Wig* enemysWig;
-    int EnemyHP = 3;
-    enemyState state;
 
     SDL_FRect wallWisker;
     SDL_FRect gapWisker;
 
 protected:
+    bool hasWig;
+    Wig* enemysWig;
+    int EnemyHP = 3;
+    enemyState state;
 
 public:
     Enemy(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart = 0, int smin = 0, int smax = 0, int nf = 0, int hp = 2, int dmg = 1);
 
     void setState(enemyState nState);
 
-    bool getHasWig()
+    virtual bool getHasWig()
     {return hasWig; }
-    Wig* getenemysWig()
+    virtual Wig* getenemysWig()
     { 
         if(hasWig)
         return enemysWig; 
     }
 
-    Wig* removeWig();
-    void takeDamage(int dmg);
+    virtual Wig* removeWig();
+    virtual void takeDamage(int dmg);
 
     void Update();
-    void Render() override;
+    virtual void Render() override;
 
     void groundedMove2(const int dir);
 };
