@@ -86,6 +86,15 @@ void GameState::Enter()
 	{
 		Engine::LoadLevel("Dat/Level2.txt");
 
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 500.0f, 200.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1600.0f, 600.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 3400.0f, 100.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 4200.0f, 30.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
+
 		// ship parts of lvl 2
 		SPMR::PushSprite(new ShipPart({ 0,0,74, 75 }, { (32.0f * 14.0f), (32.0f * 14.5f), 50.0f, 50.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
@@ -131,8 +140,9 @@ void GameState::Update()
 
 void GameState::CheckCollision()
 {	
-	if (SPMR::GetEnemies().size()!= 0)
+	for(int i = 0; i < SPMR::GetEnemies().size();i++)
 	{
+		m_pEnemy = SPMR::GetEnemies()[i];
 		if (COMA::CircleCircleCheck(m_pPlayer->getCenter(), m_pEnemy->getCenter(), 40))
 		{
 			if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
@@ -148,6 +158,7 @@ void GameState::CheckCollision()
 			m_pPlayer->takeDamage(m_pEnemy->getBaseDamage());
 		}
 	}
+	m_pEnemy = nullptr;
 
 	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy   
 	{                       //we could use the change state function to make a new game state, then we can move some of this stuff to the exit state and the stuff that's 
