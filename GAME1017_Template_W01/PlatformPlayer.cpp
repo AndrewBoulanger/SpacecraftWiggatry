@@ -349,8 +349,9 @@ void PlatformPlayer::SetState(int s)
 	}
 	else // Only other is running for now...
 	{
-		m_sprite = m_spriteMin = 1;
-		m_spriteMax = 4;
+		m_sprite = m_spriteMin = 0;
+		m_spriteMax = 2;
+	
 	}
 }
 
