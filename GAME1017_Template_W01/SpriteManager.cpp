@@ -60,6 +60,11 @@ void SpriteManager::Collision()
 			case SHIP_PART:
 				s_player->add1ShipPart();
 				break;
+			case ENERGY:
+				s_player->raiseEnergy();
+				break;
+			case HEALTH:
+				s_player->incrHealth();
 			default:
 				break;
 			}
