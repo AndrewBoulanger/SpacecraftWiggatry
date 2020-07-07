@@ -53,6 +53,7 @@ public:
 	{
 		iCooldown = frames;
 	}
+	void incrHealth() { health = ((health +1) >5) ? 5: ++health; }
 
 	virtual void takeDamage(int dmg);
 

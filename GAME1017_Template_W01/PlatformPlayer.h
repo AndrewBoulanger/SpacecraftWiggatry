@@ -35,30 +35,15 @@ public:
 	virtual void Render();
 	void KnockLeft(double vel);
 	void takeDamage(int dmg) override;
-	int getWigs()
-	{
-		return m_wigCount;
-	};
-	void setWigs(int wigs) 
-	{
-		m_wigCount = wigs;
-	}
-	void add1Wig()
-	{
-		++m_wigCount;
-	}
-	int getParts()
-	{
-		return m_ShipParts;
-	};
-	void setParts(int parts)
-	{
-		m_ShipParts = parts;
-	}
-	void add1ShipPart()
-	{
-		++m_ShipParts;
-	}
+	int getWigs() { return m_wigCount; };
+	void setWigs(int wigs) { m_wigCount = wigs; }
+	void add1Wig() { ++m_wigCount; }
+	int getParts() { return m_ShipParts; }
+	void setParts(int parts) { m_ShipParts = parts; }
+	void add1ShipPart() { ++m_ShipParts; }
+	int getEnergy() { return energy; }
+	void reduceEnergy() { --energy; }
+	void raiseEnergy() { energy = ((energy + 1) > 5) ? 5 : ++energy; }
 
 	void slap();
 	void createStunGunBullet();
@@ -76,6 +61,7 @@ private:
 
 	int m_wigCount = 0;
 	int m_ShipParts = 0;
+	int energy;
 	float m_distance = 0;
 	Hookshot* m_hookShot;
 	enum state { idle, running } m_state;
