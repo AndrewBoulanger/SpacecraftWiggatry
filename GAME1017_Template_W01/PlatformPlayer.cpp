@@ -35,6 +35,7 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Tex
 	m_ShipParts = 0;
 	energy = 5;
 	m_hookShot = new Hookshot({ 0,0,36,36 }, { d.x, d.y, 32, 32 }, r, TEMA::GetTexture("hookshot"));
+	SetState(0);
 
 	// SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t
 
@@ -105,18 +106,35 @@ void PlatformPlayer::Update()
 	}
 
 	// l/r inputs
-	if (EVMA::KeyHeld(SDL_SCANCODE_A))
+	switch (m_state)
 	{
-		m_accelX = -1.0;
-		m_facingRight = false;
-	//	m_grapplehook = false;
+	case idle:
+		if (EVMA::KeyHeld(SDL_SCANCODE_A) || EVMA::KeyHeld(SDL_SCANCODE_D))
+		{
+			SetState(running);
+		}
+		break;
+	case running:
+		if (EVMA::KeyReleased(SDL_SCANCODE_A) || EVMA::KeyReleased(SDL_SCANCODE_D))
+		{
+			SetState(idle);
+			break; // Skip movement parsing below.
+		}
+		if (EVMA::KeyHeld(SDL_SCANCODE_A))
+		{
+			m_accelX = -1.0;
+			m_facingRight = false;
+			//	m_grapplehook = false;
+		}
+		else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+		{
+			m_accelX = 1.0;
+			m_facingRight = true;
+			//	m_grapplehook = false;
+		}
+		break;
 	}
-	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
-	{
-		m_accelX = 1.0;
-		m_facingRight = true;
-	//	m_grapplehook = false;
-	}
+	Animate();
 	if (EVMA::KeyHeld(SDL_SCANCODE_W))
 	{
 		m_facingUp = true;
@@ -161,7 +179,6 @@ void PlatformPlayer::Update()
 		}
 	}
 
-
 	if (EVMA::KeyPressed(SDL_SCANCODE_Q))
 	{
 		//SOMA::PlaySound("jump"); //change jump into slap sound
@@ -173,7 +190,6 @@ void PlatformPlayer::Update()
 		//SOMA::PlaySound("jump"); //change jump into bullet sound
 		createStunGunBullet();
 	}
-
 }
 
 void PlatformPlayer::Stop() // If you want a dead stop both axes.
@@ -320,6 +336,21 @@ void PlatformPlayer::BulletBoundCheck()
 			m_vPBullets.erase(iterBegin);
 			break;
 		}
+	}
+}
+
+void PlatformPlayer::SetState(int s)
+{
+	m_state = static_cast<state>(s);
+	m_frame = 0;
+	if (m_state == idle)
+	{
+		m_sprite = m_spriteMin = m_spriteMax = 0;
+	}
+	else // Only other is running for now...
+	{
+		m_sprite = m_spriteMin = 1;
+		m_spriteMax = 4;
 	}
 }
 
