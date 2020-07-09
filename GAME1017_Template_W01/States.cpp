@@ -60,7 +60,7 @@ void GameState::Enter()
 	
 		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 850.0f, 500.0f, 50.0f, 106.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1730.0f, 200.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1710.0f, 200.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
 		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, {2700.0f, 100.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
@@ -73,7 +73,7 @@ void GameState::Enter()
 			SPMR::PushSprite(new Energy({ 0,0,100,100 }, { 3700.0f, 100.0f,45.0f,45.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
 
-			SPMR::PushSprite(new Energy({ 0,0,256,256 }, { 4100.0f, 400.0f,50.0f,50.0f },
+			SPMR::PushSprite(new Health({ 0,0,256,256 }, { 4100.0f, 400.0f,50.0f,50.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
 
 		m_pEnemy = SPMR::GetEnemies()[0];

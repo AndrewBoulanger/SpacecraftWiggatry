@@ -9,9 +9,33 @@ void DebugManager::DrawLine(const SDL_Point start, const SDL_Point end, const SD
 
 void DebugManager::QueueLine(const SDL_Point start, const SDL_Point end, const SDL_Color col)
 {
-	s_points.push_back(start);
-	s_points.push_back(end);
-	s_colors.push_back(col);
+	if (s_debugMode)
+	{
+		s_points.push_back(start);
+		s_points.push_back(end);
+		s_colors.push_back(col);
+	}
+}
+
+void DebugManager::QueueRect(const SDL_Rect r, const SDL_Color col)
+{
+	if (s_debugMode)
+	{
+		s_points.push_back({ r.x, r.y });// line 1 - left
+		s_points.push_back({ r.x, r.y + r.h });
+
+		s_points.push_back({ r.x, r.y });   // line 2 - top
+		s_points.push_back({ r.x + +r.w, r.y });
+
+		s_points.push_back({ r.x , r.y + r.h }); // bottom
+		s_points.push_back( { r.x + r.w, r.y + r.h });
+
+		s_points.push_back({ r.x +r.w , r.y  }); // right
+		s_points.push_back({ r.x + r.w, r.y + r.h });
+
+		for(int i = 0; i<4; i++) // push the colour 4 times
+		s_colors.push_back(col);
+	}
 }
 
 void DebugManager::FlushLines()
@@ -29,6 +53,6 @@ void DebugManager::Quit()
 	s_colors.shrink_to_fit();
 }
 
-int DebugManager::s_debugMode = 0;
+bool DebugManager::s_debugMode = 0;
 std::vector<SDL_Point> DebugManager::s_points;
 std::vector<SDL_Color> DebugManager::s_colors;
