@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "CollisionManager.h"
 #include "Utilities.h"
+#include "DebugManager.h"
 
 
 void SpriteManager::LoadLevel()
@@ -15,6 +16,7 @@ void SpriteManager::Update()
 {
 	for (int i = 0; i < s_sprites.size(); i++)
 	{
+		DEMA::QueueRect(MAMA::ConvertFRect2Rect(*s_sprites[i]->GetDstP()), { 0,255,0,0 });
 		if (s_sprites[i]->readyToDelete)
 		{
 			delete s_sprites[i];
@@ -26,6 +28,7 @@ void SpriteManager::Update()
 		CleanVector(s_sprites, cleanSpr);
 	for (int i = 0; i < s_enemies.size(); i++)
 	{
+		DEMA::QueueRect(MAMA::ConvertFRect2Rect(*s_enemies[i]->GetDstP()), { 0,255,0,0 });
 		if (s_enemies[i]->readyToDelete)
 		{
 			delete s_enemies[i];
@@ -39,6 +42,7 @@ void SpriteManager::Update()
 		CleanVector(s_enemies, cleanEn);
 	for (int i = 0; i < s_pickups.size(); i++)
 	{
+		DEMA::QueueRect(MAMA::ConvertFRect2Rect(*s_pickups[i]->GetDstP()), { 0,255,0,0 });
 		if (s_pickups[i] != nullptr)
 			s_pickups[i]->Update();
 	}
@@ -88,6 +92,9 @@ void SpriteManager::Render()
 		s_enemies[i]->Render();
 	for (int i = 0; i < s_pickups.size(); i++)
 		s_pickups[i]->Render();
+
+	
+	DEMA::FlushLines();
 }
 
 void SpriteManager::PushSprite(Sprite* pSprite, SpriteType type)

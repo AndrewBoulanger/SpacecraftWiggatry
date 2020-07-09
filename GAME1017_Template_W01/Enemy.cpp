@@ -35,8 +35,8 @@ void Enemy::setState(enemyState nState)
 
 void Enemy::Update()
 {
-	wallWisker = { getCenter().x + (m_dst.w * m_dir*.3f), m_dst.y, 32,32 };
-	gapWisker = { getCenter().x + (m_dst.w * m_dir),m_dst.y + m_dst.h, 32,32 };
+	wallWisker = { getCenter().x+ (m_dst.w * m_dir*.5f), m_dst.y, 32,32 };
+	gapWisker = { getCenter().x + (m_dst.w * m_dir*.75f),m_dst.y + (m_dst.h*0.75f), 24,32 };
 	//X
 	m_velX += m_accelX;
 	m_velX *= m_drag;

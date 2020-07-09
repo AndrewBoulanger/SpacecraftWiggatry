@@ -69,9 +69,10 @@ void PlatformPlayer::Update()
 			m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
 	else
 	{
-		m_grounded = true;
 		StopY();
-		
+		if(!m_grounded)
+		m_dst.y -= 3; //makes it a lot less likely that kiki gets stuck in the ground
+		m_grounded = true;
 	}
 
 	if (m_dst.y > 655)

@@ -50,7 +50,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/background.png", "bg");
 	TEMA::RegisterTexture("Img/alienBeard.png", "enemy2");
 
-	TEMA::RegisterTexture("Img/KikiSprite.png", "player");
+	TEMA::RegisterTexture("Img/KikiSprite2.0.png", "player");
 	TEMA::RegisterTexture("Img/alienWhisker.png", "enemy");
 	TEMA::RegisterTexture("Img/reticle.png", "reticle");
 	TEMA::RegisterTexture("IMG/wig1.png", "wig");
@@ -64,7 +64,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/Tiles2.png", "tiles");
 	TEMA::RegisterTexture("Img/flag.png", "flag");
 
-	SPMR::setPlayer( new PlatformPlayer({ 0,0,139,153 }, { 100.0f,600.0f,96.0f,96.0f },
+	SPMR::setPlayer( new PlatformPlayer({ 0,0,139,153 }, { 100.0f,600.0f,64.0f,96.0f },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("player"), 0, 0, 2, 6)); 
 
 	FOMA::RegisterFont("Img/font.ttf", "fontLarge", 150);
@@ -115,6 +115,8 @@ void Engine::HandleEvents()
 
 void Engine::Update()
 {
+	if (EVMA::KeyReleased(SDL_SCANCODE_H))
+		DEMA::TogleDebug();
 	STMA::Update();
 }
 
