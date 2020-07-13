@@ -38,6 +38,9 @@ void GameState::Enter()
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
 
+	wigCount = m_pPlayer->getWigs();
+	partsCount = m_pPlayer->getParts();
+
 	// ui stuff
 	for (int i = 0; i < (5); i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
@@ -166,6 +169,7 @@ void GameState::CheckCollision()
 	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy   
 	{                       //we could use the change state function to make a new game state, then we can move some of this stuff to the exit state and the stuff that's 
 						//	different between levels could be put in an if statement in the enter function
+
 		if (Engine::Instance().getLevel() == 1) {
 			timeToSwitchLevels = true;
 			Engine::Instance().setLevel(2);
@@ -180,6 +184,8 @@ void GameState::CheckCollision()
 	if (m_pPlayer->getHealth() <= 0)
 	{
 		gameOver = true;
+		m_pPlayer->setWigs(wigCount);
+		m_pPlayer->setParts(partsCount);
 		m_pPlayer->setHealth(5);// reset health for the next game, we can move this to enter if we want it to reset every level instead
 	}
 	if (gameOver)
