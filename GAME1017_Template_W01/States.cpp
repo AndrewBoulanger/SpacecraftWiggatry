@@ -96,11 +96,11 @@ void GameState::Enter()
 
 		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 500.0f, 200.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1600.0f, 600.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 1600.0f, 600.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 3400.0f, 100.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 3400.0f, 100.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 4200.0f, 30.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 4200.0f, 30.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
 
 		// ship parts of lvl 2

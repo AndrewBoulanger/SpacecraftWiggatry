@@ -80,9 +80,9 @@ void VerticalEnemy::Update()
 }
 void VerticalEnemy::verticalMove(const int plrY)
 {
-	if (plrY < -100)
+	if (plrY < -75)
 		m_accelY = -1;
-	else if (plrY > 100)
+	else if (plrY > 25)
 		m_accelY = 1;
 }
 
