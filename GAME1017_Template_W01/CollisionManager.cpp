@@ -53,25 +53,29 @@ bool CollisionManager::PlayerCollision(const SDL_FRect* player, const int dX, co
 {
 	int playerX = (player->x + offset) / 32;
 	int playerY = player->y / 32;
-	SDL_Rect p = { player->x + dX + 16, player->y + dY + 24, player->w - player->w*.5, player->h - player->h/3 }; // Adjusted bounding box.
+	SDL_Rect p = { player->x + dX + 16, player->y + dY + 24, player->w *.5, player->h *.6 }; // Adjusted bounding box.
+	
+	playerX = std::min(std::max(playerX, 0), COLS-1);
+	playerY = std::min(std::max(playerY, 0), ROWS - 1);
+
 	Tile* tiles[12] = { Engine::GetLevel()[playerY][playerX],	// Bottom		players tile											// Left
 					   Engine::GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],										// MiddleLeft
-					   Engine::GetLevel()[playerY][(playerX + 1 == COLS ? COLS - 1 : playerX + 2)],									// MiddleRight
+					   Engine::GetLevel()[playerY][(playerX + 2 >= COLS ? COLS - 1 : playerX + 2)],									// MiddleRight
 					 //  Engine::GetLevel()[playerY][(playerX + 1 == COLS ? COLS - 1 : playerX + 3) ],										// Right tile.
 					// Second row
 					   Engine::GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][playerX],
 					   Engine::GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
-					   Engine::GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 2 == COLS ? COLS - 1 : playerX + 2)],
+					   Engine::GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 2 >= COLS ? COLS - 1 : playerX + 2)],
 					   //  Engine::GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 3 == COLS ? COLS - 1 : playerX + 3) ],
 			   // Third row
 				  Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][playerX],
-				  Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
-				  Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 2 == COLS ? COLS - 1 : playerX + 2)],
+				  Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
+				  Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 2 >= COLS ? COLS - 1 : playerX + 2)],
 				  // Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 3 == COLS ? COLS - 1 : playerX + 3) ],
 				// Fourth row hahahahahahahaha
 				   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][playerX],
-				   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
-				   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 2 == COLS ? COLS - 1 : playerX + 2)] };
+				   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
+				   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 2 >= COLS ? COLS - 1 : playerX + 2)] };
 		//   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 3 == COLS ? COLS - 1 : playerX + 3) ] };
 
 	DEMA::QueueRect(p, { 255,0,0,0 });
@@ -100,9 +104,11 @@ bool CollisionManager::PlayerHazardCollision(const SDL_FRect* player, const int 
 	int playerX = (player->x + offset) / 32;
 	int playerY = player->y / 32;
 	SDL_Rect p = { player->x + dX + 16, player->y + dY + 24, player->w - 48, player->h - 48 }; // Adjusted bounding box.
+	playerX = std::min(std::max(playerX, 0), COLS - 1);
+	playerY = std::min(std::max(playerY, 0), ROWS - 1);
 	Tile* tiles[12] = { Engine::GetLevel()[playerY][playerX],	// Bottom		players tile											// Left
 					   Engine::GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],										// MiddleLeft
-					   Engine::GetLevel()[playerY][(playerX + 1 >= COLS ? COLS - 1 : playerX + 2)],										// MiddleRight
+					   Engine::GetLevel()[playerY][(playerX + 2 >= COLS ? COLS - 1 : playerX + 2)],										// MiddleRight
 					 //  Engine::GetLevel()[playerY][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],										// Right tile.
 					// Second row
 					   Engine::GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][playerX],
@@ -141,6 +147,8 @@ bool CollisionManager::SmallTileCollision(const SDL_FRect target, const int dX, 
 	int targetX = (target.x + offset) / 32;
 	int targetY = target.y / 32;
 	SDL_Rect sprite = { target.x + dX, target.y + dY + 8, target.w - 16, target.h - 16 }; // Adjusted bounding box.
+	targetX = std::min(std::max(targetX, 0), COLS - 1);
+	targetY = std::min(std::max(targetY, 0), ROWS - 1); //stops it from checking outside of the bounds of the tiles
 	Tile* tiles[4] = {
 		Engine::GetLevel()[targetY][targetX ],	// Bottom		players tile											// Left
 		Engine::GetLevel()[targetY][(targetX + 1 >= COLS ? COLS - 1 : targetX + 1)],										// MiddleLeft

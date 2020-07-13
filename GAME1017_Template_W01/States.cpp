@@ -16,6 +16,7 @@
 #include <string>
 #include "SpriteManager.h"
 #include "Utilities.h"
+#include "VerticalEnemy.h"
 
 
 // Begin State. CTRL+M+H and CTRL+M+U to turn on/off collapsed code.
@@ -37,6 +38,9 @@ void GameState::Enter()
 
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
+
+	wigCount = m_pPlayer->getWigs();
+	partsCount = m_pPlayer->getParts();
 
 	// ui stuff
 	for (int i = 0; i < (5); i++)
@@ -60,7 +64,8 @@ void GameState::Enter()
 		Engine::LoadLevel("Dat/Level1.txt");
 		words[2]->SetText("Reach the end of the map, collect as many wigs as you can");
 	
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 850.0f, 500.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 900, 300, 50.0f, 106 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2")));
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 750.0f, 500.0f, 50.0f, 106.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
 		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1710.0f, 200.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
@@ -91,11 +96,11 @@ void GameState::Enter()
 
 		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 500.0f, 200.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1600.0f, 600.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 1600.0f, 600.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 3400.0f, 100.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 3400.0f, 100.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 4200.0f, 30.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 4200.0f, 30.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
 
 		// ship parts of lvl 2
@@ -166,6 +171,7 @@ void GameState::CheckCollision()
 	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy   
 	{                       //we could use the change state function to make a new game state, then we can move some of this stuff to the exit state and the stuff that's 
 						//	different between levels could be put in an if statement in the enter function
+
 		if (Engine::Instance().getLevel() == 1) {
 			timeToSwitchLevels = true;
 			Engine::Instance().setLevel(2);
@@ -180,6 +186,8 @@ void GameState::CheckCollision()
 	if (m_pPlayer->getHealth() <= 0)
 	{
 		gameOver = true;
+		m_pPlayer->setWigs(wigCount);
+		m_pPlayer->setParts(partsCount);
 		m_pPlayer->setHealth(5);// reset health for the next game, we can move this to enter if we want it to reset every level instead
 	}
 	if (gameOver)

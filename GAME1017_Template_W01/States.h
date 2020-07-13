@@ -31,6 +31,7 @@ private:
 	Enemy* m_pEnemy;
 	Sprite* m_pReticle;
 	Button* m_pauseBtn;
+	int wigCount, partsCount;
 
 	//std::vector<Pickup*> m_pPickUpList;
 
