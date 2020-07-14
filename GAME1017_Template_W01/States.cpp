@@ -16,6 +16,7 @@
 #include <string>
 #include "SpriteManager.h"
 #include "Utilities.h"
+#include "VerticalEnemy.h"
 
 
 // Begin State. CTRL+M+H and CTRL+M+U to turn on/off collapsed code.
@@ -32,11 +33,14 @@ GameState::GameState() {}
 void GameState::Enter()
 {
 	std::cout << "Entering GameState..." << std::endl;
-	// FOMA::SetSize("Img/font.ttf", "font", 35); not working DX
+	SDL_ShowCursor(SDL_DISABLE); // we have a reticle so...
 	m_pPlayer = SPMR::getPlayer();
 
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
+
+	wigCount = m_pPlayer->getWigs();
+	partsCount = m_pPlayer->getParts();
 
 	// ui stuff
 	for (int i = 0; i < (5); i++)
@@ -47,6 +51,7 @@ void GameState::Enter()
 	shipUI = new Sprite({ 0,0, 74, 75 }, { (float)(250),-3, 35,33 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart"));
 	words[0] = new Label("font", 225, 4, to_string((int)(m_pPlayer->getWigs())).c_str(), { 255,255,255,0 });
 	words[1] = new Label("font", 289, 4, to_string((int)(m_pPlayer->getParts())).c_str(), { 255,255,255,0 });
+	words[2] = new Label("font", 15, 720, "objective updated base on level", { 255,255,255,0 });
 
 	gameOver = false; 
 	timeToSwitchLevels = false;
@@ -57,10 +62,12 @@ void GameState::Enter()
 	{
 		// loading first level
 		Engine::LoadLevel("Dat/Level1.txt");
+		words[2]->SetText("Reach the end of the map, collect as many wigs as you can");
 	
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 850.0f, 500.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 900, 300, 50.0f, 106 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2")));
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 750.0f, 500.0f, 50.0f, 106.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1730.0f, 200.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1710.0f, 200.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
 		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, {2700.0f, 100.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
@@ -73,7 +80,7 @@ void GameState::Enter()
 			SPMR::PushSprite(new Energy({ 0,0,100,100 }, { 3700.0f, 100.0f,45.0f,45.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
 
-			SPMR::PushSprite(new Energy({ 0,0,256,256 }, { 4100.0f, 400.0f,50.0f,50.0f },
+			SPMR::PushSprite(new Health({ 0,0,256,256 }, { 4100.0f, 400.0f,50.0f,50.0f },
 				Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
 
 		m_pEnemy = SPMR::GetEnemies()[0];
@@ -85,14 +92,15 @@ void GameState::Enter()
 	if (Engine::Instance().getLevel() == 2)
 	{
 		Engine::LoadLevel("Dat/Level2.txt");
+		words[2]->SetText("Collect at least 5 ship parts and reach the end of the map");
 
 		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 500.0f, 200.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1600.0f, 600.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 1600.0f, 600.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 3400.0f, 100.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 3400.0f, 100.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 4200.0f, 30.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 4200.0f, 30.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
 
 		// ship parts of lvl 2
@@ -131,7 +139,7 @@ void GameState::Update()
 
 	// UI
 	words[0]->SetText(to_string((int)(m_pPlayer->getWigs())).c_str());
-	words[1]->SetText(to_string((int)(m_pPlayer->getParts())).c_str()); // change to ship!!!!!!!!!!!!!!!1
+	words[1]->SetText(to_string((int)(m_pPlayer->getParts())).c_str());
 
 	m_pPlayer->Update(); // Change to player Update here.
 	CheckCollision();
@@ -163,16 +171,23 @@ void GameState::CheckCollision()
 	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy   
 	{                       //we could use the change state function to make a new game state, then we can move some of this stuff to the exit state and the stuff that's 
 						//	different between levels could be put in an if statement in the enter function
-		timeToSwitchLevels = true;
-		if (Engine::Instance().getLevel() == 1)
+
+		if (Engine::Instance().getLevel() == 1) {
+			timeToSwitchLevels = true;
 			Engine::Instance().setLevel(2);
-		else
+		}
+		if (Engine::Instance().getLevel() == 2 && m_pPlayer->getParts() >= 1) // currently at one for making testing quicker, change 5 later
+		{
+			timeToSwitchLevels = true;
 			Engine::Instance().setLevel(1);
+		}
 
 	}
 	if (m_pPlayer->getHealth() <= 0)
 	{
 		gameOver = true;
+		m_pPlayer->setWigs(wigCount);
+		m_pPlayer->setParts(partsCount);
 		m_pPlayer->setHealth(5);// reset health for the next game, we can move this to enter if we want it to reset every level instead
 	}
 	if (gameOver)
@@ -186,23 +201,19 @@ void GameState::Render()
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
 
-	// flag goes behind player
-	if (m_flag != nullptr)
-		m_flag->Render();
-
-	m_pReticle->Render();
-	m_pauseBtn->Render();
 	SPMR::Render();
+	m_pauseBtn->Render();
+	m_pReticle->Render();
 
 	// ui stuff
 	for (int i = 0; i < (m_pPlayer->getHealth()); i++)
 		hpUI[i]->Render();
-	for (int i = 0; i < (m_pPlayer->getEnergy()); i++) // TO: reference stun uses
+	for (int i = 0; i < (m_pPlayer->getEnergy()); i++)
 		stungunUI[i]->Render();
 	wigUI->Render();
 	shipUI->Render();
-	words[0]->Render();
-	words[1]->Render();
+	for (unsigned i = 0; i < 3; i++)
+		words[i]->Render();
 
 	// If GameState != current state.
 	if (dynamic_cast<GameState*>(STMA::GetStates().back()))
@@ -217,9 +228,9 @@ void GameState::Exit()
 
 	SPMR::RemoveLevel();
 
-	
 	m_flag->readyToDelete = true;
 	m_flag = nullptr;
+	SDL_ShowCursor(SDL_ENABLE);
 	
 }
 
@@ -299,6 +310,7 @@ PauseState::PauseState() {}
 void PauseState::Enter()
 {
 	std::cout << "Entering Pause...\n";
+	SDL_ShowCursor(SDL_ENABLE);
 	m_resumeBtn = new ResumeButton({ 0,0,200,80 }, { 415.0f,500.0f,200.0f,80.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("resume"));//1024
 	instructions = new Sprite({ 0,0,525,350 }, { 260.5f,140.0f,525.0f,350.0f },Engine::Instance().GetRenderer(), TEMA::GetTexture("controls"));
 }
@@ -312,7 +324,7 @@ void PauseState::Update()
 void PauseState::Render()
 {
 	STMA::GetStates().front()->Render();
-	SDL_SetRenderDrawBlendMode(Engine::Instance().GetRenderer(), SDL_BLENDMODE_BLEND); // below won't be taken into account unles we do this // blendmode create transparency
+	SDL_SetRenderDrawBlendMode(Engine::Instance().GetRenderer(), SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 51, 225, 170);
 	SDL_Rect rect = { 173, 128, 700, 512 };
 	SDL_RenderFillRect(Engine::Instance().GetRenderer(), &rect);
@@ -324,6 +336,7 @@ void PauseState::Render()
 void PauseState::Exit()
 {
 	std::cout << "Exiting PauseState...\n";
+	SDL_ShowCursor(SDL_DISABLE);
 }
 // End of PauseState
 

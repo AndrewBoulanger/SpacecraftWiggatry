@@ -31,6 +31,7 @@ private:
 	Enemy* m_pEnemy;
 	Sprite* m_pReticle;
 	Button* m_pauseBtn;
+	int wigCount, partsCount;
 
 	//std::vector<Pickup*> m_pPickUpList;
 
@@ -43,7 +44,7 @@ private:
 	Sprite* stungunUI[5];
 	Sprite* wigUI;
 	Sprite* shipUI;
-	Label* words[2]; // 0 = wig counter, 1 = ship parts
+	Label* words[3]; // 0 = wig counter, 1 = ship parts, 2 = objective
 
 public:
 	GameState();

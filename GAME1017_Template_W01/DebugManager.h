@@ -8,9 +8,11 @@
 class DebugManager
 {
 public:
-	static int s_debugMode;
+	static bool s_debugMode;
+	static void TogleDebug(){ s_debugMode = !s_debugMode; };
 	static void DrawLine(const SDL_Point start, const SDL_Point end, const SDL_Color col);
 	static void QueueLine(const SDL_Point start, const SDL_Point end, const SDL_Color col);
+	static void QueueRect(const SDL_Rect r, const SDL_Color col);
 	static void FlushLines();
 	static void Quit();
 private:
