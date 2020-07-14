@@ -14,8 +14,10 @@
 #include "HookShot.h"
 #include "EventManager.h"
 #include "SoundManager.h"
-#include <iostream>
 #include "SpriteManager.h"
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -254,6 +256,21 @@ void PlatformPlayer::takeDamage(int dmg)
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
 	}
+}
+
+void PlatformPlayer::add1Wig()
+{
+	++m_wigCount;
+
+	// play wig sfx! 
+	srand((unsigned)time(NULL));
+	int x = rand() % 3;
+	if (x == 0)
+		SOMA::PlaySound("wig0", 0, 6);
+	if (x == 1)
+		SOMA::PlaySound("wig1", 0, 6);
+	if (x == 2)
+		SOMA::PlaySound("wig2", 0, 6);
 }
 
 

@@ -61,33 +61,33 @@ void Button::Render()
 PlayButton::PlayButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
 void PlayButton::Execute()
 {
-	SOMA::PlaySound("beep");
+	SOMA::PlaySound("beep", 0, 6);
 	STMA::ChangeState(new GameState);
 }
 
 QuitButton::QuitButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
 void QuitButton::Execute()
 {
-	SOMA::PlaySound("beep");
+	SOMA::PlaySound("beep", 0, 6);
 	Engine::Instance().Running() = false;
 }
 
 ResumeButton::ResumeButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
 void ResumeButton::Execute()
 {
-	SOMA::PlaySound("beep");
+	SOMA::PlaySound("beep", 0, 6);
 	STMA::PopState();
 }
 
 PauseButton::PauseButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
 void PauseButton::Execute()
 {
-	SOMA::PlaySound("laser", 0, 7);
+	SOMA::PlaySound("beep", 0, 6);
 	STMA::PushState(new PauseState);
 }
 
 ControlsButton::ControlsButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
 void ControlsButton::Execute()
 {
-	SOMA::PlaySound("beep");
+	SOMA::PlaySound("beep", 0, 6);
 }
