@@ -39,7 +39,6 @@ public:
 
     virtual Wig* removeWig();
     virtual void takeDamage(int dmg);
-    void CheckEnemyDead();
 
     void Update();
     void LOSCheck();

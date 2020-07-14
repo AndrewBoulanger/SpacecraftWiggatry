@@ -150,20 +150,9 @@ void Enemy::takeDamage(int dmg)
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
 
-		if (health <= 0)
-		{
-			readyToDelete = true;
-		}
 	}
 }
 
-void Enemy::CheckEnemyDead()
-{
-	if (health == 0)
-	{
-		
-	}
-}
 
 void Enemy::groundedMove2(const int dir)
 {
