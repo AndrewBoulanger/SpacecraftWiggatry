@@ -6,7 +6,8 @@ VerticalEnemy::VerticalEnemy(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Textu
 	:Enemy(s, d, r, t, sstart, smin, smax, nf, hp, dmg)
 {
 	enemysWig = (new Wig({ 0,0,50,50 }, { d.x,d.y,40,40 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
-
+	sight = new raycast();
+	losMax = 50;
 	hasWig = true;
 	m_dir = -1;
 
@@ -19,6 +20,13 @@ VerticalEnemy::VerticalEnemy(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Textu
 
 void VerticalEnemy::Update()
 {
+	lookTimer--;
+	if (lookTimer <= 0)
+	{
+		LOSCheck();
+	}
+	sight->Update();
+
 	m_velX += m_accelX;
 	m_velX *= m_drag;
 	m_velX = std::min(std::max(m_velX, -(m_maxVelX)), (m_maxVelX));
@@ -27,7 +35,7 @@ void VerticalEnemy::Update()
 	//Y 
 	m_velY += m_accelY; // Adjust gravity to get slower jump.
 	m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_maxVelY));
-	if (!COMA::PlayerCollision(&m_dst, 0, -m_velY*2, SPMR::getOffset()))
+	if (!COMA::PlayerCollision(&m_dst, 0, -m_velY*2))
 		m_dst.y -= (int)m_velY; // To remove aliasing, I made cast it to an int too.
 	else
 	{

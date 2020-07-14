@@ -14,6 +14,7 @@
 class Hookshot;
 class Wig;
 class StunGun;
+class Projectile;
 
 class PlatformPlayer : public Character
 {
@@ -47,8 +48,11 @@ public:
 
 	void slap();
 	void createStunGunBullet();
+	void createProjectile();
 	void StunGunCollision();
 	void BulletBoundCheck();
+	void ProjectileCollision();
+	void ProjectileBoundCheck();
 
 	Hookshot* getHookShot() { return m_hookShot; }
 
@@ -68,6 +72,7 @@ private:
 	void SetState(int s);
 
 	std::vector<StunGun*> m_vPBullets;
+	std::vector<Projectile*> m_vPProjectiles;
 
 	
 };

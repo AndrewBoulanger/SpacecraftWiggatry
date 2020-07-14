@@ -47,7 +47,7 @@ void Hookshot::move()
 void Hookshot::Collision()
 {
 
-	if (COMA::SmallTileCollision(m_dst, velX *.1, velY*.1, SPMR::getOffset()))
+	if (COMA::SmallTileCollision(m_dst, velX *.1, velY*.1))
 		{
 			hookFixed = true;
 		}
@@ -82,7 +82,7 @@ void Hookshot::Update(double& grav)
 
 	if (hookFixed == true && !enemyHit )
 	{
-		if (lerpCo <= .6f)
+		if (lerpCo <= .18f || (lerpCo < .5 && !COMA::PlayerCollision(playerdst, 0, 0) ))
 		{
 			playerdst->x = MyLerp(playerdst->x, m_dst.x  + (m_dst.w * 0.5) - (playerdst->w * 0.5), lerpCo);
 			playerdst->y = MyLerp(playerdst->y, m_dst.y, lerpCo);
