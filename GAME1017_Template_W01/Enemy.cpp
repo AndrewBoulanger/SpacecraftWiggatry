@@ -149,6 +149,19 @@ void Enemy::takeDamage(int dmg)
 		health -= dmg;
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
+
+		if (health <= 0)
+		{
+			readyToDelete = true;
+		}
+	}
+}
+
+void Enemy::CheckEnemyDead()
+{
+	if (health == 0)
+	{
+		
 	}
 }
 
