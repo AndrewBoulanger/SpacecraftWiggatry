@@ -38,7 +38,7 @@ public:
 	void takeDamage(int dmg) override;
 	int getWigs() { return m_wigCount; };
 	void setWigs(int wigs) { m_wigCount = wigs; }
-	void add1Wig() { ++m_wigCount; }
+	void add1Wig();
 	int getParts() { return m_ShipParts; }
 	void setParts(int parts) { m_ShipParts = parts; }
 	void add1ShipPart() { ++m_ShipParts; }
