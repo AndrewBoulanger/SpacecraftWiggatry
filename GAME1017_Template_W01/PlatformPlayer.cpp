@@ -52,7 +52,7 @@ void PlatformPlayer::Update()
 	m_velX += m_accelX;
 	m_velX *= (m_grounded ? m_drag : 1);
 	m_velX = std::min(std::max(m_velX, -(m_maxVelX)), (m_maxVelX));
-	if (!COMA::PlayerCollision(&m_dst, m_velX, 0, SPMR::getOffset()) )
+	if (!COMA::PlayerCollision(&m_dst, m_velX, 0) )
 	{
 		m_dst.x += (int)m_velX; // Had to cast it to int to get crisp collision with side of platform.
 		if ((m_dst.x > 600 && m_velX > 0) || (m_dst.x < 400 && m_velX < 0 && SPMR::getOffset() > 0))
@@ -65,7 +65,7 @@ void PlatformPlayer::Update()
 	// Now do Y axis.
 	m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
 	m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav * 5));
-	if (!COMA::PlayerCollision(&m_dst, 0, m_velY, SPMR::getOffset()))
+	if (!COMA::PlayerCollision(&m_dst, 0, m_velY))
 			m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
 	else
 	{
@@ -90,7 +90,7 @@ void PlatformPlayer::Update()
 	//StunGun Bound Check
 	BulletBoundCheck();
 	// Traps
-	if (COMA::PlayerHazardCollision(&m_dst, m_velX, 0, SPMR::getOffset()))
+	if (COMA::PlayerHazardCollision(&m_dst, m_velX, 0))
 	{
 		takeDamage(1);
 		KnockLeft(5);

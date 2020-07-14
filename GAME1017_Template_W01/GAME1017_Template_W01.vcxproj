@@ -126,6 +126,7 @@
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="HookShot.cpp" />
     <ClCompile Include="PlatformPlayer.cpp" />
+    <ClCompile Include="raycast.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="StateManager.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="HookShot.h" />
     <ClInclude Include="Pickup.h" />
     <ClInclude Include="PlatformPlayer.h" />
+    <ClInclude Include="raycast.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="StateManager.h" />
