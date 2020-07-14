@@ -21,6 +21,7 @@
     <ClCompile Include="StunGun.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="VerticalEnemy.cpp" />
+    <ClCompile Include="Projectile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -46,6 +47,7 @@
     <ClInclude Include="StunGun.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="VerticalEnemy.h" />
+    <ClInclude Include="Projectile.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="img\circle.png" />
