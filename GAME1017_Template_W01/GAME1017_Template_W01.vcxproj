@@ -172,6 +172,7 @@
     <Image Include="Img\PlayerShip.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitignore" />
     <None Include="PropertySheet.props" />
   </ItemGroup>
   <ItemGroup>
