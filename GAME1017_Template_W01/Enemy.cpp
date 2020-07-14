@@ -8,7 +8,7 @@ Enemy::Enemy(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstar
 {
 	enemysWig = (new Wig({ 0,0,50,50 }, { d.x,d.y,40,40 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
 	sight = new raycast();
-	losMax = 50;
+	losMax = 200;
 	hasWig = true;
 	m_dir = -1;
 
@@ -38,11 +38,6 @@ void Enemy::setState(enemyState nState)
 void Enemy::Update()
 {
 	lookTimer--;
-	if (lookTimer <= 0)
-	{
-		LOSCheck();
-	}
-	sight->Update();
 
 	wallWisker = { getCenter().x+ (m_dst.w * m_dir*.5f), m_dst.y, 32,32 };
 	gapWisker = { getCenter().x + (m_dst.w * m_dir*.75f),m_dst.y + (m_dst.h*0.75f), 24,32 };
@@ -74,9 +69,12 @@ void Enemy::Update()
 
 	if (state == idle)
 	{
-		if (COMA::CircleCircleCheck(getCenter(), SPMR::getPlayer()->getCenter(), 400) && ((m_dir == -1 && SPMR::getPlayer()->GetX() <= m_dst.x) || (m_dir == 1 && SPMR::getPlayer()->GetX() >= m_dst.x)))
+		if (lookTimer <= 0)
 		{
-			std::cout << "player in enemy range\n";
+			LOSCheck();
+		}
+		if (sight->Update() || COMA::CircleCircleCheck(getCenter(), SPMR::getPlayer()->getCenter(), 400) && ((m_dir == -1 && SPMR::getPlayer()->GetX() <= m_dst.x) || (m_dir == 1 && SPMR::getPlayer()->GetX() >= m_dst.x)))
+		{
 			setState(seeking);
 		}
 	}

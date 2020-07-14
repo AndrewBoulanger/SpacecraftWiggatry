@@ -13,7 +13,7 @@ public:
 	void setX(float x) { m_pos.x = x; }
 	void setY(float y) { m_pos.y = y; }
 	void stop() { dX = dY = 0; }
-	void Update();
+	bool Update();
 
 	void move2stop(double angle);
 };

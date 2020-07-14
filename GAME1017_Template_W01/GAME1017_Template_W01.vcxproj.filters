@@ -22,6 +22,7 @@
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="VerticalEnemy.cpp" />
     <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="raycast.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -48,6 +49,7 @@
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="VerticalEnemy.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="raycast.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="img\circle.png" />
