@@ -49,9 +49,9 @@ bool CollisionManager::LinePointCheck(const SDL_FPoint object1_start, const SDL_
 	return false;
 }
 
-bool CollisionManager::PlayerCollision(const SDL_FRect* player, const int dX, const int dY, float offset)
+bool CollisionManager::PlayerCollision(const SDL_FRect* player, const int dX, const int dY)
 {
-	int playerX = (player->x + offset) / 32;
+	int playerX = (player->x + SPMR::getOffset()) / 32;
 	int playerY = player->y / 32;
 	SDL_Rect p = { player->x + dX + 16, player->y + dY + 24, player->w *.5, player->h *.6 }; // Adjusted bounding box.
 	
@@ -99,9 +99,9 @@ bool CollisionManager::PlayerCollision(const SDL_FRect* player, const int dX, co
 	return false;
 }
 
-bool CollisionManager::PlayerHazardCollision(const SDL_FRect* player, const int dX, const int dY, float offset)
+bool CollisionManager::PlayerHazardCollision(const SDL_FRect* player, const int dX, const int dY)
 {
-	int playerX = (player->x + offset) / 32;
+	int playerX = (player->x + SPMR::getOffset()) / 32;
 	int playerY = player->y / 32;
 	SDL_Rect p = { player->x + dX + 16, player->y + dY + 24, player->w - 48, player->h - 48 }; // Adjusted bounding box.
 	playerX = std::min(std::max(playerX, 0), COLS - 1);
@@ -142,11 +142,11 @@ bool CollisionManager::PlayerHazardCollision(const SDL_FRect* player, const int 
 }
 
 
-bool CollisionManager::SmallTileCollision(const SDL_FRect target, const int dX, const int dY, float offset)
+bool CollisionManager::SmallTileCollision(const SDL_FRect target, const int dX, const int dY)
 {
-	int targetX = (target.x + offset) / 32;
+	int targetX = (target.x + SPMR::getOffset()) / 32;
 	int targetY = target.y / 32;
-	SDL_Rect sprite = { target.x + dX, target.y + dY + 8, target.w - 16, target.h - 16 }; // Adjusted bounding box.
+	SDL_Rect sprite = { target.x + dX, target.y + dY + 8, target.w*.5, target.h *.5 }; // Adjusted bounding box.
 	targetX = std::min(std::max(targetX, 0), COLS - 1);
 	targetY = std::min(std::max(targetY, 0), ROWS - 1); //stops it from checking outside of the bounds of the tiles
 	Tile* tiles[4] = {
