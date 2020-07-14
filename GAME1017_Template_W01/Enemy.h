@@ -8,6 +8,10 @@ enum enemyState
 {
     idle, seeking, fleeing
 };
+enum idlestates
+{
+    none, left, right
+};
 
 class Enemy :
     public Character
@@ -21,6 +25,7 @@ protected:
     bool hasWig;
     Wig* enemysWig;
     enemyState state;
+    idlestates substate;
     raycast* sight;
     int lookTimer, losMax;
 
@@ -39,7 +44,6 @@ public:
 
     virtual Wig* removeWig();
     virtual void takeDamage(int dmg);
-    void CheckEnemyDead();
 
     void Update();
     void LOSCheck();

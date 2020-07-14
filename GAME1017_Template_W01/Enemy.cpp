@@ -8,9 +8,11 @@ Enemy::Enemy(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstar
 {
 	enemysWig = (new Wig({ 0,0,50,50 }, { d.x,d.y,40,40 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
 	sight = new raycast();
-	losMax = 50;
+	losMax = 200;
 	hasWig = true;
 	m_dir = -1;
+	m_frameMax = 6;
+	m_spriteMax = 2;
 
 	m_accelX = m_accelY = m_velX = m_velY = 0.0;
 	m_maxVelX = 10.0;
@@ -27,10 +29,10 @@ void Enemy::setState(enemyState nState)
 	if (nState == idle)
 	{
 		StopX();
-		m_frameMax = 1; //only show one frame
+		m_frameMax = 6; //only show one frame
 	}
 	else if (nState == seeking)
-		m_frameMax = 3;
+		m_frameMax = 5;
 	//else if(nState == fleeing) need to make sure fleeing sprite is in the same texture file as the normal sprite
 }
 
@@ -38,11 +40,6 @@ void Enemy::setState(enemyState nState)
 void Enemy::Update()
 {
 	lookTimer--;
-	if (lookTimer <= 0)
-	{
-		LOSCheck();
-	}
-	sight->Update();
 
 	wallWisker = { getCenter().x+ (m_dst.w * m_dir*.5f), m_dst.y, 32,32 };
 	gapWisker = { getCenter().x + (m_dst.w * m_dir*.75f),m_dst.y + (m_dst.h*0.75f), 24,32 };
@@ -54,6 +51,15 @@ void Enemy::Update()
 		m_dst.x += (int)m_velX;
 	else
 		StopX();
+	if (m_velX != 0)
+	{
+		m_sprite = m_spriteMin = 0;
+		m_spriteMax = 2;
+	}
+	else
+		m_spriteMin =  m_spriteMax = 0;
+
+	Animate();
 	//Y 
 	m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
 	m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav * 5));
@@ -74,9 +80,25 @@ void Enemy::Update()
 
 	if (state == idle)
 	{
-		if (COMA::CircleCircleCheck(getCenter(), SPMR::getPlayer()->getCenter(), 400) && ((m_dir == -1 && SPMR::getPlayer()->GetX() <= m_dst.x) || (m_dir == 1 && SPMR::getPlayer()->GetX() >= m_dst.x)))
+		if (lookTimer <= 0)
 		{
-			std::cout << "player in enemy range\n";
+			substate = (idlestates)(rand() % 3);
+			if (substate == left)
+				m_dir = -1;
+			else if (substate == right)
+				m_dir = 1;
+			LOSCheck();
+		}
+		if (substate != none)
+		{
+			m_frame = 0;
+			m_velX = 2.0 * m_dir;
+		}
+		else
+			StopX();
+
+		if (sight->Update() || COMA::CircleCircleCheck(getCenter(), SPMR::getPlayer()->getCenter(), 400) && ((m_dir == -1 && SPMR::getPlayer()->GetX() <= m_dst.x) || (m_dir == 1 && SPMR::getPlayer()->GetX() >= m_dst.x)))
+		{
 			setState(seeking);
 		}
 	}
@@ -150,20 +172,9 @@ void Enemy::takeDamage(int dmg)
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
 
-		if (health <= 0)
-		{
-			readyToDelete = true;
-		}
 	}
 }
 
-void Enemy::CheckEnemyDead()
-{
-	if (health == 0)
-	{
-		
-	}
-}
 
 void Enemy::groundedMove2(const int dir)
 {
