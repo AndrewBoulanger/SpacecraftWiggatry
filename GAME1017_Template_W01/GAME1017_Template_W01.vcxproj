@@ -176,6 +176,7 @@
     <None Include="PropertySheet.props" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Dat\LevelBoss.txt" />
     <Text Include="Dat\Level1.txt" />
     <Text Include="Dat\Level2.txt" />
     <Text Include="Dat\Tiledata.txt" />

@@ -61,7 +61,7 @@ void GameState::Enter()
 	if (Engine::Instance().getLevel() == 1)
 	{
 		// loading first level
-		Engine::LoadLevel("Dat/Level1.txt");
+		Engine::LoadLevel("Dat/LevelBoss.txt");
 		words[2]->SetText("Reach the end of the map, collect as many wigs as you can");
 	
 		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 900, 300, 50.0f, 106 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2")));
