@@ -230,7 +230,7 @@ void PlatformPlayer::GoBack() // put the player back after falling in trap
 	StopY();
 	SDL_Delay(700);
 	m_dst.x -= 120;
-	m_dst.y -= 170;
+	m_dst.y -= 100;
 	takeDamage(1);
 }
 void PlatformPlayer::KnockLeft(double vel) { m_velX -= vel; }
