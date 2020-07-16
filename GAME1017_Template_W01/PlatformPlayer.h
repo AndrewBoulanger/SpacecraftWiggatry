@@ -33,6 +33,8 @@ public:
 	void SetX(float y);
 	void SetY(float y);
 	double GetX();
+	double GetY();
+	void GoBack();
 	virtual void Render();
 	void KnockLeft(double vel);
 	void takeDamage(int dmg) override;

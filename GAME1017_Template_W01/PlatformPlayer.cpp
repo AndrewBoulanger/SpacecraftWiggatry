@@ -222,6 +222,17 @@ void PlatformPlayer::SetGrounded(bool g) { m_grounded = g; }
 void PlatformPlayer::SetX(float y) { m_dst.x = y; }
 void PlatformPlayer::SetY(float y) { m_dst.y = y; }
 double PlatformPlayer::GetX() { return m_dst.x; }
+double PlatformPlayer::GetY() { return m_dst.y; }
+void PlatformPlayer::GoBack() // put the player back after falling in trap
+{
+	SOMA::PlaySound("dead", 0, 8);
+	StopX(); // clear vel for smoother transition... very small difference but...
+	StopY();
+	SDL_Delay(700);
+	m_dst.x -= 120;
+	m_dst.y -= 100;
+	takeDamage(1);
+}
 void PlatformPlayer::KnockLeft(double vel) { m_velX -= vel; }
 
 void PlatformPlayer::Render()

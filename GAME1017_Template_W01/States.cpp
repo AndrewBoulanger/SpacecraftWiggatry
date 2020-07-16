@@ -60,7 +60,6 @@ void GameState::Enter()
 
 	if (Engine::Instance().getLevel() == 1)
 	{
-		// loading first level
 		Engine::LoadLevel("Dat/Level1.txt");
 		words[2]->SetText("Reach the end of the map, collect as many wigs as you can");
 	
@@ -74,14 +73,14 @@ void GameState::Enter()
 		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 3900.0f, 500.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
 
-			SPMR::PushSprite(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
-				Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
+		SPMR::PushSprite(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
 
-			SPMR::PushSprite(new Energy({ 0,0,100,100 }, { 3700.0f, 100.0f,45.0f,45.0f },
-				Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
+		SPMR::PushSprite(new Energy({ 0,0,100,100 }, { 3700.0f, 100.0f,45.0f,45.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
 
-			SPMR::PushSprite(new Health({ 0,0,256,256 }, { 4100.0f, 400.0f,50.0f,50.0f },
-				Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
+		SPMR::PushSprite(new Health({ 0,0,256,256 }, { 4100.0f, 400.0f,50.0f,50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
 
 		m_pEnemy = SPMR::GetEnemies()[0];
 		m_pEnemy->setHealth(3);  //this is just here to test snatching
@@ -116,6 +115,43 @@ void GameState::Enter()
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart")));
 	
 	m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
+	}
+	if (Engine::Instance().getLevel() == 4)
+	{
+		Engine::LoadLevel("Dat/LevelBoss.txt");
+		words[2]->SetText("Beat the boss and get those wigs back!");
+
+		// energy
+		SPMR::PushSprite(new Energy({ 0,0,100,100 }, { (32.0f * 14.0f), (32.0f * 16.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
+		SPMR::PushSprite(new Energy({ 0,0,100,100 }, { (32.0f * 11.0f), (32.0f * 1.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
+		SPMR::PushSprite(new Energy({ 0,0,100,100 }, { (32.0f * 35.0f), (32.0f * 10.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
+		SPMR::PushSprite(new Energy({ 0,0,256,256 }, { (32.0f * 55.0f), (32.0f * 9.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
+		SPMR::PushSprite(new Energy({ 0,0,100,100 }, { (32.0f * 70.0f), (32.0f * 15.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
+		SPMR::PushSprite(new Energy({ 0,0,100,100 }, { (32.0f * 94.0f), (32.0f * 8.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
+		SPMR::PushSprite(new Energy({ 0,0,100,100 }, { (32.0f * 77.0f), (32.0f * 2.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
+		SPMR::PushSprite(new Energy({ 0,0,100,100 }, { (32.0f * 122.0f), (32.0f * 9.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
+
+		// health
+		SPMR::PushSprite(new Health({ 0,0,256,256 }, { (32.0f * 8.0f), (32.0f * 44.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
+		SPMR::PushSprite(new Health({ 0,0,256,256 }, { (32.0f * 14.0f), (32.0f * 14.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
+		SPMR::PushSprite(new Health({ 0,0,256,256 }, { (32.0f * 69.0f), (32.0f * 20.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
+		SPMR::PushSprite(new Health({ 0,0,256,256 }, { (32.0f * 105.0f), (32.0f * 2.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
+		SPMR::PushSprite(new Health({ 0,0,256,256 }, { (32.0f * 108.0f), (32.0f * 18.5f), 50.0f, 50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
+
+		m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
 	}
 
 	SPMR::PushSprite(m_flag, Regular);
@@ -182,6 +218,11 @@ void GameState::CheckCollision()
 			Engine::Instance().setLevel(1);
 		}
 
+	}
+	// don't fall in the pit and crash the game!
+	if (m_pPlayer->GetY() > (HEIGHT - 128)) // idk where the code for catching kiki is rn... so the hard code kinda temp
+	{
+		m_pPlayer->GoBack();
 	}
 	if (m_pPlayer->getHealth() <= 0)
 	{
