@@ -23,6 +23,7 @@
     <ClCompile Include="VerticalEnemy.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="raycast.cpp" />
+    <ClCompile Include="UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -50,6 +51,7 @@
     <ClInclude Include="VerticalEnemy.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="raycast.h" />
+    <ClInclude Include="UIElement.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="img\circle.png" />

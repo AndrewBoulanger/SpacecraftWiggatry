@@ -168,3 +168,8 @@ bool CollisionManager::SmallTileCollision(const SDL_FRect target, const int dX, 
 	}
 	return false;
 }
+
+bool CollisionManager::PointRectCheck(const SDL_Point p, const SDL_Rect r)
+{
+	return SDL_PointInRect(&p, &r);
+}

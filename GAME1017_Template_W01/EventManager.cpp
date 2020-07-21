@@ -92,6 +92,13 @@ bool EventManager::MouseReleased(const int b)
 	return ((s_mouseCurr & SDL_BUTTON(b)) < (s_mouseLast & SDL_BUTTON(b)));
 }
 
+void EventManager::SetCursor(const SDL_SystemCursor& c)
+{
+	SDL_FreeCursor(s_cursor);
+	s_cursor = SDL_CreateSystemCursor(c);
+	SDL_SetCursor(s_cursor);
+}
+
 SDL_Point& EventManager::GetMousePos()
 {
 	return s_mousePos;
@@ -117,3 +124,4 @@ SDL_Point EventManager::s_mousePos = { 0,0 };
 SDL_FPoint EventManager::s_mousePosF = { 0,0 };
 Uint32 EventManager::s_mouseCurr;
 Uint32 EventManager::s_mouseLast;
+SDL_Cursor* EventManager::s_cursor;

@@ -34,6 +34,9 @@ private: // Private properties.
 
 	int currentLevel = 1;
 
+	int bgmVolume = 30; // idk how to get volume value from sdl...
+	int sfxVolume = 30;
+
 private: // Private methods.
 	Engine();
 	bool Init(const char* title, int xpos, int ypos, int width, int height, int flags);
@@ -53,6 +56,12 @@ public: // Public methods.
 	static void LoadLevel(std::string path);
 	int getLevel() { return currentLevel; };
 	void setLevel(int l) { currentLevel = l; };
+
+	int getBgmVolume() { return bgmVolume; }
+	void setBgmVolume(int v) { bgmVolume = v; }
+	int getSfxVolume() { return sfxVolume; }
+	void setSfxVolume(int v) { sfxVolume = v; }
+	
 };
 
 #endif

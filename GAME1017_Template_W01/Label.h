@@ -22,6 +22,7 @@ public:
 	void SetPos(const float x, const float y);
 	void SetColor(const SDL_Color& col);
 	void UseFont(std::string key);
+	SDL_FRect& GetRect() { return m_rTextRect; }
 };
 
 #endif

@@ -352,14 +352,22 @@ void PauseState::Enter()
 {
 	std::cout << "Entering Pause...\n";
 	SDL_ShowCursor(SDL_ENABLE);
-	m_resumeBtn = new ResumeButton({ 0,0,200,80 }, { 415.0f,500.0f,200.0f,80.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("resume"));//1024
+	m_resumeBtn = new ResumeButton({ 0,0,200,80 }, { 415.0f,550.0f,200.0f,80.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("resume"));//1024
 	instructions = new Sprite({ 0,0,525,350 }, { 260.5f,140.0f,525.0f,350.0f },Engine::Instance().GetRenderer(), TEMA::GetTexture("controls"));
+	bgmVolume = new UISlider({ 240, 490, 256, 32 }, Engine::Instance().GetRenderer(), { 255, 0, 255, 255 }, { 255, 255, 255, 255 }, "Music", Engine::Instance().getBgmVolume(), 0, 128);
+	sfxVolume = new UISlider({ 560, 490, 256, 32 }, Engine::Instance().GetRenderer(), { 255, 0, 255, 255 }, { 255, 255, 255, 255 }, "SFX", Engine::Instance().getSfxVolume(), 0, 128);
 }
 
 void PauseState::Update()
 {
 	if (m_resumeBtn->ButtonUpdate() == 1)
 		return;
+	bgmVolume->Update();
+	sfxVolume->Update();
+	SOMA::SetMusicVolume(static_cast<UISlider*>(bgmVolume)->Value());
+	SOMA::SetSoundVolume(static_cast<UISlider*>(sfxVolume)->Value());
+	Engine::Instance().setBgmVolume(static_cast<UISlider*>(bgmVolume)->Value());
+	Engine::Instance().setSfxVolume(static_cast<UISlider*>(sfxVolume)->Value());
 }
 
 void PauseState::Render()
@@ -371,6 +379,8 @@ void PauseState::Render()
 	SDL_RenderFillRect(Engine::Instance().GetRenderer(), &rect);
 	instructions->Render();
 	m_resumeBtn->Render();
+	bgmVolume->Render();
+	sfxVolume->Render();
 	State::Render();
 }
 
