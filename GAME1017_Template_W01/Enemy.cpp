@@ -159,9 +159,10 @@ void Enemy::Render()
 
 Wig* Enemy::removeWig()
 {
-	hasWig = false;
-	setState(fleeing);
-	return enemysWig;
+		hasWig = false;
+		setState(fleeing);
+		m_src.x += m_src.w;
+		return enemysWig;
 }
 
 void Enemy::takeDamage(int dmg)

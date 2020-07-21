@@ -17,6 +17,7 @@
 #include "SpriteManager.h"
 #include "Utilities.h"
 #include "VerticalEnemy.h"
+#include "Boss.h"
 
 
 // Begin State. CTRL+M+H and CTRL+M+U to turn on/off collapsed code.
@@ -32,6 +33,7 @@ GameState::GameState() {}
 
 void GameState::Enter()
 {
+	
 	std::cout << "Entering GameState..." << std::endl;
 	SDL_ShowCursor(SDL_DISABLE); // we have a reticle so...
 	m_pPlayer = SPMR::getPlayer();
@@ -63,15 +65,15 @@ void GameState::Enter()
 		Engine::LoadLevel("Dat/Level1.txt");
 		words[2]->SetText("Reach the end of the map, collect as many wigs as you can");
 	
-		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 900, 300, 50.0f, 106 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2")));
-		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 750.0f, 500.0f, 50.0f, 106.0f },
-				Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1710.0f, 200.0f, 50.0f, 106.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, {2700.0f, 100.0f, 50.0f, 106.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 3900.0f, 500.0f, 50.0f, 106.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,55,140 }, { 900, 300, 50.0f, 106 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies")));
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,55,140 }, { 750.0f, 500.0f, 50.0f, 106.0f },
+				Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 110,0,55,140 }, { 1710.0f, 200.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 110,0,55,140 }, {2700.0f, 100.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 110,0,55,140 }, { 3900.0f, 500.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 3, 1));
 
 		SPMR::PushSprite(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
@@ -93,14 +95,14 @@ void GameState::Enter()
 		Engine::LoadLevel("Dat/Level2.txt");
 		words[2]->SetText("Collect at least 5 ship parts and reach the end of the map");
 
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 490.0f, 200.0f, 50.0f, 106.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
-		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 1600.0f, 600.0f, 50.0f, 106.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
-		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 3400.0f, 100.0f, 50.0f, 106.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
-		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 4200.0f, 30.0f, 50.0f, 106.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
+		SPMR::PushSprite(new Enemy({ 110,0,55,140 }, { 490.0f, 200.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 4, 1));
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,55,140 }, { 1600.0f, 600.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 4, 1));
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,55,140 }, { 3400.0f, 100.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 4, 1));
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,55,140 }, { 4200.0f, 30.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 4, 1));
 
 		// ship parts of lvl 2
 		SPMR::PushSprite(new ShipPart({ 0,0,74, 75 }, { (32.0f * 14.0f), (32.0f * 14.5f), 50.0f, 50.0f },
@@ -121,15 +123,15 @@ void GameState::Enter()
 		Engine::LoadLevel("Dat/Level3.txt");
 		words[2]->SetText("Get those wigs back!");
 
-		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 900, 300, 50.0f, 106 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2")));
-		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 750.0f, 500.0f, 50.0f, 106.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1700.0f, 200.0f, 50.0f, 106.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 2700.0f, 100.0f, 50.0f, 106.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 3900.0f, 500.0f, 50.0f, 106.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,55,140 }, { 900, 300, 50.0f, 106 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies")));
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,55,140 }, { 750.0f, 500.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 110,0,55,140 }, { 1700.0f, 200.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 110,0,55,140 }, { 2700.0f, 100.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 110,0,55,140 }, { 3900.0f, 500.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 3, 1));
 
 		SPMR::PushSprite(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
@@ -177,6 +179,9 @@ void GameState::Enter()
 		SPMR::PushSprite(new Health({ 0,0,256,256 }, { (32.0f * 108.0f), (32.0f * 18.5f), 50.0f, 50.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
 
+		SPMR::PushSprite(new Boss({ 220,0,55,140 }, { 4100.0f, 100.0f, 300, 636.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 4, 1));
+
 		m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
 	}
 
@@ -213,7 +218,7 @@ void GameState::CheckCollision()
 	for(int i = 0; i < SPMR::GetEnemies().size();i++)
 	{
 		m_pEnemy = SPMR::GetEnemies()[i];
-		if (COMA::CircleCircleCheck(m_pPlayer->getCenter(), m_pEnemy->getCenter(), 40))
+		if (COMA::CircleAABBCheck(m_pPlayer->getCenter(), m_pPlayer->GetDstP()->w*.1, *(m_pEnemy->GetDstP())))
 		{
 			if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pEnemy->GetDstP()->x + m_pEnemy->GetDstP()->w)
 			{ // Colliding right side of platform.
