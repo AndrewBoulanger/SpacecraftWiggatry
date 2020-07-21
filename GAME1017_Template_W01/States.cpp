@@ -93,7 +93,7 @@ void GameState::Enter()
 		Engine::LoadLevel("Dat/Level2.txt");
 		words[2]->SetText("Collect at least 5 ship parts and reach the end of the map");
 
-		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 500.0f, 200.0f, 50.0f, 106.0f },
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 490.0f, 200.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
 		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 1600.0f, 600.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2"), 4, 1));
@@ -116,10 +116,36 @@ void GameState::Enter()
 	
 	m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
 	}
+	if (Engine::Instance().getLevel() == 3)
+	{
+		Engine::LoadLevel("Dat/Level3.txt");
+		words[2]->SetText("Get those wigs back!");
+
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 900, 300, 50.0f, 106 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy2")));
+		SPMR::PushSprite(new VerticalEnemy({ 0,0,400,140 }, { 750.0f, 500.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 1700.0f, 200.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 2700.0f, 100.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
+		SPMR::PushSprite(new Enemy({ 0,0,400,140 }, { 3900.0f, 500.0f, 50.0f, 106.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemy"), 3, 1));
+
+		SPMR::PushSprite(new Wig({ 0,0,100,100 }, { 600.0f, 400.0f,50.0f,50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("wig")));
+
+		SPMR::PushSprite(new Energy({ 0,0,100,100 }, { 3700.0f, 100.0f,45.0f,45.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning")));
+
+		SPMR::PushSprite(new Health({ 0,0,256,256 }, { 4100.0f, 400.0f,50.0f,50.0f },
+			Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
+
+		m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
+	}
 	if (Engine::Instance().getLevel() == 4)
 	{
 		Engine::LoadLevel("Dat/LevelBoss.txt");
-		words[2]->SetText("Beat the boss and get those wigs back!");
+		words[2]->SetText("...");
 
 		// energy
 		SPMR::PushSprite(new Energy({ 0,0,100,100 }, { (32.0f * 14.0f), (32.0f * 16.5f), 50.0f, 50.0f },
@@ -212,10 +238,15 @@ void GameState::CheckCollision()
 			timeToSwitchLevels = true;
 			Engine::Instance().setLevel(2);
 		}
-		if (Engine::Instance().getLevel() == 2 && m_pPlayer->getParts() >= 1) // currently at one for making testing quicker, change 5 later
+		else if (Engine::Instance().getLevel() == 2 && m_pPlayer->getParts() >= 1) // currently at one for making testing quicker, change 5 later
 		{
 			timeToSwitchLevels = true;
-			Engine::Instance().setLevel(1);
+			Engine::Instance().setLevel(3);
+		}
+		else if (Engine::Instance().getLevel() == 3 && m_pPlayer->getWigs() >= 10)
+		{
+			timeToSwitchLevels = true;
+			Engine::Instance().setLevel(4);
 		}
 
 	}
