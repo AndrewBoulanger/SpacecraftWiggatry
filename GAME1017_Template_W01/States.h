@@ -4,6 +4,7 @@
 
 #include <SDL.h>
 #include "Button.h"
+#include "UIElement.h"
 #include "PlatformPlayer.h"
 #include "Enemy.h"
 #include "Sprite.h"
@@ -87,6 +88,9 @@ private:
 	Button* m_resumeBtn;
 	Button* m_menuBtn;
 	Sprite* instructions;
+	UIElement* bgmVolume;
+	UIElement* sfxVolume;
+
 };
 
 class DeadState : public State

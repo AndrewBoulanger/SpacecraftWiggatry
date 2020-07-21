@@ -41,3 +41,8 @@ SDL_Rect MathManager::ConvertFRect2Rect(const SDL_FRect& r)
 	SDL_Rect temp = { (int)r.x, (int)r.y, (int)r.w, (int)r.h };
 	return temp;
 }
+
+int MathManager::ClampI(const int a, const int min, const int max)
+{
+	return std::min(std::max(a, min), max);
+}

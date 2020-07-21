@@ -17,6 +17,7 @@ public:
 	static double Deg2Rad(const double angle);
 	static double Rad2Deg(const double angle);
 	static SDL_Rect ConvertFRect2Rect(const SDL_FRect& r);
+	static int ClampI(const int a, const int min, const int max);
 
 private:
 	MathManager() {}
