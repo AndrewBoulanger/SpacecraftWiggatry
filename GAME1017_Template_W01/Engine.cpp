@@ -70,6 +70,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 
 	FOMA::RegisterFont("Img/font.ttf", "fontLarge", 150);
 	FOMA::RegisterFont("Img/font.ttf", "font", 35);
+	FOMA::RegisterFont("Img/font.ttf", "fontSmall", 20);
 	STMA::ChangeState(new TitleState);
 	SOMA::AllocateChannels(16);
 	SOMA::Load("Aud/Poker Face.mp3", "PokerFace", SOUND_MUSIC);
@@ -79,7 +80,8 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	SOMA::Load("Aud/wig_andrew.wav", "wig0", SOUND_SFX);
 	SOMA::Load("Aud/wig_juan.wav", "wig1", SOUND_SFX);
 	SOMA::Load("Aud/wig_pauleen.wav", "wig2", SOUND_SFX);
-	SOMA::SetMusicVolume(15);
+	SOMA::SetMusicVolume(getBgmVolume());
+	SOMA::SetSoundVolume(getSfxVolume());
 
 	std::ifstream inFile("Dat/Tiledata.txt");
 	if (inFile.is_open())

@@ -19,6 +19,8 @@ public:
 	static bool PlayerCollision(const SDL_FRect* player, const int dX, const int dY);
 	static bool PlayerHazardCollision(const SDL_FRect* player, const int dX, const int dY);
 	static bool SmallTileCollision(const SDL_FRect player, const int dX, const int dY);
+
+	static bool PointRectCheck(const SDL_Point p, const SDL_Rect r);
 private:
 	CollisionManager() {}
 };

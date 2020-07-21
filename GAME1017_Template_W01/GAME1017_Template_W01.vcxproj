@@ -138,6 +138,7 @@
     <ClCompile Include="States.cpp" />
     <ClCompile Include="StunGun.cpp" />
     <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="VerticalEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +166,7 @@
     <ClInclude Include="StunGun.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="UIElement.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="VerticalEnemy.h" />
   </ItemGroup>

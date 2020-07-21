@@ -17,6 +17,7 @@ public:
 	static bool MouseHeld(const int b);
 	static bool MousePressed(const int b);
 	static bool MouseReleased(const int b);
+	static void SetCursor(const SDL_SystemCursor& c);
 	static SDL_Point& GetMousePos();
 	static SDL_FPoint& GetMousePosF();
 	static void Quit();
@@ -32,6 +33,7 @@ private:
 	static SDL_FPoint s_mousePosF;
 	static Uint32 s_mouseCurr;
 	static Uint32 s_mouseLast;
+	static SDL_Cursor* s_cursor;
 private: 
 	EventManager() {}
 };
