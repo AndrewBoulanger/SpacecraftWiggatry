@@ -231,7 +231,8 @@ void PlatformPlayer::GoBack() // put the player back after falling in trap
 	SDL_Delay(700);
 	m_dst.x -= 120;
 	m_dst.y -= 100;
-	takeDamage(1);
+	if(!m_grounded) //in case the player hookshots themself through the ground
+		takeDamage(1);
 }
 void PlatformPlayer::KnockLeft(double vel) { m_velX -= vel; }
 

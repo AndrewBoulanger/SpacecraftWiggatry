@@ -41,9 +41,9 @@ public:
 	}
 
 	//setters
-	void setHealth(int health)
+	void setHealth(int hp)
 	{
-		this->health = health;
+		health = hp;
 	};
 	void setBaseDamage(int damage)
 	{
