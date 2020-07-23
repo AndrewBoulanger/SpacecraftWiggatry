@@ -6,7 +6,8 @@
 
 enum enemyState
 {
-    idle, seeking, fleeing
+    idle, seeking, fleeing, 
+    shooting  //boss only
 };
 enum idlestates
 {
@@ -50,5 +51,6 @@ public:
     virtual void Render() override;
 
     void groundedMove2(const int dir);
+    virtual void Flee();
 };
 

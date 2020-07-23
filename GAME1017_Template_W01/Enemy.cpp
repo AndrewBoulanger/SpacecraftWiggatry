@@ -11,8 +11,9 @@ Enemy::Enemy(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstar
 	losMax = 200;
 	hasWig = true;
 	m_dir = -1;
-	m_frameMax = 6;
+	m_frameMax = 3;
 	m_spriteMax = 2;
+	m_frame = m_sprite = m_spriteMin = 0;
 
 	m_accelX = m_accelY = m_velX = m_velY = 0.0;
 	m_maxVelX = 10.0;
@@ -29,10 +30,10 @@ void Enemy::setState(enemyState nState)
 	if (nState == idle)
 	{
 		StopX();
-		m_frameMax = 6; //only show one frame
+		m_frameMax = 1; //only show one frame
 	}
 	else if (nState == seeking)
-		m_frameMax = 5;
+		m_frameMax = 4;
 	//else if(nState == fleeing) need to make sure fleeing sprite is in the same texture file as the normal sprite
 }
 
@@ -48,18 +49,15 @@ void Enemy::Update()
 	m_velX *= m_drag;
 	m_velX = std::min(std::max(m_velX, -(m_maxVelX)), (m_maxVelX));
 	if (!COMA::SmallTileCollision(wallWisker, m_velX, 0) && COMA::SmallTileCollision(gapWisker, m_velX, 0))
-		m_dst.x += (int)m_velX;
-	else
-		StopX();
-	if (m_velX != 0)
 	{
-		m_sprite = m_spriteMin = 0;
-		m_spriteMax = 2;
+		m_dst.x += (int)m_velX;
+		Animate();
 	}
 	else
-		m_spriteMin =  m_spriteMax = 0;
+	{
+		StopX();
+	}
 
-	Animate();
 	//Y 
 	m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
 	m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav * 5));
@@ -116,16 +114,21 @@ void Enemy::Update()
 	}
 	else if (state == fleeing)
 	{
-		int playerdir = m_dst.x - SPMR::getPlayer()->GetX();
-		if (playerdir > 0)
-			m_dir = 1;
-		else
-			m_dir = -1;
-		groundedMove2(m_dir);
-		if (playerdir > 700 || playerdir < -700)
-			readyToDelete = true;
+		Flee();
 	}
 
+}
+
+void Enemy::Flee()
+{
+	int playerdir = m_dst.x - SPMR::getPlayer()->GetX();
+	if (playerdir > 0)
+		m_dir = 1;
+	else
+		m_dir = -1;
+	groundedMove2(m_dir);
+	if (playerdir > 700 || playerdir < -700)
+		readyToDelete = true;
 }
 
 void Enemy::LOSCheck()

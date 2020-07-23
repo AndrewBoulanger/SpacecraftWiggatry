@@ -73,14 +73,7 @@ void VerticalEnemy::Update()
 	}
 	else if (state == fleeing)
 	{
-		int playerdir = m_dst.x - SPMR::getPlayer()->GetX();
-		if (playerdir > 0)
-			m_dir = 1;
-		else
-			m_dir = -1;
-		groundedMove2(m_dir);
-		if (playerdir > 700 || playerdir < -700)
-			readyToDelete = true;
+		Flee();
 	}
 
 }
