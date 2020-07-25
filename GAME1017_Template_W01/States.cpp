@@ -31,9 +31,8 @@ void State::Resume() {}
 // Begin GameState.
 GameState::GameState() {}
 
-void GameState::Enter()
+void GameState::Enter() 
 {
-	
 	std::cout << "Entering GameState..." << std::endl;
 	SDL_ShowCursor(SDL_DISABLE); // we have a reticle so...
 	m_pPlayer = SPMR::getPlayer();
@@ -59,6 +58,8 @@ void GameState::Enter()
 	timeToSwitchLevels = false;
 
 	m_pPlayer->SetPos({ (int)100.0f,(int)600.0f });
+
+	SOMA::PlayMusic("PokerFace");
 
 	if (Engine::Instance().getLevel() == 1)
 	{
@@ -183,10 +184,11 @@ void GameState::Enter()
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 4, 1));
 
 		m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
+
+		SOMA::StopMusic(15);
 	}
 
 	SPMR::PushSprite(m_flag, Regular);
-	SOMA::PlayMusic("PokerFace");
 
 }
 
