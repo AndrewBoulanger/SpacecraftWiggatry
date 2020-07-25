@@ -186,7 +186,7 @@ void GameState::Enter()
 	}
 
 	SPMR::PushSprite(m_flag, Regular);
-		SOMA::PlayMusic("PokerFace");
+	SOMA::PlayMusic("PokerFace");
 
 }
 
