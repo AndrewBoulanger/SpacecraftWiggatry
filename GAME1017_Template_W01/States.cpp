@@ -34,6 +34,7 @@ GameState::GameState() {}
 void GameState::Enter() 
 {
 	std::cout << "Entering GameState..." << std::endl;
+	std::cout << "This is the name of our beautiful player: " << Engine::Instance().getName() << std::endl;
 	SDL_ShowCursor(SDL_DISABLE); // we have a reticle so...
 	m_pPlayer = SPMR::getPlayer();
 
@@ -329,12 +330,72 @@ void TitleState::Enter()
 	words[0] = new Label("fontLarge", 180, 110, "SPACECRAFT", { 188,7,208,0 });
 	words[1] = new Label("fontLarge", 260, 200, "Wiggatry", { 255,255,255,0 });
 	words[2] = new Label("fontLarge", 0, 670, "ETTG", { 255,0,180,0 });
-	words[3] = new Label("font", 370, 600, "Press ENTER to return", { 255,255,255,0 });
+	words[3] = new Label("font", 200, 360, "Enter your name: ", { 255,255,255,0 });
+	words[4] = new Label("font", 500, 360, "KIKI", { 255,255,255,0 }); // user inputed name [4]
+	words[5] = new Label("font", 370, 600, "Press ENTER to return", { 255,255,255,0 });
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
 }
 
 void TitleState::Update()
 {
+	if (EVMA::LastKeyDown() == SDLK_BACKSPACE && playerName.length() > 0)
+	{
+		//lop off character
+		playerName.pop_back();
+		std::cout << "back";
+		//inputText += EVMA::getText();
+	}
+	// copy
+	if (EVMA::LastKeyDown() == SDLK_c && SDL_GetModState() & KMOD_CTRL)
+	{
+		SDL_SetClipboardText(playerName.c_str());
+	}
+	// and paste
+	if (EVMA::LastKeyDown() == SDLK_v && SDL_GetModState() & KMOD_CTRL)
+	{
+		playerName = SDL_GetClipboardText();
+	}
+	// RIPPPPPP because I couldn't get the other method to work OMGGGG GUYYYYSSSSSSSS I'M SORRY FOR THE BLOCK HERE
+	if (playerName.size() < 8)
+	{
+		if (EVMA::KeyPressed(SDL_SCANCODE_SPACE)) playerName += ' ';
+		if (EVMA::KeyPressed(SDL_SCANCODE_A)) playerName += 'A';
+		if (EVMA::KeyPressed(SDL_SCANCODE_B)) playerName += 'B';
+		if (EVMA::KeyPressed(SDL_SCANCODE_C)) playerName += 'C';
+		if (EVMA::KeyPressed(SDL_SCANCODE_D)) playerName += 'D';
+		if (EVMA::KeyPressed(SDL_SCANCODE_E)) playerName += 'E';
+		if (EVMA::KeyPressed(SDL_SCANCODE_F)) playerName += 'F';
+		if (EVMA::KeyPressed(SDL_SCANCODE_G)) playerName += 'G';
+		if (EVMA::KeyPressed(SDL_SCANCODE_H)) playerName += 'H';
+		if (EVMA::KeyPressed(SDL_SCANCODE_I)) playerName += 'I';
+		if (EVMA::KeyPressed(SDL_SCANCODE_J)) playerName += 'J';
+		if (EVMA::KeyPressed(SDL_SCANCODE_K)) playerName += 'K';
+		if (EVMA::KeyPressed(SDL_SCANCODE_L)) playerName += 'L';
+		if (EVMA::KeyPressed(SDL_SCANCODE_M)) playerName += 'M';
+		if (EVMA::KeyPressed(SDL_SCANCODE_N)) playerName += 'N';
+		if (EVMA::KeyPressed(SDL_SCANCODE_O)) playerName += 'O';
+		if (EVMA::KeyPressed(SDL_SCANCODE_P)) playerName += 'P';
+		if (EVMA::KeyPressed(SDL_SCANCODE_Q)) playerName += 'Q';
+		if (EVMA::KeyPressed(SDL_SCANCODE_R)) playerName += 'R';
+		if (EVMA::KeyPressed(SDL_SCANCODE_S)) playerName += 'S';
+		if (EVMA::KeyPressed(SDL_SCANCODE_T)) playerName += 'T';
+		if (EVMA::KeyPressed(SDL_SCANCODE_U)) playerName += 'U';
+		if (EVMA::KeyPressed(SDL_SCANCODE_V)) playerName += 'V';
+		if (EVMA::KeyPressed(SDL_SCANCODE_W)) playerName += 'W';
+		if (EVMA::KeyPressed(SDL_SCANCODE_X)) playerName += 'X';
+		if (EVMA::KeyPressed(SDL_SCANCODE_Y)) playerName += 'Y';
+		if (EVMA::KeyPressed(SDL_SCANCODE_Z)) playerName += 'Z';
+	}
+	if (playerName != "")
+	{
+		words[4]->SetText(playerName.c_str());
+	}
+	else // empty
+	{
+		words[4]->SetText(" ");
+	}
+
+
 	if (displayControls == false)
 	{
 		if (m_playBtn->ButtonUpdate() == 1)
@@ -358,7 +419,7 @@ void TitleState::Render()
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 51, 255, 0);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
 	background->Render();
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 5; i++)
 		words[i]->Render();
 	m_playBtn->Render();
 	m_quitBtn->Render();
@@ -370,7 +431,7 @@ void TitleState::Render()
 		SDL_Rect rect = { 173, 128, 700, 512 };
 		SDL_RenderFillRect(Engine::Instance().GetRenderer(), &rect);
 		instructions->Render();
-		words[3]->Render();
+		words[6]->Render();
 	}
 
 	State::Render();
@@ -379,6 +440,11 @@ void TitleState::Render()
 void TitleState::Exit()
 {
 	std::cout << "Exiting TitleState..." << std::endl;
+	if (playerName == "") // if no name set, make it kiki
+	{
+		playerName = "KIKI";
+	}
+	Engine::Instance().setName(playerName);
 }
 
 // End TitleState.
@@ -462,6 +528,77 @@ void DeadState::Render()
 
 void DeadState::Exit()
 {
-	std::cout << "Exiting DeadState...a" << std::endl;
+	std::cout << "Exiting EndState..." << std::endl;
+}
+// End DeadState.
+
+// Begin EndState.
+EndState::EndState() {}
+
+void EndState::Enter()
+{
+	std::cout << "Entering EndState...\n";
+	words[0] = new Label("fontLarge", 200, 30, "WIGTASTIC!", { 255,0,255,0 });
+	words[1] = new Label("fontSmall", 300, 150, "You managed to keep your job in the wig business!", { 255,200,220,0 });
+	words[2] = new Label("font", 425, 215, "HIGHSCORES", { 255,0,255,0 });
+	words[3] = new Label("fontSmall", 200, 300, "NAME:", { 255,255,255,0 });
+	words[4] = new Label("fontSmall", 400, 300, "WIGS:", { 255,255,255,0 });
+	words[5] = new Label("fontSmall", 550, 300, "SHIP PARTS:", { 255,255,255,0 });
+	words[6] = new Label("fontSmall", 700, 300, "TOTAL SCORE:", { 255,255,255,0 });
+
+	string name = "name";
+	int wig, ship, total, shiftdown;
+	shiftdown = 350;
+
+	// load file over this, for now, I will tempy define then variables
+	wig = 15;
+	ship = 12;
+	total = (wig * 100) + (ship * 125);
+
+
+	for (unsigned int i = 7; i < 27; i+=4) // load the score information here! i: name, i+1: wig count, i+2: ship part count, i+3: total score(calulate and add)
+	{
+		// get next file input and redefine variables each iteration here
+
+		words[i] = new Label("fontSmall", 200, shiftdown, name.c_str(), { 255,255,255,0 });
+		words[i+1] = new Label("fontSmall", 400, shiftdown, to_string((int)(wig)).c_str(), { 255,255,220,0 });
+		words[i+2] = new Label("fontSmall", 550, shiftdown, to_string((int)(ship)).c_str(), { 255,255,255,0 });
+		words[i+3] = new Label("fontSmall", 700, shiftdown, to_string((int)(total)).c_str(), { 255,255,255,0 });
+
+		shiftdown += 40; // to next line
+	}
+
+
+	m_playBtn = new PlayButton({ 0,0,400,100 }, { 70.0f,600.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("replay"));
+	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 540.0f,600.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
+
+	SOMA::PlayMusic("WreckingBall"); // maybe change to victory music? any recommendations?
+}
+
+void EndState::Update()
+{
+	if (m_playBtn->ButtonUpdate() == 1)
+		return;
+	if (m_quitBtn->ButtonUpdate() == 1)
+		return;
+}
+
+void EndState::Render()
+{
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 186, 13, 220, 0);
+	SDL_RenderClear(Engine::Instance().GetRenderer());
+
+	for (unsigned i = 0; i < 27; i++)
+		words[i]->Render();
+
+	m_playBtn->Render();
+	m_quitBtn->Render();
+
+	State::Render();
+}
+
+void EndState::Exit()
+{
+	std::cout << "Exiting EndState..." << std::endl;
 }
 // End DeadState.

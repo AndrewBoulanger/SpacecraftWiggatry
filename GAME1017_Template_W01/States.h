@@ -67,13 +67,19 @@ public:
 	void Enter();
 	void Exit();
 private:
-	Label* words[4];
+	Label* words[6];
 	Button* m_playBtn;
 	Button* m_quitBtn;
 	Button* m_controlsBtn;
 	Sprite* instructions;
 	Sprite* background;
 	bool displayControls = false;
+
+	// for name input
+	SDL_Color white = { 255, 255, 255, 255 };
+	std::string playerName = "";
+	bool renderText = false;
+
 };
 
 class PauseState : public State
@@ -103,6 +109,20 @@ public:
 	void Exit();
 private:
 	Label* words;
+	Button* m_playBtn;
+	Button* m_quitBtn;
+};
+
+class EndState : public State
+{
+public:
+	EndState();
+	void Update();
+	void Render();
+	void Enter();
+	void Exit();
+private:
+	Label* words[27];
 	Button* m_playBtn;
 	Button* m_quitBtn;
 };
