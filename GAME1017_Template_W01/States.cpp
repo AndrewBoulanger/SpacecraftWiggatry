@@ -547,9 +547,6 @@ void EndState::Enter()
 	ship = 12;
 	total = (wig * 100) + (ship * 125);
 
-	//to_string((int)(wig)).c_str(),
-	//to_string((int)(ship)).c_str(),
-	//to_string((int)(total)).c_str()
 
 	for (unsigned int i = 7; i < 27; i+=4) // load the score information here! i: name, i+1: wig count, i+2: ship part count, i+3: total score(calulate and add)
 	{
