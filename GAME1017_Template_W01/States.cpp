@@ -329,12 +329,69 @@ void TitleState::Enter()
 	words[0] = new Label("fontLarge", 180, 110, "SPACECRAFT", { 188,7,208,0 });
 	words[1] = new Label("fontLarge", 260, 200, "Wiggatry", { 255,255,255,0 });
 	words[2] = new Label("fontLarge", 0, 670, "ETTG", { 255,0,180,0 });
-	words[3] = new Label("font", 370, 600, "Press ENTER to return", { 255,255,255,0 });
+	words[3] = new Label("font", 200, 360, "Enter your name: ", { 255,255,255,0 });
+	words[4] = new Label("font", 500, 360, inputText.c_str(), { 255,255,255,0 }); // user inputed name [4]
+	words[5] = new Label("font", 370, 600, "Press ENTER to return", { 255,255,255,0 });
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
+
+	SDL_StartTextInput();
 }
 
 void TitleState::Update()
 {
+	bool renderText = false;
+	// okay here we go...
+	while (SDL_PollEvent(&event) != 0)
+	{
+		if (event.type == SDL_KEYDOWN)
+		{
+			//Handle backspace
+			if (event.key.keysym.sym == SDLK_BACKSPACE && inputText.length() > 0)
+			{
+				//lop off character
+				inputText.pop_back();
+				renderText = true;
+			}
+			//Handle copy, probably dont need
+			else if (event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
+			{
+				SDL_SetClipboardText(inputText.c_str());
+			}
+			//Handle paste
+			else if (event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL)
+			{
+				inputText = SDL_GetClipboardText();
+				renderText = true;
+			}
+			else if (event.type == SDL_TEXTINPUT)
+			{
+				//Not copy or pasting
+				if (!(SDL_GetModState() & KMOD_CTRL && (event.text.text[0] == 'c' || event.text.text[0] == 'C' || event.text.text[0] == 'v' || event.text.text[0] == 'V')))
+				{
+					//Append character
+					inputText += event.text.text;
+					renderText = true;
+				}
+			}
+		}
+		if (renderText)
+		{
+			//Text is not empty
+			if (inputText != "")
+			{
+				//Render new text
+				words[4]->SetText(inputText.c_str());
+			}
+			//Text is empty
+			else
+			{
+				//Render space texture
+				words[4]->SetText(" ");
+			}
+		}
+	}
+
+
 	if (displayControls == false)
 	{
 		if (m_playBtn->ButtonUpdate() == 1)
@@ -358,7 +415,7 @@ void TitleState::Render()
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 51, 255, 0);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
 	background->Render();
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 5; i++)
 		words[i]->Render();
 	m_playBtn->Render();
 	m_quitBtn->Render();
@@ -370,7 +427,7 @@ void TitleState::Render()
 		SDL_Rect rect = { 173, 128, 700, 512 };
 		SDL_RenderFillRect(Engine::Instance().GetRenderer(), &rect);
 		instructions->Render();
-		words[3]->Render();
+		words[6]->Render();
 	}
 
 	State::Render();
@@ -379,6 +436,7 @@ void TitleState::Render()
 void TitleState::Exit()
 {
 	std::cout << "Exiting TitleState..." << std::endl;
+	SDL_StopTextInput();
 }
 
 // End TitleState.
@@ -497,7 +555,7 @@ void EndState::Enter()
 	{
 		// get next file input and redefine variables each iteration here
 
-		words[i] = new Label("fontSmall", 200, shiftdown, "name", { 255,255,255,0 });
+		words[i] = new Label("fontSmall", 200, shiftdown, name.c_str(), { 255,255,255,0 });
 		words[i+1] = new Label("fontSmall", 400, shiftdown, to_string((int)(wig)).c_str(), { 255,255,220,0 });
 		words[i+2] = new Label("fontSmall", 550, shiftdown, to_string((int)(ship)).c_str(), { 255,255,255,0 });
 		words[i+3] = new Label("fontSmall", 700, shiftdown, to_string((int)(total)).c_str(), { 255,255,255,0 });

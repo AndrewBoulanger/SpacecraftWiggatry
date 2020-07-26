@@ -67,13 +67,20 @@ public:
 	void Enter();
 	void Exit();
 private:
-	Label* words[4];
+	Label* words[6];
 	Button* m_playBtn;
 	Button* m_quitBtn;
 	Button* m_controlsBtn;
 	Sprite* instructions;
 	Sprite* background;
 	bool displayControls = false;
+
+	// for name input?
+	SDL_Color white = { 255, 255, 255, 255 };
+	std::string inputText = "tempuuu";
+	bool renderText = false;
+	SDL_Event event;
+
 };
 
 class PauseState : public State
