@@ -10,6 +10,7 @@ void EventManager::Init()
 	std::memcpy(s_keysLast, s_keysCurr, s_numKeys);
 	s_mouseCurr = SDL_GetMouseState(&s_mousePos.x, &s_mousePos.y);
 	s_mouseLast = s_mouseCurr;
+	SDL_StartTextInput();
 	std::cout << "EventManager init done!" << std::endl;
 }
 
@@ -30,6 +31,7 @@ void EventManager::HandleEvents()
 				break;
 			case SDL_KEYDOWN:
 				s_lastKeyDown = event.key.keysym.sym;
+				s_text = event.text.text;
 				break;
 			case SDL_KEYUP:
 				s_lastKeyUp = event.key.keysym.sym;
@@ -40,6 +42,11 @@ void EventManager::HandleEvents()
 	}
 	s_keysCurr = SDL_GetKeyboardState(&s_numKeys);
 	s_mouseCurr = SDL_GetMouseState(&s_mousePos.x, &s_mousePos.y);
+}
+
+char* EventManager::getText()
+{
+	return s_text;
 }
 
 bool EventManager::KeyHeld(const SDL_Scancode c)
@@ -111,6 +118,7 @@ SDL_FPoint& EventManager::GetMousePosF()
 
 void EventManager::Quit()
 {
+	SDL_StopTextInput();
 	delete s_keysLast;
 }
 
@@ -120,6 +128,7 @@ int EventManager::s_numKeys;
 
 int EventManager::s_lastKeyDown;
 int EventManager::s_lastKeyUp;
+char* EventManager::s_text;
 SDL_Point EventManager::s_mousePos = { 0,0 };
 SDL_FPoint EventManager::s_mousePosF = { 0,0 };
 Uint32 EventManager::s_mouseCurr;

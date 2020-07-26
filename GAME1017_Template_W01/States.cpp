@@ -34,6 +34,7 @@ GameState::GameState() {}
 void GameState::Enter() 
 {
 	std::cout << "Entering GameState..." << std::endl;
+	std::cout << "This is the name of our beautiful player: " << Engine::Instance().getName() << std::endl;
 	SDL_ShowCursor(SDL_DISABLE); // we have a reticle so...
 	m_pPlayer = SPMR::getPlayer();
 
@@ -330,65 +331,68 @@ void TitleState::Enter()
 	words[1] = new Label("fontLarge", 260, 200, "Wiggatry", { 255,255,255,0 });
 	words[2] = new Label("fontLarge", 0, 670, "ETTG", { 255,0,180,0 });
 	words[3] = new Label("font", 200, 360, "Enter your name: ", { 255,255,255,0 });
-	words[4] = new Label("font", 500, 360, inputText.c_str(), { 255,255,255,0 }); // user inputed name [4]
+	words[4] = new Label("font", 500, 360, "KIKI", { 255,255,255,0 }); // user inputed name [4]
 	words[5] = new Label("font", 370, 600, "Press ENTER to return", { 255,255,255,0 });
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
-
-	SDL_StartTextInput();
 }
 
 void TitleState::Update()
 {
-	bool renderText = false;
-	// okay here we go...
-	while (SDL_PollEvent(&event) != 0)
+	if (EVMA::LastKeyDown() == SDLK_BACKSPACE && playerName.length() > 0)
 	{
-		if (event.type == SDL_KEYDOWN)
-		{
-			//Handle backspace
-			if (event.key.keysym.sym == SDLK_BACKSPACE && inputText.length() > 0)
-			{
-				//lop off character
-				inputText.pop_back();
-				renderText = true;
-			}
-			//Handle copy, probably dont need
-			else if (event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
-			{
-				SDL_SetClipboardText(inputText.c_str());
-			}
-			//Handle paste
-			else if (event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL)
-			{
-				inputText = SDL_GetClipboardText();
-				renderText = true;
-			}
-			else if (event.type == SDL_TEXTINPUT)
-			{
-				//Not copy or pasting
-				if (!(SDL_GetModState() & KMOD_CTRL && (event.text.text[0] == 'c' || event.text.text[0] == 'C' || event.text.text[0] == 'v' || event.text.text[0] == 'V')))
-				{
-					//Append character
-					inputText += event.text.text;
-					renderText = true;
-				}
-			}
-		}
-		if (renderText)
-		{
-			//Text is not empty
-			if (inputText != "")
-			{
-				//Render new text
-				words[4]->SetText(inputText.c_str());
-			}
-			//Text is empty
-			else
-			{
-				//Render space texture
-				words[4]->SetText(" ");
-			}
-		}
+		//lop off character
+		playerName.pop_back();
+		std::cout << "back";
+		//inputText += EVMA::getText();
+	}
+	// copy
+	if (EVMA::LastKeyDown() == SDLK_c && SDL_GetModState() & KMOD_CTRL)
+	{
+		SDL_SetClipboardText(playerName.c_str());
+	}
+	// and paste
+	if (EVMA::LastKeyDown() == SDLK_v && SDL_GetModState() & KMOD_CTRL)
+	{
+		playerName = SDL_GetClipboardText();
+	}
+	// RIPPPPPP because I couldn't get the other method to work OMGGGG GUYYYYSSSSSSSS I'M SORRY FOR THE BLOCK HERE
+	if (playerName.size() < 8)
+	{
+		if (EVMA::KeyPressed(SDL_SCANCODE_SPACE)) playerName += ' ';
+		if (EVMA::KeyPressed(SDL_SCANCODE_A)) playerName += 'A';
+		if (EVMA::KeyPressed(SDL_SCANCODE_B)) playerName += 'B';
+		if (EVMA::KeyPressed(SDL_SCANCODE_C)) playerName += 'C';
+		if (EVMA::KeyPressed(SDL_SCANCODE_D)) playerName += 'D';
+		if (EVMA::KeyPressed(SDL_SCANCODE_E)) playerName += 'E';
+		if (EVMA::KeyPressed(SDL_SCANCODE_F)) playerName += 'F';
+		if (EVMA::KeyPressed(SDL_SCANCODE_G)) playerName += 'G';
+		if (EVMA::KeyPressed(SDL_SCANCODE_H)) playerName += 'H';
+		if (EVMA::KeyPressed(SDL_SCANCODE_I)) playerName += 'I';
+		if (EVMA::KeyPressed(SDL_SCANCODE_J)) playerName += 'J';
+		if (EVMA::KeyPressed(SDL_SCANCODE_K)) playerName += 'K';
+		if (EVMA::KeyPressed(SDL_SCANCODE_L)) playerName += 'L';
+		if (EVMA::KeyPressed(SDL_SCANCODE_M)) playerName += 'M';
+		if (EVMA::KeyPressed(SDL_SCANCODE_N)) playerName += 'N';
+		if (EVMA::KeyPressed(SDL_SCANCODE_O)) playerName += 'O';
+		if (EVMA::KeyPressed(SDL_SCANCODE_P)) playerName += 'P';
+		if (EVMA::KeyPressed(SDL_SCANCODE_Q)) playerName += 'Q';
+		if (EVMA::KeyPressed(SDL_SCANCODE_R)) playerName += 'R';
+		if (EVMA::KeyPressed(SDL_SCANCODE_S)) playerName += 'S';
+		if (EVMA::KeyPressed(SDL_SCANCODE_T)) playerName += 'T';
+		if (EVMA::KeyPressed(SDL_SCANCODE_U)) playerName += 'U';
+		if (EVMA::KeyPressed(SDL_SCANCODE_V)) playerName += 'V';
+		if (EVMA::KeyPressed(SDL_SCANCODE_W)) playerName += 'W';
+		if (EVMA::KeyPressed(SDL_SCANCODE_X)) playerName += 'X';
+		if (EVMA::KeyPressed(SDL_SCANCODE_Y)) playerName += 'Y';
+		if (EVMA::KeyPressed(SDL_SCANCODE_Z)) playerName += 'Z';
+	}
+	if (playerName != "")
+	{
+		words[4]->SetText(playerName.c_str());
+	}
+	else // empty
+	{
+		words[4]->SetText(" ");
 	}
 
 
@@ -436,7 +440,11 @@ void TitleState::Render()
 void TitleState::Exit()
 {
 	std::cout << "Exiting TitleState..." << std::endl;
-	SDL_StopTextInput();
+	if (playerName == "") // if no name set, make it kiki
+	{
+		playerName = "KIKI";
+	}
+	Engine::Instance().setName(playerName);
 }
 
 // End TitleState.

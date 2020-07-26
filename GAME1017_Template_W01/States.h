@@ -75,11 +75,10 @@ private:
 	Sprite* background;
 	bool displayControls = false;
 
-	// for name input?
+	// for name input
 	SDL_Color white = { 255, 255, 255, 255 };
-	std::string inputText = "tempuuu";
+	std::string playerName = "";
 	bool renderText = false;
-	SDL_Event event;
 
 };
 
