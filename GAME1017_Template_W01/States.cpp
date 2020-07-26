@@ -462,6 +462,80 @@ void DeadState::Render()
 
 void DeadState::Exit()
 {
-	std::cout << "Exiting DeadState...a" << std::endl;
+	std::cout << "Exiting EndState..." << std::endl;
+}
+// End DeadState.
+
+// Begin EndState.
+EndState::EndState() {}
+
+void EndState::Enter()
+{
+	std::cout << "Entering EndState...\n";
+	words[0] = new Label("fontLarge", 200, 30, "WIGTASTIC!", { 255,0,255,0 });
+	words[1] = new Label("fontSmall", 300, 150, "You managed to keep your job in the wig business!", { 255,200,220,0 });
+	words[2] = new Label("font", 425, 215, "HIGHSCORES", { 255,0,255,0 });
+	words[3] = new Label("fontSmall", 200, 300, "NAME:", { 255,255,255,0 });
+	words[4] = new Label("fontSmall", 400, 300, "WIGS:", { 255,255,255,0 });
+	words[5] = new Label("fontSmall", 550, 300, "SHIP PARTS:", { 255,255,255,0 });
+	words[6] = new Label("fontSmall", 700, 300, "TOTAL SCORE:", { 255,255,255,0 });
+
+	string name = "name";
+	int wig, ship, total, shiftdown;
+	shiftdown = 350;
+
+	// load file over this, for now, I will tempy define then variables
+	wig = 15;
+	ship = 12;
+	total = (wig * 100) + (ship * 125);
+
+	//to_string((int)(wig)).c_str(),
+	//to_string((int)(ship)).c_str(),
+	//to_string((int)(total)).c_str()
+
+	for (unsigned int i = 7; i < 27; i+=4) // load the score information here! i: name, i+1: wig count, i+2: ship part count, i+3: total score(calulate and add)
+	{
+		// get next file input and redefine variables each iteration here
+
+		words[i] = new Label("fontSmall", 200, shiftdown, "name", { 255,255,255,0 });
+		words[i+1] = new Label("fontSmall", 400, shiftdown, to_string((int)(wig)).c_str(), { 255,255,220,0 });
+		words[i+2] = new Label("fontSmall", 550, shiftdown, to_string((int)(ship)).c_str(), { 255,255,255,0 });
+		words[i+3] = new Label("fontSmall", 700, shiftdown, to_string((int)(total)).c_str(), { 255,255,255,0 });
+
+		shiftdown += 40; // to next line
+	}
+
+
+	m_playBtn = new PlayButton({ 0,0,400,100 }, { 70.0f,600.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("replay"));
+	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 540.0f,600.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
+
+	SOMA::PlayMusic("WreckingBall"); // maybe change to victory music? any recommendations?
+}
+
+void EndState::Update()
+{
+	if (m_playBtn->ButtonUpdate() == 1)
+		return;
+	if (m_quitBtn->ButtonUpdate() == 1)
+		return;
+}
+
+void EndState::Render()
+{
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 186, 13, 220, 0);
+	SDL_RenderClear(Engine::Instance().GetRenderer());
+
+	for (unsigned i = 0; i < 27; i++)
+		words[i]->Render();
+
+	m_playBtn->Render();
+	m_quitBtn->Render();
+
+	State::Render();
+}
+
+void EndState::Exit()
+{
+	std::cout << "Exiting EndState..." << std::endl;
 }
 // End DeadState.

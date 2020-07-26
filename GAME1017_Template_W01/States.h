@@ -107,4 +107,18 @@ private:
 	Button* m_quitBtn;
 };
 
+class EndState : public State
+{
+public:
+	EndState();
+	void Update();
+	void Render();
+	void Enter();
+	void Exit();
+private:
+	Label* words[27];
+	Button* m_playBtn;
+	Button* m_quitBtn;
+};
+
 #endif
