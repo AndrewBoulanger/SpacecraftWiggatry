@@ -21,6 +21,7 @@ private:
 
     SDL_FRect wallWisker;
     SDL_FRect gapWisker;
+    bool b_ReadyToSnatch = false;
 
 protected:
     bool hasWig;
@@ -52,5 +53,6 @@ public:
 
     void groundedMove2(const int dir);
     virtual void Flee();
+    void RotatingWig();
 };
 
