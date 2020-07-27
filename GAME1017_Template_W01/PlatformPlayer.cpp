@@ -14,8 +14,10 @@
 #include "HookShot.h"
 #include "EventManager.h"
 #include "SoundManager.h"
-#include <iostream>
 #include "SpriteManager.h"
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -53,7 +55,7 @@ void PlatformPlayer::Update()
 	m_velX += m_accelX;
 	m_velX *= (m_grounded ? m_drag : 1);
 	m_velX = std::min(std::max(m_velX, -(m_maxVelX)), (m_maxVelX));
-	if (!COMA::PlayerCollision(&m_dst, m_velX, 0, SPMR::getOffset()) )
+	if (!COMA::PlayerCollision(&m_dst, m_velX, 0) )
 	{
 		m_dst.x += (int)m_velX; // Had to cast it to int to get crisp collision with side of platform.
 		if ((m_dst.x > 600 && m_velX > 0) || (m_dst.x < 400 && m_velX < 0 && SPMR::getOffset() > 0))
@@ -66,7 +68,7 @@ void PlatformPlayer::Update()
 	// Now do Y axis.
 	m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
 	m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav * 5));
-	if (!COMA::PlayerCollision(&m_dst, 0, m_velY, SPMR::getOffset()))
+	if (!COMA::PlayerCollision(&m_dst, 0, m_velY))
 			m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
 	else
 	{
@@ -100,7 +102,7 @@ void PlatformPlayer::Update()
 
 	//Projectile Collision Check
 	// Traps
-	if (COMA::PlayerHazardCollision(&m_dst, m_velX, 0, SPMR::getOffset()))
+	if (COMA::PlayerHazardCollision(&m_dst, m_velX, 0))
 	{
 		takeDamage(1);
 		KnockLeft(5);
@@ -220,6 +222,18 @@ void PlatformPlayer::SetGrounded(bool g) { m_grounded = g; }
 void PlatformPlayer::SetX(float y) { m_dst.x = y; }
 void PlatformPlayer::SetY(float y) { m_dst.y = y; }
 double PlatformPlayer::GetX() { return m_dst.x; }
+double PlatformPlayer::GetY() { return m_dst.y; }
+void PlatformPlayer::GoBack() // put the player back after falling in trap
+{
+	SOMA::PlaySound("dead", 0, 8);
+	StopX(); // clear vel for smoother transition... very small difference but...
+	StopY();
+	SDL_Delay(700);
+	m_dst.x -= 120;
+	m_dst.y -= 100;
+	if(!m_grounded) //in case the player hookshots themself through the ground
+		takeDamage(1);
+}
 void PlatformPlayer::KnockLeft(double vel) { m_velX -= vel; }
 
 void PlatformPlayer::Render()
@@ -254,6 +268,21 @@ void PlatformPlayer::takeDamage(int dmg)
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
 	}
+}
+
+void PlatformPlayer::add1Wig()
+{
+	++m_wigCount;
+
+	// play wig sfx! 
+	srand((unsigned)time(NULL));
+	int x = rand() % 3;
+	if (x == 0)
+		SOMA::PlaySound("wig0", 0, 6);
+	if (x == 1)
+		SOMA::PlaySound("wig1", 0, 6);
+	if (x == 2)
+		SOMA::PlaySound("wig2", 0, 6);
 }
 
 

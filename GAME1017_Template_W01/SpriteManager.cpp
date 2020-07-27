@@ -99,20 +99,28 @@ void SpriteManager::Render()
 
 void SpriteManager::PushSprite(Sprite* pSprite, SpriteType type)
 {
-	if(type == Regular)
-		s_sprites.push_back(pSprite); // push_back() is a method of the vector type.
-		
-	if(type == background)
-		s_background.push_back(pSprite);
-	
+	if (pSprite != nullptr)
+	{
+		if (type == Regular)
+			s_sprites.push_back(pSprite); // push_back() is a method of the vector type.
+
+		if (type == background)
+			s_background.push_back(pSprite);
+	}
 }
 void SpriteManager::PushSprite(Enemy* pSprite)
 {
-	s_enemies.push_back(pSprite);
+	if (pSprite != nullptr)
+	{
+		s_enemies.push_back(pSprite);
+	}
 }
 void SpriteManager::PushSprite(Pickup* pSprite)
 {
-	s_pickups.push_back(pSprite);
+	if (pSprite != nullptr)
+	{
+		s_pickups.push_back(pSprite);
+	}
 }
 
 void SpriteManager::PopSprite()

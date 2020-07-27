@@ -22,6 +22,9 @@
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="VerticalEnemy.cpp" />
     <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="raycast.cpp" />
+    <ClCompile Include="UIElement.cpp" />
+    <ClCompile Include="Boss.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -48,6 +51,9 @@
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="VerticalEnemy.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="raycast.h" />
+    <ClInclude Include="UIElement.h" />
+    <ClInclude Include="Boss.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="img\circle.png" />
@@ -56,10 +62,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertySheet.props" />
+    <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Dat\Level1.txt" />
     <Text Include="Dat\Tiledata.txt" />
     <Text Include="Dat\Level2.txt" />
+    <Text Include="Dat\LevelBoss.txt" />
+    <Text Include="Dat\Level3.txt" />
   </ItemGroup>
 </Project>

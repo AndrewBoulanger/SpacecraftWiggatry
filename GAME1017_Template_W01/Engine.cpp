@@ -49,6 +49,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/controls.png", "controls");
 	TEMA::RegisterTexture("Img/background.png", "bg");
 	TEMA::RegisterTexture("Img/alienBeard.png", "enemy2");
+	TEMA::RegisterTexture("Img/Enemies.png", "enemies");
 
 	TEMA::RegisterTexture("Img/KikiSprite2.0.png", "player");
 	TEMA::RegisterTexture("Img/alienWhisker.png", "enemy");
@@ -69,12 +70,18 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 
 	FOMA::RegisterFont("Img/font.ttf", "fontLarge", 150);
 	FOMA::RegisterFont("Img/font.ttf", "font", 35);
-	STMA::ChangeState(new TitleState);
+	FOMA::RegisterFont("Img/font.ttf", "fontSmall", 20);
 	SOMA::AllocateChannels(16);
 	SOMA::Load("Aud/Poker Face.mp3", "PokerFace", SOUND_MUSIC);
 	SOMA::Load("Aud/Wrecking Ball.mp3", "WreckingBall", SOUND_MUSIC);
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
-	SOMA::SetMusicVolume(15);
+	SOMA::Load("Aud/dead.wav", "dead", SOUND_SFX);
+	SOMA::Load("Aud/wig_andrew.wav", "wig0", SOUND_SFX);
+	SOMA::Load("Aud/wig_juan.wav", "wig1", SOUND_SFX);
+	SOMA::Load("Aud/wig_pauleen.wav", "wig2", SOUND_SFX);
+	SOMA::SetMusicVolume(getBgmVolume());
+	SOMA::SetSoundVolume(getSfxVolume());
+	STMA::ChangeState(new TitleState);
 
 	std::ifstream inFile("Dat/Tiledata.txt");
 	if (inFile.is_open())
