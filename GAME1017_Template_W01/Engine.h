@@ -36,6 +36,7 @@ private: // Private properties.
 
 	int bgmVolume = 30; // idk how to get volume value from sdl...
 	int sfxVolume = 30;
+	std::string name;
 
 private: // Private methods.
 	Engine();
@@ -61,6 +62,8 @@ public: // Public methods.
 	void setBgmVolume(int v) { bgmVolume = v; }
 	int getSfxVolume() { return sfxVolume; }
 	void setSfxVolume(int v) { sfxVolume = v; }
+	std::string getName() { return name; }
+	void setName(std::string n) { name = n; }
 	
 };
 

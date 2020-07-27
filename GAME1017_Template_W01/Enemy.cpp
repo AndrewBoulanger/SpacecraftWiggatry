@@ -116,7 +116,7 @@ void Enemy::Update()
 	{
 		Flee();
 	}
-
+	RotatingWig();
 }
 
 void Enemy::Flee()
@@ -175,7 +175,10 @@ void Enemy::takeDamage(int dmg)
 		health -= dmg;
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
-
+	}
+	if (health <= 0)
+	{
+		b_ReadyToSnatch = true;
 	}
 }
 
@@ -186,4 +189,19 @@ void Enemy::groundedMove2(const int dir)
 		m_accelX = -1;
 	else if (dir > 0)
 		m_accelX = 1;
+}
+
+void Enemy::RotatingWig()
+{
+	if (b_ReadyToSnatch == true)
+	{
+		float angle;
+		angle = enemysWig->GetAngle();
+		angle += 1;
+		if(angle >= 360)
+		{
+			angle = 0;
+		}
+		enemysWig->SetAngle(angle);
+	}
 }
