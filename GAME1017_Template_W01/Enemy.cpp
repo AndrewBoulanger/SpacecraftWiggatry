@@ -95,6 +95,7 @@ void Enemy::Update()
 			readyToDelete = true;
 	}
 
+	RotatingWig();
 }
 
 void Enemy::Render()
@@ -108,9 +109,13 @@ void Enemy::Render()
 		if (hasWig)
 		{
 			if (m_dir == -1)
+			{
 				enemysWig->RenderFlipped();
+			}
 			else
+			{
 				enemysWig->Render();
+			}
 		}
 	}
 }
@@ -132,7 +137,8 @@ void Enemy::takeDamage(int dmg)
 
 		if (health <= 0)
 		{
-			readyToDelete = true;
+			readyToDelete = false;
+			b_ReadyToSnatch = true;
 		}
 	}
 }
@@ -151,4 +157,19 @@ void Enemy::groundedMove2(const int dir)
 		m_accelX = -1;
 	else if (dir > 0)
 		m_accelX = 1;
+}
+
+void Enemy::RotatingWig()
+{
+	if (b_ReadyToSnatch == true)
+	{
+		float angle;
+		angle = enemysWig->GetAngle();
+		angle += 1;
+		if (angle >= 360)
+		{
+			angle = 0;
+		}
+		enemysWig->SetAngle(angle);
+	}
 }

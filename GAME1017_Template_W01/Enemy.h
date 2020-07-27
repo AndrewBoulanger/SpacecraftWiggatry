@@ -15,6 +15,7 @@ private:
 
     SDL_FRect wallWisker;
     SDL_FRect gapWisker;
+    bool b_ReadyToSnatch = false;
 
 protected:
     bool hasWig;
@@ -42,5 +43,6 @@ public:
     virtual void Render() override;
 
     void groundedMove2(const int dir);
+    void RotatingWig();
 };
 

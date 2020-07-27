@@ -77,6 +77,7 @@ void VerticalEnemy::Update()
 			readyToDelete = true;
 	}
 
+	RotatingWig();
 }
 void VerticalEnemy::verticalMove(const int plrY)
 {
