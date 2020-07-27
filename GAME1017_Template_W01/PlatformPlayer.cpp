@@ -137,12 +137,14 @@ void PlatformPlayer::Update()
 		{
 			m_accelX = -1.0;
 			m_facingRight = false;
+			m_dir = -1;
 			//	m_grapplehook = false;
 		}
 		else if (EVMA::KeyHeld(SDL_SCANCODE_D))
 		{
 			m_accelX = 1.0;
 			m_facingRight = true;
+			m_dir = 1;
 			//	m_grapplehook = false;
 		}
 		break;
@@ -336,9 +338,9 @@ void PlatformPlayer::createStunGunBullet()
 
 void PlatformPlayer::createProjectile()
 {
-	Projectile* projectile = new Projectile({ 0,0,36,36 }, { m_dst.x, m_dst.y, 32, 32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("hookshot"));
+	Projectile* projectile = new Projectile(true, { m_dst.x + m_dst.w * .5f, m_dst.y + m_dst.h * .2f }, ((double)!m_facingRight)*180, 1 , TEMA::GetTexture("lightning"));
 
-	if (m_facingRight == true)
+	/*if (m_facingRight == true)
 	{
 		projectile->setVelX(20);
 	}
@@ -351,7 +353,7 @@ void PlatformPlayer::createProjectile()
 	{
 		projectile->setVelX(0);
 		projectile->setVelY(-20);
-	}
+	}*/
 
 	m_vPProjectiles.push_back(projectile);
 }
