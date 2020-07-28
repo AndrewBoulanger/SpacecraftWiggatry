@@ -25,6 +25,7 @@
     <ClCompile Include="raycast.cpp" />
     <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -54,6 +55,7 @@
     <ClInclude Include="raycast.h" />
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="img\circle.png" />
@@ -70,5 +72,8 @@
     <Text Include="Dat\Level2.txt" />
     <Text Include="Dat\LevelBoss.txt" />
     <Text Include="Dat\Level3.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Dat\HighScores.xml" />
   </ItemGroup>
 </Project>

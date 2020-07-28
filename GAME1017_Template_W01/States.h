@@ -10,7 +10,9 @@
 #include "Sprite.h"
 #include "Pickup.h"
 #include "StunGun.h"
+#include "tinyxml2.h"
 #include <vector>
+#include <string>
 #include <map>
 
 class State // This is the abstract base class for all specific states.
@@ -121,10 +123,18 @@ public:
 	void Render();
 	void Enter();
 	void Exit();
+	void Load();
+	void Save();
 private:
+	PlatformPlayer* m_pPlayer;
 	Label* words[27];
 	Button* m_playBtn;
 	Button* m_quitBtn;
+
+	std::vector<const char*> playerName;
+	std::vector<int> wigScore;
+	std::vector<int> shipScore;
+	std::vector<int> totalScore;
 };
 
 #endif
