@@ -20,15 +20,20 @@ Projectile::Projectile(bool fromPlayer, SDL_FPoint origin, double angle, float s
 	m_size = size;
 }
 
-
-Projectile::~Projectile()
+Projectile::~Projectile() 
 {
-}
+};
 
 void Projectile::update()
 {
 	m_dst.x += velX * m_speed / m_size;
 	m_dst.y += velY * m_speed / m_size;
+
+	if (m_dst.x <0 - m_dst.w || m_dst.x > WIDTH + m_dst.w ||
+		m_dst.y <0 - m_dst.h || m_dst.y > HEIGHT + m_dst.h)
+	{
+		readyToDelete = true;;
+	}
 }
 
 void Projectile::render()

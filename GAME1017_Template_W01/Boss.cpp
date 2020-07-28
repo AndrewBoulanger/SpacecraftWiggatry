@@ -1,5 +1,7 @@
 #include "Boss.h"
 #include "SoundManager.h"
+#include "SpriteManager.h"
+#include "Projectile.h";
 
 Boss::Boss(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart, int smin, int smax, int nf, int hp, int dmg)
 	:Enemy(s, d, r, t, sstart, smin, smax, nf, hp, dmg)
@@ -90,7 +92,13 @@ void Boss::Move()
 
 void Boss::Shoot()
 {
+	SDL_FPoint plr;
+	plr.x = SPMR::getPlayer()->getCenter().x - getCenter().x;
+	plr.y = SPMR::getPlayer()->getCenter().y - (m_dst.y + m_dst.h * .2f);
+
 	std::cout << "shot\n";
+	SPMR::PushSprite(new Projectile(false, { getCenter().x, m_dst.y + m_dst.h * .2f },
+		-MAMA::Rad2Deg(MAMA::AngleBetweenPoints(plr.y, plr.x)) , 2, TEMA::GetTexture("lightning")));
 }
 
 Wig* Boss::removeWig()

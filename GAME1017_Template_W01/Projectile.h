@@ -26,4 +26,6 @@ public:
 	void setVelY(float y) { velY = y; }
 	void update();
 	void render();
+
+	bulletType getOwner() { return owner; };
 };
