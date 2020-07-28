@@ -2,6 +2,7 @@
 #include <fstream>
 #include "Tile.h"
 #include "TextureManager.h"
+#include "SoundManager.h"
 #include "Engine.h"
 #include "CollisionManager.h"
 #include "Utilities.h"
@@ -62,12 +63,15 @@ void SpriteManager::Collision()
 				s_player->add1Wig();
 				break;
 			case SHIP_PART:
+				SOMA::PlaySound("yahoo");
 				s_player->add1ShipPart();
 				break;
 			case ENERGY:
+				SOMA::PlaySound("yahoo");
 				s_player->raiseEnergy();
 				break;
 			case HEALTH:
+				SOMA::PlaySound("yahoo");
 				s_player->incrHealth();
 			default:
 				break;

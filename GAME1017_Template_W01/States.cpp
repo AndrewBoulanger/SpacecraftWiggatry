@@ -238,15 +238,13 @@ void GameState::CheckCollision()
 	}
 	m_pEnemy = nullptr;
 
-	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy   
-	{                       //we could use the change state function to make a new game state, then we can move some of this stuff to the exit state and the stuff that's 
-						//	different between levels could be put in an if statement in the enter function
-
+	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) 
+	{
 		if (Engine::Instance().getLevel() == 1) {
 			timeToSwitchLevels = true;
 			Engine::Instance().setLevel(2);
 		}
-		else if (Engine::Instance().getLevel() == 2 && m_pPlayer->getParts() >= 1) // currently at one for making testing quicker, change 5 later
+		else if (Engine::Instance().getLevel() == 2 && m_pPlayer->getParts() >= 1) // for testing, get 1 at least
 		{
 			timeToSwitchLevels = true;
 			Engine::Instance().setLevel(3);

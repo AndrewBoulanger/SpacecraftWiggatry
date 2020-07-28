@@ -194,14 +194,16 @@ void PlatformPlayer::Update()
 
 	if (EVMA::KeyPressed(SDL_SCANCODE_Q))
 	{
-		//SOMA::PlaySound("jump"); //change jump into slap sound
+		SOMA::PlaySound("slap");
 		slap();
 	}
 	if (EVMA::KeyPressed(SDL_SCANCODE_E))
 	{
-		if(energy > 0)
-		//SOMA::PlaySound("jump"); //change jump into bullet sound
-		createStunGunBullet();
+		if (energy > 0)
+		{
+			SOMA::PlaySound("stun");
+			createStunGunBullet();
+		}
 	}
 	if (EVMA::KeyPressed(SDL_SCANCODE_R))
 	{
@@ -267,6 +269,7 @@ void PlatformPlayer::takeDamage(int dmg)
 		health -= dmg;
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
+		SOMA::PlaySound("oof", 0, 6);
 	}
 }
 

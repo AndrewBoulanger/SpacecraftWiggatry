@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "SpriteManager.h"
+#include "SoundManager.h"
 #include "CollisionManager.h"
 
 
@@ -175,7 +176,7 @@ void Enemy::takeDamage(int dmg)
 		health -= dmg;
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
-
+		SOMA::PlaySound("blub", 0, 6);
 	}
 }
 
