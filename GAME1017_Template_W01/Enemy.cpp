@@ -172,6 +172,7 @@ void Enemy::takeDamage(int dmg)
 {
 	if (iCooldown <= 0)
 	{
+		SOMA::PlaySound("blub", 0, 6);
 		health -= dmg;
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
