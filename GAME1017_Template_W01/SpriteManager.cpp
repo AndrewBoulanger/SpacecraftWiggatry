@@ -41,6 +41,22 @@ void SpriteManager::Update()
 	}
 	if(cleanEn)
 		CleanVector(s_enemies, cleanEn);
+
+	for (int i = 0; i < s_projectiles.size(); i++)
+	{
+		DEMA::QueueRect(MAMA::ConvertFRect2Rect(*s_projectiles[i]->GetDstP()), { 0,255,0,0 });
+		if (s_projectiles[i]->readyToDelete)
+		{
+			delete s_projectiles[i];
+			s_projectiles[i] = nullptr;
+			cleanPr = true;
+		}
+		if (s_projectiles[i] != nullptr)
+			s_projectiles[i]->update();
+	}
+	if (cleanPr)
+		CleanVector(s_projectiles, cleanPr);
+
 	for (int i = 0; i < s_pickups.size(); i++)
 	{
 		DEMA::QueueRect(MAMA::ConvertFRect2Rect(*s_pickups[i]->GetDstP()), { 0,255,0,0 });
@@ -48,7 +64,10 @@ void SpriteManager::Update()
 			s_pickups[i]->Update();
 	}
 
+
 	Collision();
+	if(cleanPr)
+		CleanVector(s_projectiles, cleanPr);
 }
 
 void SpriteManager::Collision()
@@ -83,6 +102,34 @@ void SpriteManager::Collision()
 		}
 	}
 	s_sprites.shrink_to_fit();
+
+	for (int i = 0; i < s_projectiles.size(); i++)
+	{
+		if (s_projectiles[i]->getOwner() == ENEMY_BULLET)
+		{
+			if (COMA::CircleAABBCheck(s_projectiles[i]->getCenter(), s_projectiles[i]->GetDstP()->w * .5, *s_player->GetDstP()))
+			{
+				s_player->takeDamage(1);
+				s_projectiles[i]->readyToDelete = true;
+				cleanPr = true;
+				continue;
+			}
+		}
+		else
+		{
+			for (int j = 0; j < s_enemies.size(); j++)
+			{
+				if (COMA::CircleAABBCheck(s_projectiles[i]->getCenter(), s_projectiles[i]->GetDstP()->w * .5, *s_enemies[j]->GetDstP()))
+				{
+					s_enemies[j]->takeDamage(1);
+					s_projectiles[i]->readyToDelete = true;
+					cleanPr = true;
+					continue;
+				}
+			}
+		}
+	}
+	CleanVector(s_projectiles, cleanPr);
 }
 
 void SpriteManager::Render()
@@ -96,6 +143,8 @@ void SpriteManager::Render()
 		s_enemies[i]->Render();
 	for (int i = 0; i < s_pickups.size(); i++)
 		s_pickups[i]->Render();
+	for (int i = 0; i < s_projectiles.size(); i++)
+		s_projectiles[i]->Render();
 
 	
 	DEMA::FlushLines();
@@ -124,6 +173,14 @@ void SpriteManager::PushSprite(Pickup* pSprite)
 	if (pSprite != nullptr)
 	{
 		s_pickups.push_back(pSprite);
+	}
+}
+
+void SpriteManager::PushSprite(Projectile* pSprite)
+{
+	if (pSprite != nullptr)
+	{
+		s_projectiles.push_back(pSprite);
 	}
 }
 
@@ -191,6 +248,10 @@ void SpriteManager::ScrollAll(float scroll)
 	{
 		s_pickups[i]->GetDstP()->x -= scroll;
 	}
+	for (int i = 0; i < s_projectiles.size(); i++)
+	{
+		s_projectiles[i]->GetDstP()->x -= scroll;
+	}
 	s_player->GetDstP()->x -= scroll;
 	
 	offset += scroll;
@@ -202,8 +263,9 @@ std::vector<Sprite*> SpriteManager::s_sprites;
 std::vector<Sprite*> SpriteManager::s_background;
 std::vector<Enemy*> SpriteManager::s_enemies;
 std::vector<Pickup*> SpriteManager::s_pickups;
-std::vector<Sprite*> SpriteManager::s_projectiles;
+std::vector<Projectile*> SpriteManager::s_projectiles;
 PlatformPlayer* SpriteManager::s_player;
 float SpriteManager::offset;
 bool SpriteManager::cleanSpr;
 bool SpriteManager::cleanEn;
+bool SpriteManager::cleanPr;
