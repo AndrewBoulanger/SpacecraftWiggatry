@@ -40,8 +40,8 @@ void Hookshot::calHookAngle(SDL_FRect* playerPos)
 
 void Hookshot::move()
 {
-	m_dst.x += velX * 0.1;
-	m_dst.y += velY * 0.1;
+	m_dst.x += velX * 0.2;
+	m_dst.y += velY * 0.2;
 }
 
 void Hookshot::Collision()

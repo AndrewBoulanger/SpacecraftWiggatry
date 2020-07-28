@@ -76,6 +76,7 @@ void VerticalEnemy::Update()
 		Flee();
 	}
 
+	RotatingWig();
 }
 void VerticalEnemy::verticalMove(const int plrY)
 {
