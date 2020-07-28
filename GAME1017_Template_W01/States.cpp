@@ -547,7 +547,9 @@ void EndState::Enter()
 	words[6] = new Label("fontSmall", 700, 300, "TOTAL SCORE:", { 255,255,255,0 });
 
 	string name = "name";
-	int wig, ship, total, shiftdown;
+	int wig, ship, total, shiftdown, highScore = 0;
+	int rankPosition;
+	string rankNumber;
 	shiftdown = 350;
 
 	// load file over this, for now, I will tempy define then variables
@@ -555,10 +557,55 @@ void EndState::Enter()
 	ship = 12;
 	total = (wig * 100) + (ship * 125);
 
+	vector <string> name;
+	vector <int> wig;
+	vector <int> ship;
+	vector <int> total;
+	vector <vector<int>> board;
+
+
+	ofstream output("Dat/HighScore.txt");
+
+	if (output.is_open())
+	{
+		for (int j = 4; j >= 0; j--)
+		{
+			if (total > highScore)
+			{
+				total = highScore;
+				output << highScore;
+			}
+			else
+			{
+				output << highScore;
+			}
+		}
+	}
+	output.close();
 
 	for (unsigned int i = 7; i < 27; i+=4) // load the score information here! i: name, i+1: wig count, i+2: ship part count, i+3: total score(calulate and add)
 	{
 		// get next file input and redefine variables each iteration here
+
+		/*rankPosition = i + 1;
+		rankNumber;
+
+		switch (rankPosition) 
+		{
+		case1: rankNumber = "1st"; break;
+		case2: rankNumber = "2nd"; break;
+		case3: rankNumber = "3rd"; break;
+		default: rankPosition + "th"; break;
+		}*/
+
+		ifstream input;
+		input.open("Dat/HighScore.txt");
+
+		if (input.is_open())
+		{		
+		}
+		input.close();
+
 
 		words[i] = new Label("fontSmall", 200, shiftdown, name.c_str(), { 255,255,255,0 });
 		words[i+1] = new Label("fontSmall", 400, shiftdown, to_string((int)(wig)).c_str(), { 255,255,220,0 });
@@ -572,7 +619,7 @@ void EndState::Enter()
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 70.0f,600.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("replay"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 540.0f,600.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 
-	SOMA::PlayMusic("WreckingBall"); // maybe change to victory music? any recommendations?
+	SOMA::PlayMusic("SweetVictory"); // maybe change to victory music? any recommendations?
 }
 
 void EndState::Update()
