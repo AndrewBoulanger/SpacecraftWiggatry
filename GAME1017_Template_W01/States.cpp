@@ -11,13 +11,14 @@
 #include "Enemy.h"
 #include "PlatformPlayer.h"
 #include "HookShot.h"
-#include <iostream>
-#include <fstream>
-#include <string>
 #include "SpriteManager.h"
 #include "Utilities.h"
 #include "VerticalEnemy.h"
 #include "Boss.h"
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
 
 
 // Begin State. CTRL+M+H and CTRL+M+U to turn on/off collapsed code.
@@ -536,6 +537,8 @@ EndState::EndState() {}
 void EndState::Enter()
 {
 	std::cout << "Entering EndState...\n";
+	EndState::Load();
+	m_pPlayer = SPMR::getPlayer();
 	words[0] = new Label("fontLarge", 200, 30, "WIGTASTIC!", { 255,0,255,0 });
 	words[1] = new Label("fontSmall", 300, 150, "You managed to keep your job in the wig business!", { 255,200,220,0 });
 	words[2] = new Label("font", 425, 215, "HIGHSCORES", { 255,0,255,0 });
@@ -544,26 +547,42 @@ void EndState::Enter()
 	words[5] = new Label("fontSmall", 550, 300, "SHIP PARTS:", { 255,255,255,0 });
 	words[6] = new Label("fontSmall", 700, 300, "TOTAL SCORE:", { 255,255,255,0 });
 
-	string name = "name";
-	int wig, ship, total, shiftdown;
-	shiftdown = 350;
+	int shiftdown = 350;
+	const char* name = Engine::Instance().getName().c_str(); // how doth one string/const char* ???
+	int total = 500;
+	int pos = 5;
+	//total = (m_pPlayer->getWigs() * 100) + (m_pPlayer->getParts() * 125);
+
+	cout << totalScore[3];
+	for (int i = 4; i >= 0; i--) // load the score information here! i: name, i+1: wig count, i+2: ship part count, i+3: total score(calulate and add)
+	{
+		if (total > totalScore[i])
+		{
+			pos--;
+		}
+	}
+	if (pos < 5)
+	{
+		//playerName.insert(playerName.begin() + pos, name);
+		wigScore.insert(wigScore.begin() + pos, 6);
+		shipScore.insert(shipScore.begin() + pos, 6);
+		totalScore.insert(totalScore.begin() + pos, total);
+	}
 
 	// load file over this, for now, I will tempy define then variables
-	wig = 15;
-	ship = 12;
-	total = (wig * 100) + (ship * 125);
 
-
+	int counter = 0;
 	for (unsigned int i = 7; i < 27; i+=4) // load the score information here! i: name, i+1: wig count, i+2: ship part count, i+3: total score(calulate and add)
 	{
 		// get next file input and redefine variables each iteration here
 
-		words[i] = new Label("fontSmall", 200, shiftdown, name.c_str(), { 255,255,255,0 });
-		words[i+1] = new Label("fontSmall", 400, shiftdown, to_string((int)(wig)).c_str(), { 255,255,220,0 });
-		words[i+2] = new Label("fontSmall", 550, shiftdown, to_string((int)(ship)).c_str(), { 255,255,255,0 });
-		words[i+3] = new Label("fontSmall", 700, shiftdown, to_string((int)(total)).c_str(), { 255,255,255,0 });
+		words[i] = new Label("fontSmall", 200, shiftdown, /*playerName[counter]*/"KIKI", { 255,255,255,0 });
+		words[i+1] = new Label("fontSmall", 400, shiftdown, to_string((int)(wigScore[counter])).c_str(), { 255,255,220,0 });
+		words[i+2] = new Label("fontSmall", 550, shiftdown, to_string((int)(shipScore[counter])).c_str(), { 255,255,255,0 });
+		words[i+3] = new Label("fontSmall", 700, shiftdown, to_string((int)(totalScore[counter])).c_str(), { 255,255,255,0 });
 
 		shiftdown += 40; // to next line
+		counter++;
 	}
 
 
@@ -571,6 +590,7 @@ void EndState::Enter()
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 540.0f,600.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 
 	SOMA::PlayMusic("WreckingBall"); // maybe change to victory music? any recommendations?
+	EndState::Save();
 }
 
 void EndState::Update()
@@ -598,5 +618,54 @@ void EndState::Render()
 void EndState::Exit()
 {
 	std::cout << "Exiting EndState..." << std::endl;
+}
+void EndState::Load()
+{
+	cout << "Loading...";
+	tinyxml2::XMLDocument xmlDoc;
+	xmlDoc.LoadFile("Dat/HighScores.xml");
+	tinyxml2::XMLElement* pRoot = xmlDoc.FirstChildElement();
+	tinyxml2::XMLElement* pElement = pRoot->FirstChildElement();
+	const char* name;
+	int w, s, t;
+
+	for (unsigned int i = 0; i < 5; i++)
+	{
+		if (strcmp(pElement->Value(), "HighScore") == 0)
+		{
+			pElement->QueryStringAttribute("name", &name); // "Gets" what'stored in name
+			pElement->QueryIntAttribute("wig", &w);
+			pElement->QueryIntAttribute("ship", &s);
+			pElement->QueryIntAttribute("total", &t);
+			playerName.push_back(name);
+			wigScore.push_back(w);
+			shipScore.push_back(s);
+			totalScore.push_back(t);
+		}
+		pElement = pElement->NextSiblingElement();
+	}
+	cout << "Load complete!\n";
+}
+void EndState::Save()
+{
+	cout << "Saving...";
+	tinyxml2::XMLDocument xmlDoc;
+
+	tinyxml2::XMLNode* pRoot = xmlDoc.NewElement("Root");
+	xmlDoc.InsertEndChild(pRoot);
+
+	tinyxml2::XMLElement* pElement;
+
+	for (int i = 0; i < 5; i++)
+	{
+		pElement = xmlDoc.NewElement("HighScore");
+		pElement->SetAttribute("name", "tempKIKI"/*playerName[i]*/);
+		pElement->SetAttribute("wig", wigScore[i]);
+		pElement->SetAttribute("ship", shipScore[i]);
+		pElement->SetAttribute("total", totalScore[i]);
+		pRoot->InsertEndChild(pElement);
+	}
+	xmlDoc.SaveFile("Dat/HighScoresTesting.xml"); //
+	cout << "Save complete!\n";
 }
 // End DeadState.

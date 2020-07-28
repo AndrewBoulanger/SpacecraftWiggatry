@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "SpriteManager.h"
+#include "SoundManager.h"
 #include "CollisionManager.h"
 
 

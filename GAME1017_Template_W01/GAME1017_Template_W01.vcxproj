@@ -138,6 +138,7 @@
     <ClCompile Include="States.cpp" />
     <ClCompile Include="StunGun.cpp" />
     <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="VerticalEnemy.cpp" />
   </ItemGroup>
@@ -166,6 +167,7 @@
     <ClInclude Include="StunGun.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="VerticalEnemy.h" />
@@ -185,6 +187,9 @@
     <Text Include="Dat\Level1.txt" />
     <Text Include="Dat\Level2.txt" />
     <Text Include="Dat\Tiledata.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Dat\HighScores.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
