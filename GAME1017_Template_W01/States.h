@@ -131,7 +131,7 @@ private:
 	Button* m_playBtn;
 	Button* m_quitBtn;
 
-	std::vector<const char*> playerName;
+	std::vector<std::string> playerName;
 	std::vector<int> wigScore;
 	std::vector<int> shipScore;
 	std::vector<int> totalScore;

@@ -548,8 +548,12 @@ void EndState::Enter()
 	words[6] = new Label("fontSmall", 700, 300, "TOTAL SCORE:", { 255,255,255,0 });
 
 	int shiftdown = 350;
-	const char* name = Engine::Instance().getName().c_str(); // how doth one string/const char* ???
-	int total = 500;
+	string name = Engine::Instance().getName();
+	if (name == "")
+		name = "some kiki";
+	int wig = m_pPlayer->getWigs();
+	int ship = m_pPlayer->getParts();
+	int total = 1800;
 	int pos = 5;
 	//total = (m_pPlayer->getWigs() * 100) + (m_pPlayer->getParts() * 125);
 
@@ -563,9 +567,9 @@ void EndState::Enter()
 	}
 	if (pos < 5)
 	{
-		//playerName.insert(playerName.begin() + pos, name);
-		wigScore.insert(wigScore.begin() + pos, 6);
-		shipScore.insert(shipScore.begin() + pos, 6);
+		playerName.insert(playerName.begin() + pos, name);
+		wigScore.insert(wigScore.begin() + pos, wig);
+		shipScore.insert(shipScore.begin() + pos, ship);
 		totalScore.insert(totalScore.begin() + pos, total);
 	}
 
@@ -575,8 +579,8 @@ void EndState::Enter()
 	for (unsigned int i = 7; i < 27; i+=4) // load the score information here! i: name, i+1: wig count, i+2: ship part count, i+3: total score(calulate and add)
 	{
 		// get next file input and redefine variables each iteration here
-
-		words[i] = new Label("fontSmall", 200, shiftdown, /*playerName[counter]*/"KIKI", { 255,255,255,0 });
+		name = playerName[counter];
+		words[i] = new Label("fontSmall", 200, shiftdown, name.c_str(), { 255,255,255,0 });
 		words[i+1] = new Label("fontSmall", 400, shiftdown, to_string((int)(wigScore[counter])).c_str(), { 255,255,220,0 });
 		words[i+2] = new Label("fontSmall", 550, shiftdown, to_string((int)(shipScore[counter])).c_str(), { 255,255,255,0 });
 		words[i+3] = new Label("fontSmall", 700, shiftdown, to_string((int)(totalScore[counter])).c_str(), { 255,255,255,0 });
@@ -626,18 +630,21 @@ void EndState::Load()
 	xmlDoc.LoadFile("Dat/HighScores.xml");
 	tinyxml2::XMLElement* pRoot = xmlDoc.FirstChildElement();
 	tinyxml2::XMLElement* pElement = pRoot->FirstChildElement();
-	const char* name;
+
+	const char* n; // buffers
+	string sName;
 	int w, s, t;
 
 	for (unsigned int i = 0; i < 5; i++)
 	{
 		if (strcmp(pElement->Value(), "HighScore") == 0)
 		{
-			pElement->QueryStringAttribute("name", &name); // "Gets" what'stored in name
+			pElement->QueryStringAttribute("name", &n); // "Gets" what'stored in name
 			pElement->QueryIntAttribute("wig", &w);
 			pElement->QueryIntAttribute("ship", &s);
 			pElement->QueryIntAttribute("total", &t);
-			playerName.push_back(name);
+			sName = n; // trying to convert here
+			playerName.push_back(sName);
 			wigScore.push_back(w);
 			shipScore.push_back(s);
 			totalScore.push_back(t);
@@ -649,6 +656,7 @@ void EndState::Load()
 void EndState::Save()
 {
 	cout << "Saving...";
+	const char* name;
 	tinyxml2::XMLDocument xmlDoc;
 
 	tinyxml2::XMLNode* pRoot = xmlDoc.NewElement("Root");
@@ -658,8 +666,9 @@ void EndState::Save()
 
 	for (int i = 0; i < 5; i++)
 	{
+		name = playerName[i].c_str();
 		pElement = xmlDoc.NewElement("HighScore");
-		pElement->SetAttribute("name", "tempKIKI"/*playerName[i]*/);
+		pElement->SetAttribute("name", name);
 		pElement->SetAttribute("wig", wigScore[i]);
 		pElement->SetAttribute("ship", shipScore[i]);
 		pElement->SetAttribute("total", totalScore[i]);
