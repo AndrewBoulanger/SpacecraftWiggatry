@@ -42,8 +42,10 @@ private:
 	bool timeToSwitchLevels;
 
 	Sprite* m_flag;
+	Enemy* m_pBoss;
 
 	Sprite* hpUI[5];
+	Sprite* hpEnemyUI[10];
 	Sprite* stungunUI[5];
 	Sprite* wigUI;
 	Sprite* shipUI;
