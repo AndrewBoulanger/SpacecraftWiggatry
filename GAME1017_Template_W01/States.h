@@ -9,7 +9,6 @@
 #include "Enemy.h"
 #include "Sprite.h"
 #include "Pickup.h"
-#include "StunGun.h"
 #include "tinyxml2.h"
 #include <vector>
 #include <string>
