@@ -2,7 +2,7 @@
 #include "Sprite.h"
 #include "Engine.h"
 
-#define GRAV 3.0
+#define GRAV 3.0f
 
 class Character : public AnimatedSprite
 {
