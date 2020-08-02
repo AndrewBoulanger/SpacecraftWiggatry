@@ -38,6 +38,8 @@ void GameState::Enter()
 	std::cout << "This is the name of our beautiful player: " << Engine::Instance().getName() << std::endl;
 	SDL_ShowCursor(SDL_DISABLE); // we have a reticle so...
 	m_pPlayer = SPMR::getPlayer();
+	m_pBoss = new Boss({ 220,0,55,140 }, { 4100.0f, 100.0f, 300, 636.0f },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 4, 1); // object to get boss health
 
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
@@ -186,8 +188,6 @@ void GameState::Enter()
 		SPMR::PushSprite(new Health({ 0,0,256,256 }, { (32.0f * 108.0f), (32.0f * 18.5f), 50.0f, 50.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
 
-		m_pBoss = new Boss({ 220,0,55,140 }, { 4100.0f, 100.0f, 300, 636.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 4, 1); // object to get boss health
 		SPMR::PushSprite(m_pBoss); 
 
 		m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
