@@ -38,6 +38,8 @@ void GameState::Enter()
 	std::cout << "This is the name of our beautiful player: " << Engine::Instance().getName() << std::endl;
 	SDL_ShowCursor(SDL_DISABLE); // we have a reticle so...
 	m_pPlayer = SPMR::getPlayer();
+	m_pBoss = new Boss({ 220,0,55,140 }, { 4100.0f, 100.0f, 300, 636.0f },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 4, 1); // object to get boss health
 
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
@@ -46,9 +48,13 @@ void GameState::Enter()
 	partsCount = m_pPlayer->getParts();
 
 	// ui stuff
-	for (int i = 0; i < (5); i++)
+	for (int i = 0; i < 5; i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
-	for (int i = 0; i < (5); i++)
+	for (int i = 0; i < 5; i++)
+		hpEnemyUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(829 + 35 * i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart1"));
+	for (int i = 5; i < 10; i++)
+		hpEnemyUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(829 + 35 * (i - 5)),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart2"));
+	for (int i = 0; i < 5; i++)
 		stungunUI[i] = new Sprite({ 0,0, 29,35 }, { (float)(35 * i),36, 29,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning"));
 	wigUI = new Sprite({ 0,0, 100,100 }, { (float)(185),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig"));
 	shipUI = new Sprite({ 0,0, 74, 75 }, { (float)(250),-3, 35,33 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart"));
@@ -182,8 +188,7 @@ void GameState::Enter()
 		SPMR::PushSprite(new Health({ 0,0,256,256 }, { (32.0f * 108.0f), (32.0f * 18.5f), 50.0f, 50.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
 
-		SPMR::PushSprite(new Boss({ 220,0,55,140 }, { 4100.0f, 100.0f, 300, 636.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 4, 1));
+		SPMR::PushSprite(m_pBoss); 
 
 		m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
 
@@ -289,6 +294,12 @@ void GameState::Render()
 		hpUI[i]->Render();
 	for (int i = 0; i < (m_pPlayer->getEnergy()); i++)
 		stungunUI[i]->Render();
+	cout << m_pBoss->getHealth() <<"\t";
+	if (Engine::Instance().getLevel() == 4)
+	{
+		for (int i = 0; i < m_pBoss->getHealth(); i++)
+			hpEnemyUI[i]->Render();
+	}
 	wigUI->Render();
 	shipUI->Render();
 	for (unsigned i = 0; i < 3; i++)

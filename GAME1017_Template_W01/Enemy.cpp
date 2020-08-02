@@ -178,10 +178,6 @@ void Enemy::takeDamage(int dmg)
 		iCooldown = iFrames;
 		std::cout << "Health: " << health << std::endl;
 	}
-	if (health <= 0)
-	{
-		b_ReadyToSnatch = true;
-	}
 }
 
 
