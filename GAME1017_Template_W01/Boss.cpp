@@ -22,6 +22,8 @@ Boss::Boss(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart,
 	m_frame = m_sprite = m_spriteMin = 0;
 
 	stateTimer = actionTimer =  120;
+
+	health = 10;
 }
 
 

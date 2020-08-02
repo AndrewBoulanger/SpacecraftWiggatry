@@ -60,6 +60,8 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/line.png", "line(temp)");
 
 	TEMA::RegisterTexture("Img/hp.png", "heart");
+	TEMA::RegisterTexture("Img/hp1.png", "heart1");
+	TEMA::RegisterTexture("Img/hp2.png", "heart2");
 	TEMA::RegisterTexture("Img/lightning.png", "lightning");
 
 	TEMA::RegisterTexture("Img/Tiles2.png", "tiles");
