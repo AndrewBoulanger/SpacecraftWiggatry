@@ -86,7 +86,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	SOMA::Load("Aud/wig_pauleen.wav", "wig2", SOUND_SFX);
 	SOMA::SetMusicVolume(getBgmVolume());
 	SOMA::SetSoundVolume(getSfxVolume());
-	STMA::ChangeState(new EndState);
+	STMA::ChangeState(new TitleState);
 
 	std::ifstream inFile("Dat/Tiledata.txt");
 	if (inFile.is_open())

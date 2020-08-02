@@ -407,9 +407,12 @@ void TitleState::Update()
 			return;
 		}
 	}
-	if (EVMA::KeyPressed(SDL_SCANCODE_RETURN))
+	else
 	{
-		displayControls = false;
+		if (EVMA::KeyPressed(SDL_SCANCODE_RETURN))
+		{
+			displayControls = false;
+		}
 	}
 }
 
