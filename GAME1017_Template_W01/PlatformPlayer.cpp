@@ -208,11 +208,12 @@ double PlatformPlayer::GetY() { return m_dst.y; }
 void PlatformPlayer::GoBack() // put the player back after falling in trap
 {
 	SOMA::PlaySound("dead", 0, 8);
+	SDL_Delay(400);
+	m_dst.x = (groundedX < m_dst.x) ? groundedX : groundedX + m_dst.w;
+	m_dst.y = groundedY - 10;
+	KnockLeft(m_velX *10);
 	StopX(); // clear vel for smoother transition... very small difference but...
 	StopY();
-	SDL_Delay(400);
-	m_dst.x = groundedX;
-	m_dst.y = groundedY;
 	takeDamage(1);
 }
 void PlatformPlayer::KnockLeft(double vel) { m_velX -= vel; }
