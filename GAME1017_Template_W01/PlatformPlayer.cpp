@@ -4,7 +4,6 @@
 #include "StateManager.h"
 #include "States.h"
 #include "EventManager.h"
-#include "StunGun.h"
 #include "Projectile.h"
 #include "CollisionManager.h"
 #include "SoundManager.h"
@@ -51,9 +50,15 @@ PlatformPlayer::~PlatformPlayer()
 
 void PlatformPlayer::Update()
 {
+	if (m_grounded)
+	{
+		groundedX = m_dst.x;
+		groundedY = m_dst.y;
+	}
+
 	//Do X axis first.
 	m_velX += m_accelX;
-	m_velX *= (m_grounded ? m_drag : 1);
+	m_velX *= (m_grounded ? m_drag : 0.95f);
 	m_velX = std::min(std::max(m_velX, -(m_maxVelX)), (m_maxVelX));
 	if (!COMA::PlayerCollision(&m_dst, m_velX, 0) )
 	{
@@ -69,38 +74,20 @@ void PlatformPlayer::Update()
 	m_velY += m_accelY + m_grav; // Adjust gravity to get slower jump.
 	m_velY = std::min(std::max(m_velY, -(m_maxVelY)), (m_grav * 5));
 	if (!COMA::PlayerCollision(&m_dst, 0, m_velY))
-			m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
+	{
+		m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
+		m_grounded = false;
+	}
 	else
 	{
 		StopY();
 		if(!m_grounded)
-		m_dst.y -= 3; //makes it a lot less likely that kiki gets stuck in the ground
+		m_dst.y -= 1; //makes it a lot less likely that kiki gets stuck in the ground
 		m_grounded = true;
 	}
 
-	if (m_dst.y > 655)
-		m_dst.y = 655;
-
 	m_accelX = m_accelY = 0.0;
-  
-	//Bullet update
-	for (int i = 0; i < m_vPBullets.size(); ++i)
-	{
-		m_vPBullets[i]->update();
-	}
-	//Projectile update
-	for (int i = 0; i < m_vPProjectiles.size(); ++i)
-	{
-		m_vPProjectiles[i]->update();
-	}
-	//StunGun Collision update
-	StunGunCollision();
-	//Projectile Collision update
-	ProjectileCollision();
-	//StunGun Bound Check
-	ProjectileBoundCheck();
 
-	//Projectile Collision Check
 	// Traps
 	if (COMA::PlayerHazardCollision(&m_dst, m_velX, 0))
 	{
@@ -173,9 +160,6 @@ void PlatformPlayer::Update()
 		m_grounded = false;
 	}
 
-	//// hookshot
-	//if (m_grapplehook == false)
-	//	RemoveHookShot();
 
 	if (EVMA::MousePressed(1))
 	{
@@ -205,10 +189,6 @@ void PlatformPlayer::Update()
 			createStunGunBullet();
 		}
 	}
-	if (EVMA::KeyPressed(SDL_SCANCODE_R))
-	{
-		createProjectile();
-	}
 }
 
 void PlatformPlayer::Stop() // If you want a dead stop both axes.
@@ -228,13 +208,13 @@ double PlatformPlayer::GetY() { return m_dst.y; }
 void PlatformPlayer::GoBack() // put the player back after falling in trap
 {
 	SOMA::PlaySound("dead", 0, 8);
+	SDL_Delay(400);
+	m_dst.x = (groundedX < m_dst.x) ? groundedX : groundedX + m_dst.w;
+	m_dst.y = groundedY - 10;
+	KnockLeft(m_velX *10);
 	StopX(); // clear vel for smoother transition... very small difference but...
 	StopY();
-	SDL_Delay(700);
-	m_dst.x -= 120;
-	m_dst.y -= 100;
-	if(!m_grounded) //in case the player hookshots themself through the ground
-		takeDamage(1);
+	takeDamage(1);
 }
 void PlatformPlayer::KnockLeft(double vel) { m_velX -= vel; }
 
@@ -247,16 +227,6 @@ void PlatformPlayer::Render()
 	{
 		m_hookShot->Render();
 		SDL_RenderDrawLineF(m_pRend, getCenter().x, getCenter().y, m_hookShot->getCenter().x, m_hookShot->getCenter().y);
-	}
-
-	for (int i = 0; i < m_vPBullets.size(); ++i)
-	{
-		m_vPBullets[i]->Render();
-	}
-
-	for (int i = 0; i < m_vPProjectiles.size(); ++i)
-	{
-		m_vPProjectiles[i]->Render();
 	}
 }
 
@@ -316,139 +286,11 @@ void PlatformPlayer::slap()
 
 void PlatformPlayer::createStunGunBullet()
 {
-	StunGun* stungun = new StunGun({ 0,0,36,36 }, { m_dst.x, m_dst.y, 32, 32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning"));
-	reduceEnergy();
-
-	if (m_facingRight == true)
-	{
-		stungun->setVelX(20);
-	}
-	else
-	{
-		stungun->setVelX(-20);
-	}
-	
-	if (m_facingUp == true)
-	{
-		stungun->setVelX(0);
-		stungun->setVelY(-20);
-	}
-
-	m_vPBullets.push_back(stungun);
-}
-
-void PlatformPlayer::createProjectile()
-{
 	SPMR::PushSprite(new Projectile(true, { m_dst.x + m_dst.w * .5f, m_dst.y + m_dst.h * .2f },
-		((double)!m_facingRight)*180, 1 , TEMA::GetTexture("lightning")));
-				//i cant believe multiplying by a bool was the easiest solution
-
+		((double)!m_facingRight) * 180, 1, TEMA::GetTexture("lightning")));
+	reduceEnergy();
 }
 
-//Playre - Enemy StunGun Collision
-void PlatformPlayer::StunGunCollision()
-{
-	for (int i = 0; i < SPMR::GetEnemies().size(); i++)
-	{
-		if (SPMR::GetEnemies()[i] != nullptr)
-		{
-			Enemy* Enemy = SPMR::GetEnemies()[i];
-			SDL_Rect EnemyDst;
-			EnemyDst.x = Enemy->GetDstP()->x;
-			EnemyDst.y = Enemy->GetDstP()->y;
-			EnemyDst.w = Enemy->GetDstP()->w;
-			EnemyDst.h = Enemy->GetDstP()->h;
-
-			SDL_Rect temp;
-			std::vector<StunGun*>::iterator iterBegin = m_vPBullets.begin();
-
-			for (int i = 0; i < (int)m_vPBullets.size(); ++i, ++iterBegin)
-			{
-				SDL_Rect gunshotDst;
-				gunshotDst.x = m_vPBullets[i]->GetDstP()->x;
-				gunshotDst.y = m_vPBullets[i]->GetDstP()->y;
-				gunshotDst.w = m_vPBullets[i]->GetDstP()->w;
-				gunshotDst.h = m_vPBullets[i]->GetDstP()->h;
-
-				if (SDL_IntersectRect(&EnemyDst, &gunshotDst, &temp))
-				{
-					Enemy->takeDamage(1);
-					delete m_vPBullets[i];
-					m_vPBullets.erase(iterBegin);
-
-					break;
-				}
-			}
-		}
-	}
-}
-
-void PlatformPlayer::ProjectileCollision()
-{
-	for (int i = 0; i < SPMR::GetEnemies().size(); i++)
-	{
-		if (SPMR::GetEnemies()[i] != nullptr)
-		{
-			Enemy* Enemy = SPMR::GetEnemies()[i];
-			SDL_Rect EnemyDst;
-			EnemyDst.x = Enemy->GetDstP()->x;
-			EnemyDst.y = Enemy->GetDstP()->y;
-			EnemyDst.w = Enemy->GetDstP()->w;
-			EnemyDst.h = Enemy->GetDstP()->h;
-
-			SDL_Rect temp;
-			std::vector<Projectile*>::iterator iterBegin = m_vPProjectiles.begin();
-
-			for (int i = 0; i < (int)m_vPProjectiles.size(); ++i, ++iterBegin)
-			{
-				SDL_Rect gunshotDst;
-				gunshotDst.x = m_vPProjectiles[i]->GetDstP()->x;
-				gunshotDst.y = m_vPProjectiles[i]->GetDstP()->y;
-				gunshotDst.w = m_vPProjectiles[i]->GetDstP()->w;
-				gunshotDst.h = m_vPProjectiles[i]->GetDstP()->h;
-
-				if (SDL_IntersectRect(&EnemyDst, &gunshotDst, &temp))
-				{
-					Enemy->takeDamage(1);
-					delete m_vPProjectiles[i];
-					m_vPProjectiles.erase(iterBegin);
-					break;
-				}
-			}
-		}
-	}
-}
-
-void PlatformPlayer::BulletBoundCheck()
-{
-	
-	std::vector<StunGun*>::iterator iterBegin = m_vPBullets.begin();
-
-	for (int i = 0; i < (int)m_vPBullets.size(); ++i, ++iterBegin)
-	{
-		if (m_vPBullets[i]->GetDstP()->x > WIDTH)
-		{
-			delete m_vPBullets[i];
-			m_vPBullets.erase(iterBegin);
-			break;
-		}
-	}
-}
-
-void PlatformPlayer::ProjectileBoundCheck()
-{
-	std::vector<Projectile*>::iterator iterBegin = m_vPProjectiles.begin();
-
-	for (int i = 0; i < (int)m_vPProjectiles.size(); ++i, ++iterBegin)
-	{
-		if (m_vPProjectiles[i]->GetDstP()->x > WIDTH)
-		{
-			delete m_vPProjectiles[i];
-			m_vPProjectiles.erase(iterBegin);
-			break;
-		}
-	}
-}
 
 void PlatformPlayer::SetState(int s)
 {
@@ -465,4 +307,3 @@ void PlatformPlayer::SetState(int s)
 	
 	}
 }
-

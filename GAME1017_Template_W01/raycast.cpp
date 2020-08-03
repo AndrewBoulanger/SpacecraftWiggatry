@@ -11,7 +11,7 @@ bool raycast::Update()
 	}
 	accelX = accelY = 0;
 
-	if (COMA::CircleCircleCheck(m_pos, SPMR::getPlayer()->getCenter(), 30, 30))
+	if (COMA::CircleCircleCheck(m_pos, SPMR::getPlayer()->getCenter(), 15, 15))
 		return true;
 	return false;
 }

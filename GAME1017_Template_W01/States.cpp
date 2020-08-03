@@ -263,7 +263,7 @@ void GameState::CheckCollision()
 
 	}
 	// don't fall in the pit and crash the game!
-	if (m_pPlayer->GetY() > (HEIGHT - 128)) // idk where the code for catching kiki is rn... so the hard code kinda temp
+	if (m_pPlayer->GetY() > (HEIGHT-10)) // idk where the code for catching kiki is rn... so the hard code kinda temp
 	{
 		m_pPlayer->GoBack();
 	}
