@@ -149,7 +149,7 @@ void PlatformPlayer::Update()
 	{
 		if (m_velY >= 0)
 		{
-			m_accelY = m_grav;
+			m_accelY = m_grav/2;
 			m_velY = 0;
 		}
 	}
