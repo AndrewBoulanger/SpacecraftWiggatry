@@ -16,6 +16,8 @@ bool CollisionManager::AABBCheck(const SDL_FRect& object1, const SDL_FRect& obje
 
 bool CollisionManager::CircleCircleCheck(const SDL_FPoint object1, const SDL_FPoint object2, const double r1, const double r2)
 {
+//	DEMA::QueueLine({ (int)object1.x, (int)object1.y
+	//	}, { (int)object2.x, (int)object2.y }, { 255,255,255,255 });
 	return (MAMA::Distance((double)object1.x, (double)object2.x, (double)object1.y, (double)object2.y) < (r1 + r2));
 }
 
@@ -31,6 +33,10 @@ bool CollisionManager::CircleAABBCheck(const SDL_FPoint object1, const double r,
 		y1 = (double)object2.y;
 	else if (object1.y > object2.y + object2.h)
 		y1 = (double)object2.y + (double)object2.h;
+
+	//DEMA::QueueLine({ (int)object1.x, (int)object1.y
+	//	}, { (int)object2.x, (int)object2.y }, { 255,255,255,255 });
+
 
 	return CircleCircleCheck({ (float)x1, (float)y1 }, { (float)object1.x, (float)object1.y }, r);
 }
