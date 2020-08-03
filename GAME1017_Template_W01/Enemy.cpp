@@ -198,7 +198,7 @@ void Enemy::groundedMove2(const int dir)
 
 void Enemy::RotatingWig()
 {
-	if (b_ReadyToSnatch == true)
+	if (health <= 0)
 	{
 		float angle;
 		angle = enemysWig->GetAngle();

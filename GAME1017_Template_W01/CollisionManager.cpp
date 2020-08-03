@@ -11,6 +11,8 @@ bool CollisionManager::AABBCheck(const SDL_FRect& object1, const SDL_FRect& obje
 {
 	SDL_Rect temp1 = MAMA::ConvertFRect2Rect(object1);
 	SDL_Rect temp2 = MAMA::ConvertFRect2Rect(object2);
+	DEMA::QueueRect(temp1, { 255,0,0,255 });
+	
 	return SDL_HasIntersection(&temp1, &temp2);
 }
 

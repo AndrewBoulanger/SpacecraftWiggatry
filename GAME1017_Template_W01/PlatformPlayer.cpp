@@ -176,7 +176,7 @@ void PlatformPlayer::Update()
 		}
 	}
 
-	if (EVMA::KeyPressed(SDL_SCANCODE_Q))
+	if (EVMA::KeyPressed(SDL_SCANCODE_Q) || EVMA::MousePressed(3))
 	{
 		SOMA::PlaySound("slap");
 		slap();
@@ -270,12 +270,9 @@ void PlatformPlayer::slap()
 			Enemy* Enemy = SPMR::GetEnemies()[i];
 			float PlayerX = m_dst.x + (m_dst.w * 0.5);
 			float PlayerY = m_dst.y + (m_dst.h * 0.5);
-			float EnemyX = Enemy->GetDstP()->x + (Enemy->GetDstP()->w * 0.5);
-			float EnemyY = Enemy->GetDstP()->y + (Enemy->GetDstP()->h * 0.5);
-
-			m_distance = sqrtf(((PlayerX - EnemyX) * (PlayerX - EnemyX)) + ((PlayerY - EnemyY) * (PlayerY - EnemyY)));
-
-			if (m_distance < 100) 
+			
+			
+			if(COMA::AABBCheck({PlayerX, PlayerY, m_facingRight? 100.0f:-100.0f, 34.0f }, *Enemy->GetDstP()))
 			{
 				Enemy->takeDamage(1);
 
