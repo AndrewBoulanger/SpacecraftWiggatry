@@ -283,6 +283,10 @@ void PlatformPlayer::slap()
 
 void PlatformPlayer::createStunGunBullet()
 {
+	if(m_facingUp)
+	SPMR::PushSprite(new Projectile(true, { m_dst.x + m_dst.w * .5f, m_dst.y + m_dst.h * .2f },
+		90, 1, TEMA::GetTexture("lightning")));
+	else
 	SPMR::PushSprite(new Projectile(true, { m_dst.x + m_dst.w * .5f, m_dst.y + m_dst.h * .2f },
 		((double)!m_facingRight) * 180, 1, TEMA::GetTexture("lightning")));
 	reduceEnergy();
