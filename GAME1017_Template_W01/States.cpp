@@ -34,6 +34,7 @@ GameState::GameState() {}
 
 void GameState::Enter() 
 {
+	//Engine::Instance().setLevel(4);
 	std::cout << "Entering GameState..." << std::endl;
 	std::cout << "This is the name of our beautiful player: " << Engine::Instance().getName() << std::endl;
 	SDL_ShowCursor(SDL_DISABLE); // we have a reticle so...
@@ -50,10 +51,6 @@ void GameState::Enter()
 	// ui stuff
 	for (int i = 0; i < 5; i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
-	for (int i = 0; i < 5; i++)
-		hpEnemyUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(829 + 35 * i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart1"));
-	for (int i = 5; i < 10; i++)
-		hpEnemyUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(829 + 35 * (i - 5)),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart2"));
 	for (int i = 0; i < 5; i++)
 		stungunUI[i] = new Sprite({ 0,0, 29,35 }, { (float)(35 * i),36, 29,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning"));
 	wigUI = new Sprite({ 0,0, 100,100 }, { (float)(185),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig"));
@@ -294,12 +291,7 @@ void GameState::Render()
 		hpUI[i]->Render();
 	for (int i = 0; i < (m_pPlayer->getEnergy()); i++)
 		stungunUI[i]->Render();
-	cout << m_pBoss->getHealth() <<"\t";
-	if (Engine::Instance().getLevel() == 4)
-	{
-		for (int i = 0; i < m_pBoss->getHealth(); i++)
-			hpEnemyUI[i]->Render();
-	}
+
 	wigUI->Render();
 	shipUI->Render();
 	for (unsigned i = 0; i < 3; i++)

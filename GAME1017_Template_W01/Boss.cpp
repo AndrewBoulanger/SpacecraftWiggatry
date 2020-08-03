@@ -24,6 +24,11 @@ Boss::Boss(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart,
 	stateTimer = actionTimer =  120;
 
 	health = 10;
+
+	for (int i = 0; i < 5; i++)
+		hpEnemyUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(829 + 35 * i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart1"));
+	for (int i = 5; i < 10; i++)
+		hpEnemyUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(829 + 35 * (i - 5)),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart2"));
 }
 
 
@@ -121,5 +126,21 @@ Wig* Boss::removeWig()
 	}
 
 	else return nullptr;
+
+}
+
+
+void Boss::Render()
+{
+	if (iCooldown % 10 < 5)
+	{
+		if (m_dir == -1)
+			Sprite::Render();
+		else
+			Sprite::RenderFlipped();
+	}
+	if(state != idle)
+	for (int i = 0; i < health; i++)
+		hpEnemyUI[i]->Render();
 
 }
