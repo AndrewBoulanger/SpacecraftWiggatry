@@ -84,19 +84,20 @@ void Hookshot::Update(double& grav)
 	{
 		int lerpX = MyLerp(playerdst->x, m_dst.x + (m_dst.w * 0.5) - (playerdst->w * 0.5), lerpCo);
 		int lerpY = MyLerp(playerdst->y, m_dst.y - (m_dst.h *0.5), lerpCo);
-		if (lerpCo <= .18f || (lerpCo < .5 && !COMA::PlayerCollision(playerdst, lerpX - playerdst->x, lerpY - playerdst->y)))
+		if ((lerpCo < .3) && !(MAMA::Distance(m_dst.x,playerdst->x, m_dst.y-m_dst.h*.5, playerdst->y) < 34) )
 		{
 			playerdst->x = lerpX;
 			playerdst->y = lerpY;
 			lerpCo += 0.01f;
 			grav = 0;
-
+			
 		}
 		else
 		{
 			deactivateHookshot();
 			grav = GRAV;
 		}
+
 	}
 
 	if (enemyHit)
