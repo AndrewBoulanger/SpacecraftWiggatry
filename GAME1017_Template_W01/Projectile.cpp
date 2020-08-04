@@ -28,6 +28,7 @@ void Projectile::update()
 {
 	m_dst.x += velX * m_speed / m_size;
 	m_dst.y += velY * m_speed / m_size;
+	
 
 	if (m_dst.x <0 - m_dst.w || m_dst.x > WIDTH + m_dst.w ||
 		m_dst.y <0 - m_dst.h || m_dst.y > HEIGHT + m_dst.h)
@@ -38,5 +39,6 @@ void Projectile::update()
 
 void Projectile::render()
 {
-	SDL_RenderCopyF(m_pRend, m_pText, &m_src, &m_dst);
+//	SDL_RenderCopyF(m_pRend, m_pText, &m_src, &m_dst);
+	SDL_RenderCopyExF(m_pRend, m_pText, &m_src, &m_dst, m_angle, 0, (SDL_RendererFlip)false);
 }

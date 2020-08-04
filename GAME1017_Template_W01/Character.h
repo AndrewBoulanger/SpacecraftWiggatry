@@ -2,7 +2,7 @@
 #include "Sprite.h"
 #include "Engine.h"
 
-#define GRAV 3.0f
+#define GRAV 2.0f
 
 class Character : public AnimatedSprite
 {
@@ -67,6 +67,7 @@ public:
 	double GetVelX();
 	double GetVelY();
 	void SetVelY(double a);
+	void SetVelX(double a);
 	void SetGrav(double grav) { m_grav = grav; }
 
 };

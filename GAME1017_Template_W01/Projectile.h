@@ -11,7 +11,7 @@ class Projectile : public Sprite
 {
 private:
 
-	float m_speed = 5.0f;
+	float m_speed = 15.0f;
 	float velX = 0;
 	float velY = 0;
 	float m_size;

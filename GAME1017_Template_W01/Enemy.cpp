@@ -30,11 +30,15 @@ void Enemy::setState(enemyState nState)
 	state = nState;
 	if (nState == idle)
 	{
+		m_frameMax = 8;
+		m_maxVelX = 5;
 		StopX();
-		m_frameMax = 1; //only show one frame
 	}
 	else if (nState == seeking)
-		m_frameMax = 4;
+	{
+	m_frameMax = 4;
+		m_maxVelX = 10;
+	}
 	//else if(nState == fleeing) need to make sure fleeing sprite is in the same texture file as the normal sprite
 }
 
@@ -43,7 +47,7 @@ void Enemy::Update()
 {
 	lookTimer--;
 
-	wallWisker = { getCenter().x+ (m_dst.w * m_dir*.5f), m_dst.y, 32,32 };
+	wallWisker = { getCenter().x+ (m_dst.w * m_dir*.5f), m_dst.y + (m_dst.h * 0.5f) , 32,32 };
 	gapWisker = { getCenter().x + (m_dst.w * m_dir*.75f),m_dst.y + (m_dst.h*0.75f), 24,32 };
 	//X
 	m_velX += m_accelX;
@@ -56,7 +60,10 @@ void Enemy::Update()
 	}
 	else
 	{
-		StopX();
+		if (state == idle)
+			m_dir *= -1;
+		else
+			StopX();
 	}
 
 	//Y 
@@ -90,10 +97,10 @@ void Enemy::Update()
 		}
 		if (substate != none)
 		{
-			m_frame = 0;
-			m_velX = 2.0 * m_dir;
+			m_accelX = 2.0 * m_dir;
 		}
 		else
+			m_frame = 0;
 			StopX();
 
 		if (sight->Update() || COMA::CircleCircleCheck(getCenter(), SPMR::getPlayer()->getCenter(), 400) && ((m_dir == -1 && SPMR::getPlayer()->GetX() <= m_dst.x) || (m_dir == 1 && SPMR::getPlayer()->GetX() >= m_dst.x)))
@@ -139,7 +146,7 @@ void Enemy::LOSCheck()
 	plr.y = plr.y - m_dst.y;
 	lookTimer = losMax;
 	sight->setPos(m_dst.x, m_dst.y);
-	//if((m_dir < 0 && plr.x < 0) || (m_dir >0 && plr.x >0))
+	if((m_dir < 0 && plr.x < 0) || (m_dir >0 && plr.x >0))
 		sight->move2stop(MAMA::Rad2Deg(MAMA::AngleBetweenPoints(plr.y, plr.x )));
 }
 
@@ -191,7 +198,7 @@ void Enemy::groundedMove2(const int dir)
 
 void Enemy::RotatingWig()
 {
-	if (b_ReadyToSnatch == true)
+	if (health <= 0)
 	{
 		float angle;
 		angle = enemysWig->GetAngle();

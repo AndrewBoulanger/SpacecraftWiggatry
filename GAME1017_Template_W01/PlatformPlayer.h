@@ -3,11 +3,10 @@
 #define _PLATFORMPLAYER_H_
 
 //gravity was moved to character class so the enemies can use it too
-#define JUMPFORCE 35.0
+#define JUMPFORCE 30.0
 
 #include "Sprite.h"
 #include "Character.h"
-#include "StunGun.h"
 #include <vector>
 #include <array>
 
@@ -27,6 +26,7 @@ public:
 	double GetThurst();
 	bool IsGrounded();
 	void SetGrounded(bool g);
+	float groundedY, groundedX;
 
 	void SetGrav(double grav) { m_grav = grav; }
 	
@@ -50,11 +50,6 @@ public:
 
 	void slap();
 	void createStunGunBullet();
-	void createProjectile();
-	void StunGunCollision();
-	void BulletBoundCheck();
-	void ProjectileCollision();
-	void ProjectileBoundCheck();
 
 	Hookshot* getHookShot() { return m_hookShot; }
 
@@ -73,10 +68,6 @@ private:
 	enum state { idle, running } m_state;
 	void SetState(int s);
 
-	std::vector<StunGun*> m_vPBullets;
-	std::vector<Projectile*> m_vPProjectiles;
-
-	
 };
 
 #endif
