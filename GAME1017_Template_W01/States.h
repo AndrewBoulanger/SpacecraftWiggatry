@@ -79,10 +79,7 @@ private:
 	bool displayControls = false;
 
 	// for name input
-	SDL_Color white = { 255, 255, 255, 255 };
 	std::string playerName = "";
-	bool renderText = false;
-
 };
 
 class PauseState : public State
