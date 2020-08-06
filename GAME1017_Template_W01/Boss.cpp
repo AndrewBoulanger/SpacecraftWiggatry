@@ -29,6 +29,7 @@ Boss::Boss(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart,
 		hpEnemyUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(829 + 35 * i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart1"));
 	for (int i = 5; i < 10; i++)
 		hpEnemyUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(829 + 35 * (i - 5)),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart2"));
+	bossMusicPlaying = false;
 }
 
 
@@ -53,7 +54,11 @@ void Boss::Update()
 	{
 		if (m_dst.x <= WIDTH)
 		{
-			SOMA::PlayMusic("WreckingBall", -1, 6);
+			if (!bossMusicPlaying)
+			{
+				SOMA::PlayMusic("WreckingBall", -1);
+				bossMusicPlaying = true;
+			}
 			state = seeking; //not using set state becuase we dont need to change the frames between animations
 		}
 	}
@@ -105,7 +110,7 @@ void Boss::Shoot()
 
 	std::cout << "shot\n";
 	SPMR::PushSprite(new Projectile(false, { getCenter().x, m_dst.y + m_dst.h * .2f },
-		-MAMA::Rad2Deg(MAMA::AngleBetweenPoints(plr.y, plr.x)) , 2, TEMA::GetTexture("lightning")));
+		-MAMA::Rad2Deg(MAMA::AngleBetweenPoints(plr.y, plr.x)) , 2, TEMA::GetTexture("laser")));
 }
 
 Wig* Boss::removeWig()
