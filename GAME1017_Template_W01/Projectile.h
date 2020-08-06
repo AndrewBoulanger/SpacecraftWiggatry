@@ -7,7 +7,7 @@ enum bulletType
 	ENEMY_BULLET
 };
 
-class Projectile : public Sprite
+class Projectile : public AnimatedSprite
 {
 private:
 
@@ -25,7 +25,7 @@ public:
 	void setVelX(float x) { velX = x; }
 	void setVelY(float y) { velY = y; }
 	void update();
-	void render();
+	void Render() override;
 
 	bulletType getOwner() { return owner; };
 };

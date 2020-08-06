@@ -272,7 +272,7 @@ void PlatformPlayer::slap()
 			float PlayerY = m_dst.y + (m_dst.h * 0.5);
 			
 			
-			if(COMA::AABBCheck({PlayerX, PlayerY, m_facingRight? 100.0f:-100.0f, 34.0f }, *Enemy->GetDstP()))
+			if(COMA::AABBCheck({ m_facingRight ? PlayerX: PlayerX-100, PlayerY, 100.0f, 34.0f }, *Enemy->GetDstP()))
 			{
 				Enemy->takeDamage(1);
 
@@ -285,10 +285,10 @@ void PlatformPlayer::createStunGunBullet()
 {
 	if(m_facingUp)
 	SPMR::PushSprite(new Projectile(true, { m_dst.x + m_dst.w * .5f, m_dst.y + m_dst.h * .2f },
-		90, 1, TEMA::GetTexture("lightning")));
+		90, 1, TEMA::GetTexture("laser")));
 	else
 	SPMR::PushSprite(new Projectile(true, { m_dst.x + m_dst.w * .5f, m_dst.y + m_dst.h * .2f },
-		((double)!m_facingRight) * 180, 1, TEMA::GetTexture("lightning")));
+		((double)!m_facingRight) * 180, 1, TEMA::GetTexture("laser")));
 	reduceEnergy();
 }
 
