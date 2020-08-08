@@ -1,5 +1,7 @@
 #include "Boss.h"
 #include "SoundManager.h"
+#include "SpriteManager.h"
+#include "Projectile.h";
 
 Boss::Boss(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart, int smin, int smax, int nf, int hp, int dmg)
 	:Enemy(s, d, r, t, sstart, smin, smax, nf, hp, dmg)
@@ -20,6 +22,14 @@ Boss::Boss(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart,
 	m_frame = m_sprite = m_spriteMin = 0;
 
 	stateTimer = actionTimer =  120;
+
+	health = 10;
+
+	for (int i = 0; i < 5; i++)
+		hpEnemyUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(829 + 35 * i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart1"));
+	for (int i = 5; i < 10; i++)
+		hpEnemyUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(829 + 35 * (i - 5)),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart2"));
+	bossMusicPlaying = false;
 }
 
 
@@ -44,7 +54,11 @@ void Boss::Update()
 	{
 		if (m_dst.x <= WIDTH)
 		{
-			SOMA::PlayMusic("WreckingBall", -1, 6);
+			if (!bossMusicPlaying)
+			{
+				SOMA::PlayMusic("WreckingBall", -1);
+				bossMusicPlaying = true;
+			}
 			state = seeking; //not using set state becuase we dont need to change the frames between animations
 		}
 	}
@@ -90,7 +104,13 @@ void Boss::Move()
 
 void Boss::Shoot()
 {
+	SDL_FPoint plr;
+	plr.x = SPMR::getPlayer()->getCenter().x - getCenter().x;
+	plr.y = SPMR::getPlayer()->getCenter().y - (m_dst.y + m_dst.h * .2f);
+
 	std::cout << "shot\n";
+	SPMR::PushSprite(new Projectile(false, { getCenter().x, m_dst.y + m_dst.h * .2f },
+		-MAMA::Rad2Deg(MAMA::AngleBetweenPoints(plr.y, plr.x)) , 2, TEMA::GetTexture("laser")));
 }
 
 Wig* Boss::removeWig()
@@ -111,5 +131,21 @@ Wig* Boss::removeWig()
 	}
 
 	else return nullptr;
+
+}
+
+
+void Boss::Render()
+{
+	if (iCooldown % 10 < 5)
+	{
+		if (m_dir == -1)
+			Sprite::Render();
+		else
+			Sprite::RenderFlipped();
+	}
+	if(state != idle)
+	for (int i = 0; i < health; i++)
+		hpEnemyUI[i]->Render();
 
 }

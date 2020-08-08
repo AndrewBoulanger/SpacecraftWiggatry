@@ -34,8 +34,8 @@ private: // Private properties.
 
 	int currentLevel = 1;
 
-	int bgmVolume = 30; // idk how to get volume value from sdl...
-	int sfxVolume = 30;
+	int bgmVolume = 30; // Set start values here
+	int sfxVolume = 70;
 	std::string name;
 
 private: // Private methods.

@@ -19,6 +19,7 @@ void Character::StopY() { m_velY = 0.0; }
 void Character::SetAccelX(double a) { m_accelX = a; }
 void Character::SetAccelY(double a) { m_accelY = a; }
 void Character::SetVelY(double a) { m_velY = a; }
+void Character::SetVelX(double a) { m_velX = a; }
 double Character::GetVelX() { return m_velX; }
 double Character::GetVelY() { return m_velY; }
 double Character::GetAccelY() { return m_accelY; }

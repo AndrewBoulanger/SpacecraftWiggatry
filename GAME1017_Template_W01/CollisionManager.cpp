@@ -11,11 +11,15 @@ bool CollisionManager::AABBCheck(const SDL_FRect& object1, const SDL_FRect& obje
 {
 	SDL_Rect temp1 = MAMA::ConvertFRect2Rect(object1);
 	SDL_Rect temp2 = MAMA::ConvertFRect2Rect(object2);
+	DEMA::QueueRect(temp1, { 255,0,0,255 });
+	
 	return SDL_HasIntersection(&temp1, &temp2);
 }
 
 bool CollisionManager::CircleCircleCheck(const SDL_FPoint object1, const SDL_FPoint object2, const double r1, const double r2)
 {
+//	DEMA::QueueLine({ (int)object1.x, (int)object1.y
+	//	}, { (int)object2.x, (int)object2.y }, { 255,255,255,255 });
 	return (MAMA::Distance((double)object1.x, (double)object2.x, (double)object1.y, (double)object2.y) < (r1 + r2));
 }
 
@@ -31,6 +35,10 @@ bool CollisionManager::CircleAABBCheck(const SDL_FPoint object1, const double r,
 		y1 = (double)object2.y;
 	else if (object1.y > object2.y + object2.h)
 		y1 = (double)object2.y + (double)object2.h;
+
+	//DEMA::QueueLine({ (int)object1.x, (int)object1.y
+	//	}, { (int)object2.x, (int)object2.y }, { 255,255,255,255 });
+
 
 	return CircleCircleCheck({ (float)x1, (float)y1 }, { (float)object1.x, (float)object1.y }, r);
 }
@@ -65,17 +73,17 @@ bool CollisionManager::PlayerCollision(const SDL_FRect* player, const int dX, co
 					// Second row
 					   Engine::GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][playerX],
 					   Engine::GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
-					   Engine::GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 2 >= COLS ? COLS - 1 : playerX + 2)],
+					   Engine::GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][(playerX + 2 >= COLS ? COLS - 1 : playerX + 2)],
 					   //  Engine::GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 3 == COLS ? COLS - 1 : playerX + 3) ],
 			   // Third row
-				  Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][playerX],
-				  Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
-				  Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 2 >= COLS ? COLS - 1 : playerX + 2)],
+				  Engine::GetLevel()[(playerY + 2 >= ROWS ? ROWS - 1 : playerY + 2)][playerX],
+				  Engine::GetLevel()[(playerY + 2 >= ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
+				  Engine::GetLevel()[(playerY + 2 >= ROWS ? ROWS - 1 : playerY + 2)][(playerX + 2 >= COLS ? COLS - 1 : playerX + 2)],
 				  // Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 3 == COLS ? COLS - 1 : playerX + 3) ],
 				// Fourth row hahahahahahahaha
-				   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][playerX],
-				   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
-				   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 2 >= COLS ? COLS - 1 : playerX + 2)] };
+				   Engine::GetLevel()[(playerY + 3 >= ROWS ? ROWS - 1 : playerY + 3)][playerX],
+				   Engine::GetLevel()[(playerY + 3 >= ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
+				   Engine::GetLevel()[(playerY + 3 >= ROWS ? ROWS - 1 : playerY + 3)][(playerX + 2 >= COLS ? COLS - 1 : playerX + 2)] };
 		//   Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 3 == COLS ? COLS - 1 : playerX + 3) ] };
 
 	DEMA::QueueRect(p, { 255,0,0,0 });
@@ -112,18 +120,18 @@ bool CollisionManager::PlayerHazardCollision(const SDL_FRect* player, const int 
 					 //  Engine::GetLevel()[playerY][(playerX + 1 == COLS ? COLS - 1 : playerX + 3)],										// Right tile.
 					// Second row
 					   Engine::GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][playerX],
-					   Engine::GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
-					   Engine::GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 2 == COLS ? COLS - 1 : playerX + 2)],
+					   Engine::GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
+					   Engine::GetLevel()[(playerY + 1 >= ROWS ? ROWS - 1 : playerY + 1)][(playerX + 2 == COLS ? COLS - 1 : playerX + 2)],
 		//   Engine::GetLevel()[(playerY + 1 == ROWS ? ROWS - 1 : playerY + 1)][(playerX + 3 == COLS ? COLS - 1 : playerX + 3)],
 // Third row
-   Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][playerX],
-   Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
-   Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 2 == COLS ? COLS - 1 : playerX + 2)],
+   Engine::GetLevel()[(playerY + 2 >= ROWS ? ROWS - 1 : playerY + 2)][playerX],
+   Engine::GetLevel()[(playerY + 2 >= ROWS ? ROWS - 1 : playerY + 2)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
+   Engine::GetLevel()[(playerY + 2 >= ROWS ? ROWS - 1 : playerY + 2)][(playerX + 2 >= COLS ? COLS - 1 : playerX + 2)],
 		//  Engine::GetLevel()[(playerY + 2 == ROWS ? ROWS - 1 : playerY + 2)][(playerX + 3 == COLS ? COLS - 1 : playerX + 3)],
 	   // Fourth row hahahahahahahaha
-		  Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][playerX],
-		  Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 == COLS ? COLS - 1 : playerX + 1)],
-		  Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 2 == COLS ? COLS - 1 : playerX + 2)] };
+		  Engine::GetLevel()[(playerY + 3 >= ROWS ? ROWS - 1 : playerY + 3)][playerX],
+		  Engine::GetLevel()[(playerY + 3 >= ROWS ? ROWS - 1 : playerY + 3)][(playerX + 1 >= COLS ? COLS - 1 : playerX + 1)],
+		  Engine::GetLevel()[(playerY + 3 >= ROWS ? ROWS - 1 : playerY + 3)][(playerX + 2 >= COLS ? COLS - 1 : playerX + 2)] };
 		 //  Engine::GetLevel()[(playerY + 3 == ROWS ? ROWS - 1 : playerY + 3)][(playerX + 3 == COLS ? COLS - 1 : playerX + 3)] };
 //	DEMA::QueueRect(p, { 255,0,0,0 });
 	for (int i = 0; i < 12; i++)

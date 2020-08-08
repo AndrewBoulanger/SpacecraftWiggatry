@@ -9,8 +9,9 @@
 #include "Enemy.h"
 #include "Sprite.h"
 #include "Pickup.h"
-#include "StunGun.h"
+#include "tinyxml2.h"
 #include <vector>
+#include <string>
 #include <map>
 
 class State // This is the abstract base class for all specific states.
@@ -40,8 +41,10 @@ private:
 	bool timeToSwitchLevels;
 
 	Sprite* m_flag;
+	Enemy* m_pBoss;
 
 	Sprite* hpUI[5];
+	Sprite* hpEnemyUI[10];
 	Sprite* stungunUI[5];
 	Sprite* wigUI;
 	Sprite* shipUI;
@@ -76,10 +79,7 @@ private:
 	bool displayControls = false;
 
 	// for name input
-	SDL_Color white = { 255, 255, 255, 255 };
 	std::string playerName = "";
-	bool renderText = false;
-
 };
 
 class PauseState : public State
@@ -121,10 +121,18 @@ public:
 	void Render();
 	void Enter();
 	void Exit();
+	void Load();
+	void Save();
 private:
+	PlatformPlayer* m_pPlayer;
 	Label* words[27];
 	Button* m_playBtn;
 	Button* m_quitBtn;
+
+	std::vector<std::string> playerName;
+	std::vector<int> wigScore;
+	std::vector<int> shipScore;
+	std::vector<int> totalScore;
 };
 
 #endif

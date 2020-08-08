@@ -9,6 +9,7 @@
 #include "Engine.h"
 #include "Enemy.h"
 #include "PlatformPlayer.h"
+#include "Projectile.h"
 
 enum SpriteType
 {
@@ -28,6 +29,7 @@ public:
 	static void PushSprite(Sprite* pSprite, SpriteType type);
 	static void PushSprite(Enemy* pSprite);
 	static void PushSprite(Pickup* pSprite);
+	static void PushSprite(Projectile* pSprite);
 
 	static void PopSprite();
 	static void RemoveLevel(); //i dont know if we'll need this but im putting it here anyway
@@ -36,7 +38,7 @@ public:
 	static PlatformPlayer* getPlayer() {return s_player; }
 	static std::vector<Sprite*>& GetSprites();
 	static std::vector<Enemy*>& GetEnemies() { return s_enemies; }
-	static std::vector<Sprite*>& GetProjectiles() { return s_projectiles; }
+	static std::vector<Projectile*>& GetProjectiles() { return s_projectiles; }
 	static std::vector<Pickup*>& GetPickups() { return s_pickups; }
 	static void ScrollAll(float scroll);
 	static float getOffset() { return offset; }
@@ -45,7 +47,7 @@ private:
 	static std::vector<Sprite*> s_background;
 	static std::vector<Sprite*> s_sprites;
 	static std::vector<Enemy*> s_enemies;
-	static std::vector<Sprite*> s_projectiles;
+	static std::vector<Projectile*> s_projectiles;
 	static std::vector<Pickup*> s_pickups;
 	static PlatformPlayer* s_player;
 

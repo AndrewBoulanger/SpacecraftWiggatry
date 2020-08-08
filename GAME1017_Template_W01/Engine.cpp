@@ -50,6 +50,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/background.png", "bg");
 	TEMA::RegisterTexture("Img/alienBeard.png", "enemy2");
 	TEMA::RegisterTexture("Img/Enemies.png", "enemies");
+	TEMA::RegisterTexture("Img/projectiles.png", "laser");
 
 	TEMA::RegisterTexture("Img/KikiSprite2.0.png", "player");
 	TEMA::RegisterTexture("Img/alienWhisker.png", "enemy");
@@ -60,6 +61,8 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/line.png", "line(temp)");
 
 	TEMA::RegisterTexture("Img/hp.png", "heart");
+	TEMA::RegisterTexture("Img/hp1.png", "heart1");
+	TEMA::RegisterTexture("Img/hp2.png", "heart2");
 	TEMA::RegisterTexture("Img/lightning.png", "lightning");
 
 	TEMA::RegisterTexture("Img/Tiles2.png", "tiles");
@@ -77,6 +80,11 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	SOMA::Load("Aud/SweetVictory.mp3", "SweetVictory", SOUND_MUSIC);
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
 	SOMA::Load("Aud/dead.wav", "dead", SOUND_SFX);
+	SOMA::Load("Aud/attack.wav", "slap", SOUND_SFX);
+	SOMA::Load("Aud/laser.wav", "stun", SOUND_SFX);
+	SOMA::Load("Aud/oof.mp3", "oof", SOUND_SFX);
+	SOMA::Load("Aud/blub.mp3", "blub", SOUND_SFX);
+	SOMA::Load("Aud/yahoo.wav", "yahoo", SOUND_SFX);
 	SOMA::Load("Aud/wig_andrew.wav", "wig0", SOUND_SFX);
 	SOMA::Load("Aud/wig_juan.wav", "wig1", SOUND_SFX);
 	SOMA::Load("Aud/wig_pauleen.wav", "wig2", SOUND_SFX);
