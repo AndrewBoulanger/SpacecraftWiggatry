@@ -34,8 +34,8 @@ private: // Private properties.
 
 	int currentLevel = 1;
 
-	int bgmVolume = 30; // Set start values here
-	int sfxVolume = 70;
+	int bgmVolume = 40; // Set start values here
+	int sfxVolume = 80;
 	std::string name;
 
 private: // Private methods.
