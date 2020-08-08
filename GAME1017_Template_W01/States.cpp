@@ -34,7 +34,7 @@ GameState::GameState() {}
 
 void GameState::Enter() 
 {
-	Engine::Instance().setLevel(4);
+	Engine::Instance().setLevel(4); 
 	std::cout << "Entering GameState..." << std::endl;
 	std::cout << "This is the name of our beautiful player: " << Engine::Instance().getName() << std::endl;
 	SDL_ShowCursor(SDL_DISABLE); // we have a reticle so...
@@ -69,7 +69,7 @@ void GameState::Enter()
 	if (Engine::Instance().getLevel() == 1)
 	{
 		Engine::LoadLevel("Dat/Level1.txt");
-		words[2]->SetText("Reach the end of the map, collect as many wigs as you can");
+		words[2]->SetText("Weakening enemies and SNATCH the wigs when they are lose!");
 	
 		SPMR::PushSprite(new VerticalEnemy({ 0,0,55,140 }, { 900, 300, 50.0f, 106 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies")));
 		SPMR::PushSprite(new VerticalEnemy({ 0,0,55,140 }, { 750.0f, 500.0f, 50.0f, 106.0f },
@@ -99,7 +99,7 @@ void GameState::Enter()
 	if (Engine::Instance().getLevel() == 2)
 	{
 		Engine::LoadLevel("Dat/Level2.txt");
-		words[2]->SetText("Collect at least 5 ship parts and reach the end of the map");
+		words[2]->SetText("Collect at least 5 ship parts and reach the end of the map!");
 
 		SPMR::PushSprite(new Enemy({ 110,0,55,140 }, { 490.0f, 200.0f, 50.0f, 106.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 4, 1));
@@ -127,7 +127,7 @@ void GameState::Enter()
 	if (Engine::Instance().getLevel() == 3)
 	{
 		Engine::LoadLevel("Dat/Level3.txt");
-		words[2]->SetText("Get those wigs back!");
+		words[2]->SetText("Get those wigs back, you need at least 10 to continue!");
 
 		SPMR::PushSprite(new VerticalEnemy({ 0,0,55,140 }, { 900, 300, 50.0f, 106 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies")));
 		SPMR::PushSprite(new VerticalEnemy({ 0,0,55,140 }, { 750.0f, 500.0f, 50.0f, 106.0f },
@@ -153,7 +153,7 @@ void GameState::Enter()
 	if (Engine::Instance().getLevel() == 4)
 	{
 		Engine::LoadLevel("Dat/LevelBoss.txt");
-		words[2]->SetText("...");
+		words[2]->SetText("Why does it feel like boss music will suddenly start playing?");
 
 		// energy
 		SPMR::PushSprite(new Energy({ 0,0,100,100 }, { (32.0f * 14.0f), (32.0f * 16.5f), 50.0f, 50.0f },
@@ -189,7 +189,7 @@ void GameState::Enter()
 
 		m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
 
-		SOMA::StopMusic(15);
+		SOMA::StopMusic();
 	}
 
 	SPMR::PushSprite(m_flag, Regular);
@@ -247,7 +247,7 @@ void GameState::CheckCollision()
 			timeToSwitchLevels = true;
 			Engine::Instance().setLevel(2);
 		}
-		else if (Engine::Instance().getLevel() == 2 && m_pPlayer->getParts() >= 1) // for testing, get 1 at least
+		else if (Engine::Instance().getLevel() == 2 && m_pPlayer->getParts() >= 5)
 		{
 			timeToSwitchLevels = true;
 			Engine::Instance().setLevel(3);
@@ -324,6 +324,7 @@ TitleState::TitleState() {}
 
 void TitleState::Enter()
 {
+	SOMA::PlayMusic("PopTeam");
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	m_controlsBtn = new ControlsButton({ 0,0,200,47 }, { 824.0f,721.0f,200.0f,47.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("control"));
@@ -556,12 +557,12 @@ void EndState::Enter()
 	int shiftdown = 350;
 	string name = Engine::Instance().getName();
 	if (name == "")
-		name = "some kiki";
+		name = "KIKI";
 	int wig = m_pPlayer->getWigs();
 	int ship = m_pPlayer->getParts();
 	int total = 1800;
 	int pos = 5;
-	//total = (m_pPlayer->getWigs() * 100) + (m_pPlayer->getParts() * 125);
+	total = (m_pPlayer->getWigs() * 100) + (m_pPlayer->getParts() * 125);
 
 	cout << totalScore[3];
 	for (int i = 4; i >= 0; i--) // load the score information here! i: name, i+1: wig count, i+2: ship part count, i+3: total score(calulate and add)
@@ -579,12 +580,10 @@ void EndState::Enter()
 		totalScore.insert(totalScore.begin() + pos, total);
 	}
 
-	// load file over this, for now, I will tempy define then variables
 
 	int counter = 0;
-	for (unsigned int i = 7; i < 27; i+=4) // load the score information here! i: name, i+1: wig count, i+2: ship part count, i+3: total score(calulate and add)
+	for (unsigned int i = 7; i < 27; i+=4) // into text
 	{
-		// get next file input and redefine variables each iteration here
 		name = playerName[counter];
 		words[i] = new Label("fontSmall", 200, shiftdown, name.c_str(), { 255,255,255,0 });
 		words[i+1] = new Label("fontSmall", 400, shiftdown, to_string((int)(wigScore[counter])).c_str(), { 255,255,220,0 });
@@ -599,7 +598,7 @@ void EndState::Enter()
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 70.0f,600.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("replay"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 540.0f,600.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 
-	SOMA::PlayMusic("WreckingBall"); // maybe change to victory music? any recommendations?
+	SOMA::PlayMusic("Win"); // maybe change to victory music? any recommendations?
 	EndState::Save();
 }
 
@@ -645,7 +644,7 @@ void EndState::Load()
 	{
 		if (strcmp(pElement->Value(), "HighScore") == 0)
 		{
-			pElement->QueryStringAttribute("name", &n); // "Gets" what'stored in name
+			pElement->QueryStringAttribute("name", &n);
 			pElement->QueryIntAttribute("wig", &w);
 			pElement->QueryIntAttribute("ship", &s);
 			pElement->QueryIntAttribute("total", &t);
@@ -680,7 +679,7 @@ void EndState::Save()
 		pElement->SetAttribute("total", totalScore[i]);
 		pRoot->InsertEndChild(pElement);
 	}
-	xmlDoc.SaveFile("Dat/HighScoresTesting.xml"); //
+	xmlDoc.SaveFile("Dat/HighScores.xml");
 	cout << "Save complete!\n";
 }
 // End DeadState.

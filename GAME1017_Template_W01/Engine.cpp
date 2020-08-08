@@ -77,6 +77,8 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	SOMA::AllocateChannels(16);
 	SOMA::Load("Aud/Poker Face.mp3", "PokerFace", SOUND_MUSIC);
 	SOMA::Load("Aud/Wrecking Ball.mp3", "WreckingBall", SOUND_MUSIC);
+	SOMA::Load("Aud/bossbgm.mp3", "PopTeam", SOUND_MUSIC);
+	SOMA::Load("Aud/victory.mp3", "Win", SOUND_MUSIC);
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
 	SOMA::Load("Aud/dead.wav", "dead", SOUND_SFX);
 	SOMA::Load("Aud/attack.wav", "slap", SOUND_SFX);
