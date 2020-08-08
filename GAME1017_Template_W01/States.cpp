@@ -11,13 +11,14 @@
 #include "Enemy.h"
 #include "PlatformPlayer.h"
 #include "HookShot.h"
-#include <iostream>
-#include <fstream>
-#include <string>
 #include "SpriteManager.h"
 #include "Utilities.h"
 #include "VerticalEnemy.h"
 #include "Boss.h"
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
 
 
 // Begin State. CTRL+M+H and CTRL+M+U to turn on/off collapsed code.
@@ -33,10 +34,13 @@ GameState::GameState() {}
 
 void GameState::Enter() 
 {
+	Engine::Instance().setLevel(4);
 	std::cout << "Entering GameState..." << std::endl;
 	std::cout << "This is the name of our beautiful player: " << Engine::Instance().getName() << std::endl;
 	SDL_ShowCursor(SDL_DISABLE); // we have a reticle so...
 	m_pPlayer = SPMR::getPlayer();
+	m_pBoss = new Boss({ 220,0,55,140 }, { 4100.0f, 100.0f, 300, 636.0f },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 4, 1); // object to get boss health
 
 	m_pauseBtn = new PauseButton({ 0,0,86,78 }, { 1005.0f,0.0f,21.5f,19.5f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
 	m_pReticle = new Sprite({ 0,0, 36,36 }, { 0,0, 25,25 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("reticle"));
@@ -45,9 +49,9 @@ void GameState::Enter()
 	partsCount = m_pPlayer->getParts();
 
 	// ui stuff
-	for (int i = 0; i < (5); i++)
+	for (int i = 0; i < 5; i++)
 		hpUI[i] = new Sprite({ 0,0, 256,256 }, { (float)(35*i),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("heart"));
-	for (int i = 0; i < (5); i++)
+	for (int i = 0; i < 5; i++)
 		stungunUI[i] = new Sprite({ 0,0, 29,35 }, { (float)(35 * i),36, 29,32 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("lightning"));
 	wigUI = new Sprite({ 0,0, 100,100 }, { (float)(185),0, 35,35 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("wig"));
 	shipUI = new Sprite({ 0,0, 74, 75 }, { (float)(250),-3, 35,33 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("shippart"));
@@ -181,8 +185,7 @@ void GameState::Enter()
 		SPMR::PushSprite(new Health({ 0,0,256,256 }, { (32.0f * 108.0f), (32.0f * 18.5f), 50.0f, 50.0f },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("heart")));
 
-		SPMR::PushSprite(new Boss({ 220,0,55,140 }, { 4100.0f, 100.0f, 300, 636.0f },
-			Engine::Instance().GetRenderer(), TEMA::GetTexture("enemies"), 4, 1));
+		SPMR::PushSprite(m_pBoss); 
 
 		m_flag = new Sprite({ 0,0, 32, 64 }, { (32 * 137) , (32 * 20), 32, 64 }, Engine::Instance().GetRenderer(), TEMA::GetTexture("flag"));
 
@@ -238,15 +241,13 @@ void GameState::CheckCollision()
 	}
 	m_pEnemy = nullptr;
 
-	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) // TEMPORARY loading lvl here... messy   
-	{                       //we could use the change state function to make a new game state, then we can move some of this stuff to the exit state and the stuff that's 
-						//	different between levels could be put in an if statement in the enter function
-
+	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_flag->GetDstP())) 
+	{
 		if (Engine::Instance().getLevel() == 1) {
 			timeToSwitchLevels = true;
 			Engine::Instance().setLevel(2);
 		}
-		else if (Engine::Instance().getLevel() == 2 && m_pPlayer->getParts() >= 1) // currently at one for making testing quicker, change 5 later
+		else if (Engine::Instance().getLevel() == 2 && m_pPlayer->getParts() >= 1) // for testing, get 1 at least
 		{
 			timeToSwitchLevels = true;
 			Engine::Instance().setLevel(3);
@@ -259,7 +260,7 @@ void GameState::CheckCollision()
 
 	}
 	// don't fall in the pit and crash the game!
-	if (m_pPlayer->GetY() > (HEIGHT - 128)) // idk where the code for catching kiki is rn... so the hard code kinda temp
+	if (m_pPlayer->GetY() > (HEIGHT-10)) // idk where the code for catching kiki is rn... so the hard code kinda temp
 	{
 		m_pPlayer->GoBack();
 	}
@@ -290,6 +291,7 @@ void GameState::Render()
 		hpUI[i]->Render();
 	for (int i = 0; i < (m_pPlayer->getEnergy()); i++)
 		stungunUI[i]->Render();
+
 	wigUI->Render();
 	shipUI->Render();
 	for (unsigned i = 0; i < 3; i++)
@@ -408,9 +410,12 @@ void TitleState::Update()
 			return;
 		}
 	}
-	if (EVMA::KeyPressed(SDL_SCANCODE_RETURN))
+	else
 	{
-		displayControls = false;
+		if (EVMA::KeyPressed(SDL_SCANCODE_RETURN))
+		{
+			displayControls = false;
+		}
 	}
 }
 
@@ -538,6 +543,8 @@ EndState::EndState() {}
 void EndState::Enter()
 {
 	std::cout << "Entering EndState...\n";
+	EndState::Load();
+	m_pPlayer = SPMR::getPlayer();
 	words[0] = new Label("fontLarge", 200, 30, "WIGTASTIC!", { 255,0,255,0 });
 	words[1] = new Label("fontSmall", 300, 150, "You managed to keep your job in the wig business!", { 255,200,220,0 });
 	words[2] = new Label("font", 425, 215, "HIGHSCORES", { 255,0,255,0 });
@@ -546,6 +553,7 @@ void EndState::Enter()
 	words[5] = new Label("fontSmall", 550, 300, "SHIP PARTS:", { 255,255,255,0 });
 	words[6] = new Label("fontSmall", 700, 300, "TOTAL SCORE:", { 255,255,255,0 });
 
+<<<<<<< HEAD
 	string name = "name";
 	int wig, ship, total, shiftdown, highScore = 0;
 	int rankPosition;
@@ -582,10 +590,41 @@ void EndState::Enter()
 		}
 	}
 	output.close();
+=======
+	int shiftdown = 350;
+	string name = Engine::Instance().getName();
+	if (name == "")
+		name = "some kiki";
+	int wig = m_pPlayer->getWigs();
+	int ship = m_pPlayer->getParts();
+	int total = 1800;
+	int pos = 5;
+	//total = (m_pPlayer->getWigs() * 100) + (m_pPlayer->getParts() * 125);
 
+	cout << totalScore[3];
+	for (int i = 4; i >= 0; i--) // load the score information here! i: name, i+1: wig count, i+2: ship part count, i+3: total score(calulate and add)
+	{
+		if (total > totalScore[i])
+		{
+			pos--;
+		}
+	}
+	if (pos < 5)
+	{
+		playerName.insert(playerName.begin() + pos, name);
+		wigScore.insert(wigScore.begin() + pos, wig);
+		shipScore.insert(shipScore.begin() + pos, ship);
+		totalScore.insert(totalScore.begin() + pos, total);
+	}
+
+	// load file over this, for now, I will tempy define then variables
+>>>>>>> Andrew
+
+	int counter = 0;
 	for (unsigned int i = 7; i < 27; i+=4) // load the score information here! i: name, i+1: wig count, i+2: ship part count, i+3: total score(calulate and add)
 	{
 		// get next file input and redefine variables each iteration here
+<<<<<<< HEAD
 
 		/*rankPosition = i + 1;
 		rankNumber;
@@ -607,12 +646,16 @@ void EndState::Enter()
 		input.close();
 
 
+=======
+		name = playerName[counter];
+>>>>>>> Andrew
 		words[i] = new Label("fontSmall", 200, shiftdown, name.c_str(), { 255,255,255,0 });
-		words[i+1] = new Label("fontSmall", 400, shiftdown, to_string((int)(wig)).c_str(), { 255,255,220,0 });
-		words[i+2] = new Label("fontSmall", 550, shiftdown, to_string((int)(ship)).c_str(), { 255,255,255,0 });
-		words[i+3] = new Label("fontSmall", 700, shiftdown, to_string((int)(total)).c_str(), { 255,255,255,0 });
+		words[i+1] = new Label("fontSmall", 400, shiftdown, to_string((int)(wigScore[counter])).c_str(), { 255,255,220,0 });
+		words[i+2] = new Label("fontSmall", 550, shiftdown, to_string((int)(shipScore[counter])).c_str(), { 255,255,255,0 });
+		words[i+3] = new Label("fontSmall", 700, shiftdown, to_string((int)(totalScore[counter])).c_str(), { 255,255,255,0 });
 
 		shiftdown += 40; // to next line
+		counter++;
 	}
 
 
@@ -620,6 +663,8 @@ void EndState::Enter()
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 540.0f,600.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 
 	SOMA::PlayMusic("SweetVictory"); // maybe change to victory music? any recommendations?
+	SOMA::PlayMusic("WreckingBall"); // maybe change to victory music? any recommendations?
+	EndState::Save();
 }
 
 void EndState::Update()
@@ -647,5 +692,59 @@ void EndState::Render()
 void EndState::Exit()
 {
 	std::cout << "Exiting EndState..." << std::endl;
+}
+void EndState::Load()
+{
+	cout << "Loading...";
+	tinyxml2::XMLDocument xmlDoc;
+	xmlDoc.LoadFile("Dat/HighScores.xml");
+	tinyxml2::XMLElement* pRoot = xmlDoc.FirstChildElement();
+	tinyxml2::XMLElement* pElement = pRoot->FirstChildElement();
+
+	const char* n; // buffers
+	string sName;
+	int w, s, t;
+
+	for (unsigned int i = 0; i < 5; i++)
+	{
+		if (strcmp(pElement->Value(), "HighScore") == 0)
+		{
+			pElement->QueryStringAttribute("name", &n); // "Gets" what'stored in name
+			pElement->QueryIntAttribute("wig", &w);
+			pElement->QueryIntAttribute("ship", &s);
+			pElement->QueryIntAttribute("total", &t);
+			sName = n; // trying to convert here
+			playerName.push_back(sName);
+			wigScore.push_back(w);
+			shipScore.push_back(s);
+			totalScore.push_back(t);
+		}
+		pElement = pElement->NextSiblingElement();
+	}
+	cout << "Load complete!\n";
+}
+void EndState::Save()
+{
+	cout << "Saving...";
+	const char* name;
+	tinyxml2::XMLDocument xmlDoc;
+
+	tinyxml2::XMLNode* pRoot = xmlDoc.NewElement("Root");
+	xmlDoc.InsertEndChild(pRoot);
+
+	tinyxml2::XMLElement* pElement;
+
+	for (int i = 0; i < 5; i++)
+	{
+		name = playerName[i].c_str();
+		pElement = xmlDoc.NewElement("HighScore");
+		pElement->SetAttribute("name", name);
+		pElement->SetAttribute("wig", wigScore[i]);
+		pElement->SetAttribute("ship", shipScore[i]);
+		pElement->SetAttribute("total", totalScore[i]);
+		pRoot->InsertEndChild(pElement);
+	}
+	xmlDoc.SaveFile("Dat/HighScoresTesting.xml"); //
+	cout << "Save complete!\n";
 }
 // End DeadState.
