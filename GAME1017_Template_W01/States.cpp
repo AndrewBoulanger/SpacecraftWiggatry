@@ -215,6 +215,10 @@ void GameState::Update()
 	words[1]->SetText(to_string((int)(m_pPlayer->getParts())).c_str());
 
 	m_pPlayer->Update(); // Change to player Update here.
+	if (m_pBoss->getHealth() <= 0)
+	{
+		playerWin = true;
+	}
 	CheckCollision();
 }
 
@@ -275,6 +279,8 @@ void GameState::CheckCollision()
 		STMA::ChangeState(new DeadState);
 	else if (timeToSwitchLevels)
 		STMA::ChangeState(new GameState);
+	else if (playerWin)
+			STMA::ChangeState(new EndState);
 }
 
 void GameState::Render()
@@ -544,6 +550,7 @@ EndState::EndState() {}
 void EndState::Enter()
 {
 	std::cout << "Entering EndState...\n";
+	SOMA::PlayMusic("SweetVictory");
 	EndState::Load();
 	m_pPlayer = SPMR::getPlayer();
 	words[0] = new Label("fontLarge", 200, 30, "WIGTASTIC!", { 255,0,255,0 });
@@ -595,7 +602,7 @@ void EndState::Enter()
 	}
 
 
-	m_playBtn = new PlayButton({ 0,0,400,100 }, { 70.0f,600.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("replay"));
+	m_playBtn = new RestartButton({ 0,0,400,100 }, { 70.0f,600.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("replay"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 540.0f,600.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 
 	SOMA::PlayMusic("Win"); // maybe change to victory music? any recommendations?
