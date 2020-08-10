@@ -328,7 +328,7 @@ void TitleState::Enter()
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
 	m_quitBtn = new QuitButton({ 0,0,400,100 }, { 312.0f,520.0f,400.0f,100.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	m_controlsBtn = new ControlsButton({ 0,0,200,47 }, { 824.0f,721.0f,200.0f,47.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("control"));
-	instructions = new Sprite({ 0,0,525,350 }, { 260.5f,140.0f,525.0f,350.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("controls"));
+	instructions = new Sprite({ 0,0,525,350 }, { 260.5f,170.0f,525.0f,350.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("controls"));
 	background = new Sprite({ 0,0,1204,768 }, { 0.0f,0.0f,1204.0f,768.0f }, Engine::Instance().GetRenderer(), TEMA::GetTexture("bg"));
 	words[0] = new Label("fontLarge", 180, 110, "SPACECRAFT", { 188,7,208,0 });
 	words[1] = new Label("fontLarge", 260, 200, "Wiggatry", { 255,255,255,0 });
@@ -437,7 +437,7 @@ void TitleState::Render()
 		SDL_Rect rect = { 173, 128, 700, 512 };
 		SDL_RenderFillRect(Engine::Instance().GetRenderer(), &rect);
 		instructions->Render();
-		words[6]->Render();
+		words[5]->Render();
 	}
 
 	State::Render();
