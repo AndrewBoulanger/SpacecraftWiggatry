@@ -142,7 +142,7 @@ void PlatformPlayer::Update()
 		if (EVMA::KeyReleased(SDL_SCANCODE_A) || EVMA::KeyReleased(SDL_SCANCODE_D))
 		{
 			SetState(idle);
-			break;d
+			break;
 		}
 	}
 	Animate();
