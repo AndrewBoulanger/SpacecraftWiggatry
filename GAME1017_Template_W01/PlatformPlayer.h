@@ -65,7 +65,7 @@ private:
 	int energy;
 	float m_distance = 0;
 	Hookshot* m_hookShot;
-	enum state { idle, running } m_state;
+	enum state { idle, running, slapping } m_state;
 	void SetState(int s);
 
 };

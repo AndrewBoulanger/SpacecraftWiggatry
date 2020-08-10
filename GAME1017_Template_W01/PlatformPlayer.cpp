@@ -133,6 +133,13 @@ void PlatformPlayer::Update()
 			//	m_grapplehook = false;
 		}
 		break;
+	case slapping:
+		if (EVMA::KeyPressed(SDL_SCANCODE_Q) || EVMA::MousePressed(3))
+		{
+			SOMA::PlaySound("slap");
+			slap();
+		}
+		break;
 	}
 	Animate();
 	if (EVMA::KeyHeld(SDL_SCANCODE_W))
@@ -176,11 +183,11 @@ void PlatformPlayer::Update()
 		}
 	}
 
-	if (EVMA::KeyPressed(SDL_SCANCODE_Q) || EVMA::MousePressed(3))
+	/*if (EVMA::KeyPressed(SDL_SCANCODE_Q) || EVMA::MousePressed(3))
 	{
 		SOMA::PlaySound("slap");
 		slap();
-	}
+	}*/
 	if (EVMA::KeyPressed(SDL_SCANCODE_E))
 	{
 		if (energy > 0)
@@ -300,6 +307,10 @@ void PlatformPlayer::SetState(int s)
 	if (m_state == idle)
 	{
 		m_sprite = m_spriteMin = m_spriteMax = 0;
+	}
+	else if (m_state == slapping)
+	{
+
 	}
 	else // Only other is running for now...
 	{
