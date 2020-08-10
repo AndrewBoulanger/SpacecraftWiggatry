@@ -38,6 +38,7 @@ private:
 	//std::vector<Pickup*> m_pPickUpList;
 
 	bool gameOver;
+	bool playerWin;
 	bool timeToSwitchLevels;
 
 	Sprite* m_flag;

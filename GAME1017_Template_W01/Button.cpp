@@ -65,6 +65,13 @@ void PlayButton::Execute()
 	STMA::ChangeState(new GameState);
 }
 
+RestartButton::RestartButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
+void RestartButton::Execute()
+{
+	SOMA::PlaySound("beep", 0, 6);
+	STMA::ChangeState(new TitleState);
+}
+
 QuitButton::QuitButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
 void QuitButton::Execute()
 {

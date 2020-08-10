@@ -1,6 +1,9 @@
 #include "Boss.h"
 #include "SoundManager.h"
 #include "SpriteManager.h"
+#include "StateManager.h"
+#include "EventManager.h"
+#include "States.h"
 #include "Projectile.h";
 
 Boss::Boss(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart, int smin, int smax, int nf, int hp, int dmg)
