@@ -34,7 +34,7 @@ GameState::GameState() {}
 
 void GameState::Enter() 
 {
-	Engine::Instance().setLevel(1); 
+	// Engine::Instance().setLevel(1);
 	std::cout << "Entering GameState..." << std::endl;
 	std::cout << "This is the name of our beautiful player: " << Engine::Instance().getName() << std::endl;
 	SDL_ShowCursor(SDL_DISABLE); // we have a reticle so...
